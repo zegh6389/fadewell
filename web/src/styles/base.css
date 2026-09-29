@@ -1,0 +1,423 @@
+/* ============================================================
+   FadeWell — Base: reset, typography, motion primitives
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Anchor targets clear the sticky masthead. */
+  scroll-padding-top: 6rem;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--void);
+  color: var(--paper);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: 1.65;
+  font-weight: 400;
+  letter-spacing: -0.011em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+li {
+  overflow-wrap: break-word;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+::selection {
+  background: var(--violet);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Typography ------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.display {
+  font-size: var(--t-4xl);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  font-weight: 600;
+}
+
+.h1 {
+  font-size: var(--t-3xl);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.h2 {
+  font-size: var(--t-2xl);
+  line-height: 1.02;
+  letter-spacing: -0.038em;
+}
+
+.h3 {
+  font-size: var(--t-xl);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.h4 {
+  font-size: var(--t-lg);
+  line-height: 1.2;
+  letter-spacing: -0.022em;
+}
+
+.lede {
+  font-size: var(--t-md);
+  line-height: 1.55;
+  color: var(--paper-2);
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+
+.prose {
+  color: var(--paper-2);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+.prose > * + * {
+  margin-top: 1.1em;
+}
+
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.grad-text {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--paper-3);
+}
+
+.eyebrow--accent {
+  color: var(--cyan);
+}
+
+/* ---------- Layout ------------------------------------------ */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: clamp(4.5rem, 9vw, 9rem);
+}
+
+.section--tight {
+  padding-block: clamp(3rem, 5.5vw, 5.5rem);
+}
+
+.section-head {
+  display: grid;
+  gap: var(--s-4);
+  max-width: 60rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+  border: 0;
+}
+
+/* Staggered children — drives both entrance reveals and the hero
+   line-mask delay, so no component needs an inline style attribute. */
+.d-1 {
+  --line-delay: 90ms;
+  --reveal-delay: 0ms;
+}
+.d-2 {
+  --line-delay: 200ms;
+  --reveal-delay: 80ms;
+}
+.d-3 {
+  --line-delay: 310ms;
+  --reveal-delay: 160ms;
+}
+.d-4 {
+  --line-delay: 420ms;
+  --reveal-delay: 240ms;
+}
+.d-5 {
+  --reveal-delay: 320ms;
+}
+.d-6 {
+  --reveal-delay: 400ms;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--s-4);
+  top: -100px;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  background: var(--violet);
+  color: #fff;
+  border-radius: var(--r-sm);
+  font-weight: 600;
+  transition: top var(--d-fast) var(--ease-out);
+}
+.skip-link:focus {
+  top: var(--s-4);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Motion primitives ------------------------------ */
+
+/* Entrance reveals, driven by an IntersectionObserver that adds `.is-in`.
+   Declared here (not in JS) so a blocked script still shows content. */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity var(--d-story) var(--ease-out),
+    transform var(--d-story) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+[data-reveal='fade'] {
+  transform: none;
+}
+
+[data-reveal='left'] {
+  transform: translate3d(-36px, 0, 0);
+}
+
+[data-reveal='right'] {
+  transform: translate3d(36px, 0, 0);
+}
+
+[data-reveal='scale'] {
+  transform: scale(0.94);
+}
+
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Native CSS scroll-driven animations (Chromium 115+, Safari 26+).
+   Everything below degrades to a static, fully readable layout elsewhere. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Parallax drift: layer slides as it crosses the viewport. */
+    .drift {
+      animation: drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .drift--slow {
+      --drift: 90px;
+    }
+    .drift--mid {
+      --drift: -55px;
+    }
+    .drift--fast {
+      --drift: 140px;
+    }
+
+    /* Continuous rotation for decorative rings. */
+    .spin-slow {
+      animation: spin 26s linear infinite;
+    }
+    .spin-rev {
+      animation: spin 40s linear infinite reverse;
+    }
+
+    /* Sticky-scene progress rail: fills 0 -> 100% across the scene. */
+    .timeline-fill {
+      transform-origin: top;
+      animation: fill-y linear both;
+      animation-timeline: view();
+      animation-range: cover 12% cover 72%;
+    }
+
+    .timeline-fill--x {
+      transform-origin: left;
+      animation-name: fill-x;
+    }
+
+    /* Pinned horizontal journey: the track is translated across the
+       viewport while the scene stays stuck. */
+    .pin-track {
+      animation: track-x linear both;
+      animation-timeline: view();
+      animation-range: cover 8% cover 92%;
+    }
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, calc(var(--drift, 60px) * -1), 0);
+  }
+  to {
+    transform: translate3d(0, var(--drift, 60px), 0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fill-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes fill-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes track-x {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-1 * (var(--track-overflow, 0px))), 0, 0);
+  }
+}
+
+/* Ambient aurora blobs — CSS-only so they cost nothing on the main thread. */
+@keyframes blob-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(6%, -7%, 0) scale(1.12);
+  }
+  66% {
+    transform: translate3d(-5%, 5%, 0) scale(0.94);
+  }
+}
+
+/* ---------- Reduced motion --------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

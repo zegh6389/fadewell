@@ -1,0 +1,126 @@
+/* ============================================================
+   FadeWell — Design tokens
+   Brand: a calm, cinematic dusk. Deep indigo base, aurora light.
+   ============================================================ */
+
+:root {
+  /* --- Surfaces ------------------------------------------------ */
+  --void: #05060e;
+  --ink-950: #070917;
+  --ink-900: #0a0d1c;
+  --ink-850: #0e1224;
+  --ink-800: #131830;
+  --ink-700: #1b2142;
+  --ink-600: #252c56;
+
+  /* --- Light interludes ---------------------------------------- */
+  --cream: #f6f4f0;
+  --cream-2: #ece8e1;
+  --cream-ink: #12131b;
+  --cream-ink-2: #4a4c5c;
+
+  /* --- Text --------------------------------------------------- */
+  /* The three dim levels are all used for real content, so each one has to
+     clear 4.5:1 against the void background. Values below these fail WCAG AA
+     — verified by the axe-core scan in tests/browser/site.spec.js. */
+  --paper: #f4f5fb;
+  --paper-2: #aeb5d0;
+  --paper-3: #8e96b3;
+  --paper-4: #7a81a0;
+
+  /* --- Aurora accents ----------------------------------------- */
+  --violet: #7c5cff;
+  --violet-soft: #a58cff;
+  --indigo: #4b46ff;
+  --cyan: #34e0e8;
+  --mint: #6ee7b7;
+  --rose: #ff6b9d;
+  --amber: #ffc46b;
+  --clay: #ff9a6b;
+
+  /* --- Lines & glass ------------------------------------------ */
+  --line: rgb(255 255 255 / 0.09);
+  --line-strong: rgb(255 255 255 / 0.16);
+  --line-soft: rgb(255 255 255 / 0.05);
+  --glass: rgb(255 255 255 / 0.035);
+  --glass-2: rgb(255 255 255 / 0.06);
+  --line-dark: rgb(18 19 27 / 0.1);
+  --glass-dark: rgb(255 255 255 / 0.55);
+
+  /* --- Gradients ---------------------------------------------- */
+  --grad-aurora: linear-gradient(
+    115deg,
+    var(--violet) 0%,
+    var(--indigo) 26%,
+    var(--cyan) 62%,
+    var(--mint) 100%
+  );
+  --grad-sunset: linear-gradient(115deg, var(--rose) 0%, var(--clay) 45%, var(--amber) 100%);
+  --grad-dawn: linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 55%, var(--void) 100%);
+  --grad-text: linear-gradient(100deg, #ffffff 0%, #d9dbff 30%, var(--violet-soft) 62%, var(--cyan) 100%);
+
+  /* --- Type --------------------------------------------------- */
+  --font-sans: 'Sora', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Fluid type scale — clamp(min, preferred, max) */
+  --t-xs: clamp(0.7rem, 0.67rem + 0.15vw, 0.78rem);
+  --t-sm: clamp(0.83rem, 0.79rem + 0.2vw, 0.94rem);
+  --t-base: clamp(0.98rem, 0.94rem + 0.22vw, 1.09rem);
+  --t-md: clamp(1.12rem, 1.04rem + 0.4vw, 1.38rem);
+  --t-lg: clamp(1.35rem, 1.18rem + 0.85vw, 1.9rem);
+  --t-xl: clamp(1.75rem, 1.4rem + 1.75vw, 2.9rem);
+  --t-2xl: clamp(2.3rem, 1.65rem + 3.2vw, 4.4rem);
+  --t-3xl: clamp(3rem, 1.9rem + 5.4vw, 6.6rem);
+  --t-4xl: clamp(3.1rem, 1.5rem + 7.2vw, 7.4rem);
+
+  /* --- Space -------------------------------------------------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+
+  --gutter: clamp(1.25rem, 0.6rem + 3vw, 4.5rem);
+  --measure: 62ch;
+  --shell: 1440px;
+
+  /* --- Radii -------------------------------------------------- */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 36px;
+  --r-pill: 999px;
+
+  /* --- Elevation / glow ---------------------------------------- */
+  --sh-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --sh-2: 0 12px 32px -12px rgb(0 0 0 / 0.6);
+  --sh-3: 0 32px 70px -24px rgb(0 0 0 / 0.75);
+  --glow-violet: 0 0 0 1px rgb(124 92 255 / 0.35), 0 18px 60px -18px rgb(124 92 255 / 0.55);
+  --glow-cyan: 0 0 0 1px rgb(52 224 232 / 0.3), 0 18px 60px -18px rgb(52 224 232 / 0.45);
+
+  /* --- Motion ------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --d-fast: 180ms;
+  --d-med: 380ms;
+  --d-slow: 720ms;
+  --d-story: 1100ms;
+
+  /* --- Layering ------------------------------------------------ */
+  --z-bg: 0;
+  --z-content: 1;
+  --z-sticky: 5;
+  --z-nav: 60;
+  --z-overlay: 80;
+  --z-cursor: 90;
+  --z-toast: 100;
+}

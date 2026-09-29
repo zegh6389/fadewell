@@ -1,0 +1,17 @@
+-- Idempotency payload hash. Phase 4 bound the idempotency cache by (scope, actor_id, key) only.
+-- That allowed an attacker who can guess or precompute a victim's UUID key to overwrite the
+-- victim's in-flight intake with attacker-controlled PHI: the second call (same key, different
+-- body) was silently replayed as the first response. The red team flagged this as a PII-rewrite
+-- primitive.
+--
+-- The fix: hash the canonicalised request body and store it next to the cached response. On
+-- replay, compare hashes; mismatch returns 409 IDEMPOTENCY_KEY_MISMATCH so the caller knows
+-- their key is already in use with a different payload (and should generate a fresh key).
+--
+-- DEFAULT '' so the migration is forward-compatible with existing rows (Phase 4 hadn't shipped
+-- yet in production so there should be none, but the default keeps the migration safe to
+-- re-run on partially-migrated environments).
+ALTER TABLE idempotency_keys ADD COLUMN payload_hash text NOT NULL DEFAULT '';
+-- The replay check is enforced in the route handler, not at the storage layer: a partial
+-- uniqueness index would prevent legitimate distinct saves from ever sharing (scope, actor_id, key)
+-- but the handler already differentiates via payload_hash before reaching the INSERT.

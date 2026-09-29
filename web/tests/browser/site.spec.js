@@ -1,0 +1,157 @@
+import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
+
+/**
+ * Marketing-site smoke + quality gate.
+ *
+ * Every public route is loaded in a real browser at two viewports, checked for
+ * runtime errors, verified for correct branding, and scanned for accessibility
+ * violations. Screenshots are captured to artifacts/browser/ for review.
+ */
+
+const ROUTES = [
+  { path: '/', name: 'home', expect: 'FadeWell' },
+  { path: '/how-it-works', name: 'how-it-works', expect: 'Five steps' },
+  { path: '/care', name: 'care', expect: 'Qualifying conditions' },
+  { path: '/clinicians', name: 'clinicians', expect: 'clinician' },
+  { path: '/pricing', name: 'pricing', expect: 'Published prices' },
+  { path: '/faq', name: 'faq', expect: 'Answered properly' },
+  { path: '/about', name: 'about', expect: 'About FadeWell' },
+  { path: '/contact', name: 'contact', expect: 'Ask us anything' },
+  { path: '/privacy-policy', name: 'privacy', expect: 'Privacy policy' },
+  { path: '/terms-conditions', name: 'terms', expect: 'Terms of service' },
+  { path: '/refund-policy', name: 'refund', expect: 'Refund policy' },
+  { path: '/telehealth-consent', name: 'telehealth', expect: 'Telehealth consent' },
+  { path: '/medical-disclaimer', name: 'disclaimer', expect: 'Medical disclaimer' },
+  { path: '/accessibility', name: 'accessibility', expect: 'Accessibility' },
+  { path: '/this-page-does-not-exist', name: 'not-found', expect: 'faded out' }
+]
+
+/** Collects console errors and failed requests for the life of the test. */
+function watchErrors(page) {
+  const errors = []
+  page.on('console', (message) => {
+    if (message.type() !== 'error') return
+    // The workspaces probe GET /api/v1/session on load to discover whether the
+    // visitor is signed in. A 401 is the expected answer for an anonymous
+    // visitor and is handled in app code; the browser still logs the failed
+    // response. Anything else is a genuine fault.
+    if (/401 \(Unauthorized\)/.test(message.text())) return
+    errors.push(`console: ${message.text()}`)
+  })
+  page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`))
+  page.on('requestfailed', (request) => {
+    const url = request.url()
+    if (url.includes('/api/')) return
+    errors.push(`requestfailed: ${url} — ${request.failure()?.errorText}`)
+  })
+  return errors
+}
+
+test.describe('FadeWell marketing site', () => {
+  for (const route of ROUTES) {
+    test(`${route.path} renders without errors`, async ({ page }, testInfo) => {
+      const errors = watchErrors(page)
+      const response = await page.goto(route.path, { waitUntil: 'networkidle' })
+
+      expect(response?.status(), `${route.path} should return 200`).toBeLessThan(400)
+
+      // Main landmark and a single H1.
+      await expect(page.locator('main#main-content')).toBeVisible()
+      await expect(page.locator('h1')).toHaveCount(1)
+
+      const body = await page.locator('body').innerText()
+      // innerText reflects CSS text-transform, so eyebrow copy arrives
+      // uppercased. Compare case-insensitively against the source string.
+      expect(body.toLowerCase(), `${route.path} should mention the expected copy`).toContain(
+        route.expect.toLowerCase()
+      )
+
+      // FadeWell branding only — no legacy brand may survive anywhere.
+      expect(body).not.toMatch(/medcardaccess|medefy|medaccess/i)
+
+      await page.waitForTimeout(400)
+      await page.screenshot({
+        path: `artifacts/browser/${testInfo.project.name}-${route.name}.png`,
+        fullPage: false
+      })
+
+      expect(errors, `${route.path} produced runtime errors`).toEqual([])
+    })
+  }
+
+  test('home page is branded, navigable and animates on scroll', async ({ page }, testInfo) => {
+    const errors = watchErrors(page)
+    await page.goto('/', { waitUntil: 'networkidle' })
+
+    // Wordmark + primary navigation.
+    await expect(page.locator('.brand').first()).toContainText('FadeWell')
+    await expect(page.locator('nav.nav .nav__link')).toHaveCount(6)
+
+    // Reveal elements start hidden and animate in as they enter the viewport.
+    const deep = page.locator('.story__step').first()
+    await deep.scrollIntoViewIfNeeded()
+    await expect(deep).toHaveClass(/is-in/, { timeout: 5000 })
+
+    // The pinned journey track should have had its overflow measured so the
+    // scroll-driven keyframe knows how far to translate it. It is published as
+    // a CSS length, so parse the number out rather than coercing the string.
+    await page.locator('#journey').scrollIntoViewIfNeeded()
+    await page.waitForTimeout(600)
+    const overflow = await page.locator('.journey__track').evaluate((el) =>
+      parseFloat(el.style.getPropertyValue('--track-overflow'))
+    )
+    expect(overflow, 'journey track overflow should be measured in px').toBeGreaterThan(0)
+
+    // Full-page capture for design review.
+    await page.evaluate(() => window.scrollTo(0, 0))
+    await page.waitForTimeout(500)
+    await page.screenshot({
+      path: `artifacts/browser/${testInfo.project.name}-home-full.png`,
+      fullPage: true
+    })
+
+    expect(errors).toEqual([])
+  })
+
+  test('every navigation link resolves to a real page', async ({ page }) => {
+    const errors = watchErrors(page)
+    await page.goto('/', { waitUntil: 'networkidle' })
+
+    const hrefs = await page.locator('a[href^="/"]').evaluateAll((nodes) =>
+      [...new Set(nodes.map((n) => n.getAttribute('href')))].filter(Boolean)
+    )
+
+    for (const href of hrefs) {
+      const response = await page.goto(href, { waitUntil: 'domcontentloaded' })
+      expect(response?.status(), `${href} returned ${response?.status()}`).toBeLessThan(400)
+      // Guard against a link silently falling through to the 404 page.
+      const h1 = await page.locator('h1').first().innerText()
+      expect(h1, `${href} resolved to the 404 page`).not.toContain('faded out')
+    }
+
+    expect(errors).toEqual([])
+  })
+
+  test('has no accessibility violations on the home page', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' })
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
+    expect(results.violations, JSON.stringify(results.violations.map((v) => v.id), null, 2)).toEqual([])
+  })
+
+  test('has no accessibility violations on an interior page', async ({ page }) => {
+    await page.goto('/pricing', { waitUntil: 'networkidle' })
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
+    expect(results.violations, JSON.stringify(results.violations.map((v) => v.id), null, 2)).toEqual([])
+  })
+
+  test('FAQ accordion opens and closes', async ({ page }) => {
+    await page.goto('/faq', { waitUntil: 'networkidle' })
+    const trigger = page.locator('.accordion__trigger').nth(1)
+    const panelId = await trigger.getAttribute('aria-controls')
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    await trigger.click()
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    await expect(page.locator(`#${panelId}`)).toHaveClass(/is-open/)
+  })
+})

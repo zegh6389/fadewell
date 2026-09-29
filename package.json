@@ -1,0 +1,24 @@
+{
+  "name": "fadewell",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FadeWell — guided medical-card evaluation and telehealth.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "api",
+    "web"
+  ],
+  "scripts": {
+    "dev:api": "npm --prefix api run dev",
+    "dev:web": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "typecheck": "npm --prefix api run typecheck",
+    "test:api": "npm --prefix api test",
+    "test:e2e": "npm --prefix web run test:e2e",
+    "lint": "npm --prefix web run lint",
+    "assets": "node web/scripts/generate-assets.mjs"
+  }
+}

@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+.npm/
+
+# Build output
+web/dist/
+web/test-results/
+web/playwright-report/
+api/dist/
+
+# Environment and secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+!api/deploy/*.crt
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Editor and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Caches
+.cache/
+.vite/
+.eslintcache
+*.tsbuildinfo

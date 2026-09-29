@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /patient
+Disallow: /portal
+Disallow: /staff
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://fadewell.com/sitemap.xml

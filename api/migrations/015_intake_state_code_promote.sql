@@ -1,0 +1,42 @@
+-- Promote the NOT VALID FK + nullable column from migration
+-- 007_intake_state_code.sql to a fully validated, NOT NULL constraint.
+--
+-- This migration is intentionally a NO-OP today: FadeWell is pre-launch and
+-- the legacy → FadeWell data import tooling does not exist yet. When that
+-- tooling lands, the import is expected to populate intakes.state_code from
+-- the legacy users.state column for every historical intake row BEFORE this
+-- promotion migration runs. If the import leaves any rows with NULL
+-- state_code, the ALTER COLUMN ... SET NOT NULL below will fail and the
+-- migration is intentionally not wrapped in a savepoint — operators must
+-- reconcile the data, not paper over it.
+--
+-- Run the following block in a single transaction when legacy import is
+-- complete and you are ready to promote the constraint:
+--
+--   BEGIN;
+--     -- Defensive backfill: copy state_code from any intake_revisions row
+--     -- that has it set. Most historical rows will already be populated by
+--     -- the legacy import; this UPDATE only covers the case where the
+--     -- import tool wrote revisions but not the parent row.
+--     UPDATE intakes i
+--        SET state_code = r.state_code
+--       FROM intake_revisions r
+--      WHERE r.intake_id = i.id
+--        AND r.state_code IS NOT NULL
+--        AND i.state_code IS NULL;
+--
+--     -- Promote the FK from NOT VALID to fully VALIDATED. This step takes
+--     -- only a SHARE UPDATE EXCLUSIVE lock on `intakes`, so concurrent
+--     -- reads and writes continue. The validation scan itself runs in the
+--     -- background; until it completes the constraint behaves as NOT VALID.
+--     ALTER TABLE intakes VALIDATE CONSTRAINT intakes_state_code_fkey;
+--
+--     -- Promote the column to NOT NULL now that no NULL rows can exist.
+--     ALTER TABLE intakes ALTER COLUMN state_code SET NOT NULL;
+--   COMMIT;
+--
+-- The reason this is left as commented-out documentation rather than live
+-- SQL: a premature SET NOT NULL against a partially-backfilled intakes
+-- table would block the legacy import with a constraint violation. The
+-- promotion must run AFTER the import, in a deployment step the import
+-- tool's runbook explicitly schedules.

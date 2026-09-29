@@ -1,0 +1,31 @@
+{
+  "name": "fadewell-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "FadeWell — guided medical-card evaluation and telehealth. Public site + care workspaces.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "oxlint",
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.55.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "oxlint": "^1.15.0",
+    "sharp": "^0.35.5",
+    "vite": "^7.1.0"
+  }
+}
