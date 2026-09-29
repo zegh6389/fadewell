@@ -241,7 +241,8 @@
 }
 
 .field__hint {
-  color: var(--muted-2);
+  /* --muted-2 measures 3.4:1 on white; these are real 12px text. */
+  color: var(--muted);
   font-weight: 400;
 }
 

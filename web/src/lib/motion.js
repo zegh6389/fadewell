@@ -18,31 +18,65 @@ import { useEffect, useRef, useState } from 'react'
 
 /* ---------- Entrance reveals ---------------------------------- */
 
+/**
+ * Shared reveal wiring.
+ *
+ * The IntersectionObserver deliberately uses a negative bottom margin so
+ * elements reveal slightly after they enter rather than snapping the instant
+ * a single pixel appears. That margin has a sharp edge case: content inside
+ * the excluded band can never intersect. The last block of the page — the
+ * footer note — always sits there, and the page cannot be scrolled further,
+ * so it would stay at `opacity: 0` forever. A tail sweep releases anything
+ * still pending once the reader approaches the end of the document.
+ */
+function wireReveal(root = document) {
+  const pending = () => root.querySelectorAll('[data-reveal]:not(.is-in)')
+  if (!pending().length) return () => {}
+
+  const revealAll = () => {
+    for (const n of pending()) n.classList.add('is-in')
+    window.removeEventListener('scroll', onTail)
+    window.removeEventListener('resize', onTail)
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    revealAll()
+    return () => {}
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        entry.target.classList.add('is-in')
+        observer.unobserve(entry.target)
+      }
+    },
+    { rootMargin: '0px 0px -12% 0px', threshold: 0.08 }
+  )
+
+  for (const n of pending()) observer.observe(n)
+
+  const onTail = () => {
+    const doc = document.documentElement
+    if (window.scrollY + window.innerHeight >= doc.scrollHeight - window.innerHeight * 1.5) {
+      revealAll()
+    }
+  }
+
+  window.addEventListener('scroll', onTail, { passive: true })
+  window.addEventListener('resize', onTail, { passive: true })
+
+  return () => {
+    observer.disconnect()
+    window.removeEventListener('scroll', onTail)
+    window.removeEventListener('resize', onTail)
+  }
+}
+
 /** Adds `.is-in` to `[data-reveal]` elements as they enter the viewport. */
 export function useRevealRoot() {
-  useEffect(() => {
-    const nodes = document.querySelectorAll('[data-reveal]:not(.is-in)')
-    if (!nodes.length) return
-
-    if (!('IntersectionObserver' in window)) {
-      nodes.forEach((n) => n.classList.add('is-in'))
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue
-          entry.target.classList.add('is-in')
-          observer.unobserve(entry.target)
-        }
-      },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 }
-    )
-
-    nodes.forEach((n) => observer.observe(n))
-    return () => observer.disconnect()
-  }, [])
+  useEffect(() => wireReveal(document), [])
 }
 
 /* ---------- Count-up numbers ----------------------------------- */
@@ -238,27 +272,8 @@ export function useReveal() {
 
   useEffect(() => {
     const root = ref.current
-    if (!root) return
-    const nodes = root.querySelectorAll('[data-reveal]:not(.is-in)')
-    if (!nodes.length) return
-
-    if (!('IntersectionObserver' in window)) {
-      nodes.forEach((n) => n.classList.add('is-in'))
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue
-          entry.target.classList.add('is-in')
-          observer.unobserve(entry.target)
-        }
-      },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.08 }
-    )
-    nodes.forEach((n) => observer.observe(n))
-    return () => observer.disconnect()
+    if (!root) return undefined
+    return wireReveal(root)
   }, [])
 
   return ref

@@ -43,7 +43,7 @@ export default function Legal({ kind = 'privacy' }) {
       <section className="section section--tight">
         <div className="shell legal">
           <nav className="legal__toc" aria-label="Policy selection">
-            <p className="footer__col-title">Documents</p>
+            <p className="legal__toc-title">Documents</p>
             <ul className="legal__toc-list">
               {documents.map((doc) => (
                 <li key={doc.slug}>

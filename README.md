@@ -87,6 +87,7 @@ in-memory API instead of `npm run dev` — see **Browser tests** below.
 | `npm run lint` | oxlint |
 | `npm run test:e2e` | Playwright browser suite |
 | `node scripts/audit-classes.mjs` | Token / class / import audit |
+| `node scripts/deep-audit.mjs` | Full-route browser audit (see below) |
 | `node scripts/probe-mask.mjs` | Prove the reveal technique survives IntersectionObserver |
 | `node scripts/shoot.mjs` | Capture design reference screenshots |
 | `node scripts/generate-assets.mjs` | Regenerate brand imagery |
@@ -208,6 +209,35 @@ animation, the FAQ accordion, WCAG 2.1 AA scans via axe-core, and every care
 workspace including role isolation and noindex headers.
 
 Screenshots land in `web/artifacts/browser/`.
+
+### Deep audit
+
+`web/scripts/deep-audit.mjs` goes beyond "does the route render". It walks
+every route at both viewports and checks the things the suite does not:
+
+- **No glassmorphism** — fails if any element computes a `backdrop-filter` or
+  a `filter`. The brief was flat, and "looks glassy" was an explicit
+  rejection, so this is asserted rather than eyeballed.
+- **Reveals actually fire** — scrolls the whole document and reports any
+  `[data-reveal]` still without `.is-in`. An unrevealed element is
+  `opacity: 0`, i.e. permanently invisible content.
+- **Real horizontal overflow** — tests whether the page can actually scroll
+  sideways, rather than comparing `scrollWidth` to `clientWidth` (with
+  `overflow-x: clip` those disagree on a perfectly healthy page).
+- Broken images, rendered-text brand leakage, failed requests, and a
+  WCAG 2.1 AA scan **with every reveal forced visible** — otherwise axe
+  skips hidden content, which is exactly where the contrast bugs hide.
+
+```sh
+cd web
+npm run build
+npx vite preview --host 127.0.0.1 --port 4173 &
+PROBE_URL=http://127.0.0.1:4173 node scripts/deep-audit.mjs
+```
+
+Exit code is non-zero on any finding. The `/api` failures a static preview
+produces are classified as environment noise — the Playwright suite covers
+API integration properly with its synthetic in-memory server.
 
 ---
 

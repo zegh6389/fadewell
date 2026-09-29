@@ -977,7 +977,8 @@
   max-width: 78ch;
   font-size: var(--t-xs);
   line-height: 1.65;
-  color: rgb(244 247 242 / 0.55);
+  /* 0.55 blends to ~4.1:1 on forest, under the 4.5:1 floor for 12px text. */
+  color: rgb(244 247 242 / 0.72);
 }
 
 @media (max-width: 900px) {
