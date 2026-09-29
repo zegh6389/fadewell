@@ -55,6 +55,23 @@ export const IconVideo = make(
   </>
 )
 
+export const IconId = make(
+  <>
+    <rect x="2.5" y="4.5" width="19" height="15" rx="2.2" />
+    <circle cx="8.5" cy="10" r="2.3" />
+    <path d="M5 16.2c.6-1.7 1.9-2.6 3.5-2.6s2.9.9 3.5 2.6" />
+    <path d="M15 9.5h4M15 13h4" />
+  </>
+)
+
+export const IconNote = make(
+  <>
+    <path d="M6 3.5h9l4 4v13H6z" />
+    <path d="M15 3.5v4h4" />
+    <path d="M9 12h7M9 15.5h7M9 8.5h3" />
+  </>
+)
+
 export const IconCard = make(
   <>
     <rect x="2.5" y="5.5" width="19" height="13" rx="2.4" />
@@ -156,7 +173,9 @@ export const iconMap = {
   badge: IconBadge,
   clock: IconClock,
   lock: IconLock,
-  chat: IconChat
+  chat: IconChat,
+  id: IconId,
+  note: IconNote
 }
 
 /** Resolves a content-layer icon name to its component. */

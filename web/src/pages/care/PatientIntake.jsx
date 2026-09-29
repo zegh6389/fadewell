@@ -9,6 +9,24 @@ import {
   getWorkspace
 } from '../../lib/api.js'
 import { IconArrow, IconCheck, IconClock, IconShield } from '../../components/Icons.jsx'
+import { QuizAnswer } from './QuizAnswer.jsx'
+import { IdDocumentCapture } from './IdDocumentCapture.jsx'
+
+/**
+ * Suggested answers for the standard questionnaire questions. Questions the
+ * API adds that are not listed here fall back to a plain write-in, which is
+ * the correct behaviour for a question we have not written copy for.
+ *
+ * These are shortcuts, not the answer: `QuizAnswer` renders the free-text box
+ * alongside them, so a patient who finds none of these true just types.
+ */
+const SUGGESTIONS = {
+  reason: ['First medical card evaluation', 'Renew my current certification'],
+  goals: ['Discuss symptom management', 'Discuss a renewal', 'Understand benefits and risks'],
+  history: ['No medical history to report'],
+  medications: ['None'],
+  allergies: ['No known allergies']
+}
 
 const MODES = [
   { value: 'VIDEO', label: 'Video call', note: 'Face to face, from wherever you are' },
@@ -72,6 +90,17 @@ function IntakeForm({ session, questionnaire, jurisdictions, existing, onSaved, 
   const [saved, setSaved] = useState(false)
   const [summary, setSummary] = useState(null)
   const firstError = useRef(null)
+  // Identity is captured separately from the questionnaire payload: the API
+  // owns the document, and the intake only records which one is on file.
+  const [idType, setIdType] = useState(data.idType ?? '')
+  const [idDocumentId, setIdDocumentId] = useState(data.idDocumentId ?? '')
+
+  const ID_LABELS = {
+    DRIVERS_LICENSE: 'driver licence',
+    PASSPORT: 'passport',
+    STATE_ID: 'state ID'
+  }
+  const savedIdLabel = idDocumentId ? (ID_LABELS[idType] ?? 'ID') : ''
 
   const set = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -114,6 +143,8 @@ function IntakeForm({ session, questionnaire, jurisdictions, existing, onSaved, 
       state: form.state,
       reason: form.reason.trim(),
       mode: form.mode,
+      idType,
+      idDocumentId,
       smsConsent: form.smsConsent,
       emailConsent: form.emailConsent,
       answers: Object.fromEntries(
@@ -122,7 +153,7 @@ function IntakeForm({ session, questionnaire, jurisdictions, existing, onSaved, 
           .map(([key, value]) => [key, String(value).trim()])
       )
     }),
-    [form, version]
+    [form, version, idType, idDocumentId]
   )
 
   async function handleSave(event) {
@@ -324,59 +355,78 @@ function IntakeForm({ session, questionnaire, jurisdictions, existing, onSaved, 
             <span className="care__legend-num">03</span> Your evaluation
           </legend>
 
-          <label className="field">
-            <span className="field__label">What brings you in?</span>
-            <textarea
-              className="field__control field__control--area"
-              name="reason"
-              rows={4}
-              maxLength={4000}
-              required
-              placeholder="A short description helps your clinician prepare before you meet."
-              value={form.reason}
-              onChange={(event) => set('reason', event.target.value)}
-            />
-          </label>
+          <QuizAnswer
+            name="reason"
+            label="What brings you in?"
+            value={form.reason}
+            onChange={(value) => set('reason', value)}
+            options={['First medical card evaluation', 'Renew my current certification']}
+            disabled={isLocked}
+          />
 
           {questionnaire.questions.map((question, index) => (
-            <label className="field" key={question.id}>
-              <span className="field__label">
-                {String(index + 1).padStart(2, '0')} · {question.label}
-              </span>
-              <textarea
-                className="field__control field__control--area"
-                name={question.id}
-                rows={3}
-                maxLength={4000}
-                required={question.required}
-                value={form.answers[question.id] ?? ''}
-                onChange={(event) => setAnswer(question.id, event.target.value)}
-              />
-            </label>
+            <QuizAnswer
+              key={question.id}
+              name={question.id}
+              label={`${String(index + 1).padStart(2, '0')} · ${question.label}`}
+              value={form.answers[question.id] ?? ''}
+              onChange={(value) => setAnswer(question.id, value)}
+              options={SUGGESTIONS[question.id]}
+              disabled={isLocked}
+            />
           ))}
 
           <div className="care__verify">
-            <span className="field__label">Age confirmation</span>
-            <div className="care__choices">
-              {['Yes', 'No'].map((option) => (
-                <label key={option} className={`choice choice--inline${form.answers.age_verified === option ? ' is-selected' : ''}`}>
-                  <input
-                    type="radio"
-                    name="age_verified"
-                    value={option}
-                    checked={form.answers.age_verified === option}
-                    onChange={() => setAnswer('age_verified', option)}
-                  />
-                  <span className="choice__title">
-                    {option === 'Yes' ? 'Yes, I am 21 or older' : 'No, I am under 21'}
-                  </span>
-                </label>
-              ))}
-            </div>
+            <QuizAnswer
+              name="age_verified"
+              label="Age confirmation"
+              value={form.answers.age_verified ?? ''}
+              onChange={(value) => setAnswer('age_verified', value)}
+              options={['Yes', 'No']}
+              allowOther={false}
+              disabled={isLocked}
+            />
             <p className="float-card__meta">
               You must be 21 or older to hold a medical card in the states we serve. Answer honestly —
               if you are not, we will point you to the right process instead of wasting your time.
             </p>
+          </div>
+
+          <div className="care__verify">
+            <span className="field__label">Photo identification</span>
+            <p className="field__hint">
+              We cannot verify your identity without it, and it is the most common reason a visit gets rescheduled.
+            </p>
+            <div className="care__choices">
+              {['DRIVERS_LICENSE', 'PASSPORT', 'STATE_ID'].map((type) => (
+                <label
+                  key={type}
+                  className={`choice choice--inline${idType === type ? ' is-selected' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="id_type"
+                    value={type}
+                    checked={idType === type}
+                    onChange={() => setIdType(type)}
+                    disabled={isLocked}
+                  />
+                  <span className="choice__title">
+                    {type === 'DRIVERS_LICENSE' ? 'Driver licence' : type === 'PASSPORT' ? 'Passport' : 'State ID'}
+                  </span>
+                </label>
+              ))}
+            </div>
+            <IdDocumentCapture
+              csrf={session.csrf}
+              idType={idType}
+              savedLabel={savedIdLabel}
+              disabled={isLocked}
+              onSaved={({ id, idType: savedType }) => {
+                setIdDocumentId(id)
+                setIdType(savedType)
+              }}
+            />
           </div>
         </fieldset>
 

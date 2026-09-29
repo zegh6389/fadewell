@@ -7,8 +7,12 @@ import { PRIVATE_ROUTES } from './pages/care/routes.jsx'
 
 import Home from './pages/Home.jsx'
 import HowItWorks from './pages/HowItWorks.jsx'
+import Service from './pages/Service.jsx'
 import Care from './pages/Care.jsx'
+import PatientInfo from './pages/PatientInfo.jsx'
 import Clinicians from './pages/Clinicians.jsx'
+import ClinicianProfile from './pages/ClinicianProfile.jsx'
+import Blog from './pages/Blog.jsx'
 import Pricing from './pages/Pricing.jsx'
 import Faq from './pages/Faq.jsx'
 import About from './pages/About.jsx'
@@ -20,7 +24,9 @@ import './styles/tokens.css'
 import './styles/base.css'
 import './styles/components.css'
 import './styles/pages.css'
+import './styles/parity.css'
 import './styles/care.css'
+import './styles/parity-care.css'
 
 /** Restores scroll position on navigation, and honours in-page hashes. */
 function ScrollManager() {
@@ -61,8 +67,13 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/how-it-works" element={<HowItWorks />} />
+                  <Route path="/service" element={<Service />} />
                   <Route path="/care" element={<Care />} />
+                  <Route path="/patient-info" element={<PatientInfo />} />
                   <Route path="/clinicians" element={<Clinicians />} />
+                  <Route path="/clinicians/:slug" element={<ClinicianProfile />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<Blog />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/faq" element={<Faq />} />
                   <Route path="/about" element={<About />} />

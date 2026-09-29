@@ -787,3 +787,237 @@ export const timeline = [
   { year: '2025', title: 'Twelve thousand evaluations', body: 'Median time from consultation to decision falls below three days as scheduling and registry automation improve.' },
   { year: '2026', title: 'Fourteen states', body: 'Rebuilt around a single care record so a patient never has to repeat their history between steps, clinicians or states.' }
 ]
+
+/* ---------- Parity with the MedCardAccess information architecture --- */
+
+/**
+ * Support details shown by the help launcher, the question form and the
+ * contact page. Kept in one place so the three can never disagree.
+ */
+export const support = {
+  phone: '888-809-3204',
+  tel: 'tel:+18888093204',
+  email: 'care@fadewell.com',
+  mailto: 'mailto:care@fadewell.com'
+}
+
+/** States we have not opened yet. Everything else reads as available. */
+export const comingSoon = ['Pennsylvania', 'Oklahoma']
+
+/** The 50 states plus DC and the inhabited territories. */
+export const stateNames = [
+  'Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California',
+  'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Guam',
+  'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+  'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+  'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
+  'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina',
+  'North Dakota', 'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon',
+  'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina',
+  'South Dakota', 'Tennessee', 'Texas', 'US Virgin Islands', 'Utah',
+  'Vermont', 'Virginia', 'Washington', 'Washington DC', 'West Virginia',
+  'Wisconsin', 'Wyoming'
+]
+
+export function getStateOutcome(name) {
+  if (!name) return { kind: 'error', message: 'Choose your state or territory to continue.' }
+  if (comingSoon.includes(name)) {
+    return { kind: 'coming-soon', message: `${name} is coming soon. We can add you to the launch list.` }
+  }
+  return {
+    kind: 'available',
+    message: `We can show you the next step for ${name}. Eligibility is still decided by a clinician, not this website.`
+  }
+}
+
+/** Proof row directly under the hero. */
+export const proofRibbon = [
+  { icon: 'clock', title: 'Online evaluation, 24/7', note: 'Start when it suits you, not when a clinic opens.' },
+  { icon: 'shield', title: 'Licensed clinician review', note: 'Every decision made independently, never automated.' },
+  { icon: 'card', title: 'Refunded if not approved', note: 'The evaluation fee only. State fees are separate.' }
+]
+
+/** What to have ready before the consultation. */
+export const preparationItems = [
+  { icon: 'id', title: 'Photo identification', note: 'A current government-issued photo ID, so we can verify you at the visit.' },
+  { icon: 'map', title: 'Proof of residency', note: 'Some state programmes require evidence that you live there.' },
+  { icon: 'note', title: 'Your medical history', note: 'Current medications, conditions and anything a clinician should know.' },
+  { icon: 'clock', title: 'Your current card', note: 'Renewing patients should have the existing certification to hand.' }
+]
+
+/** What happens after a clinician certifies you — a step people are often surprised by. */
+export const afterAppointment = [
+  'Follow the registration instructions your state gives you after the visit.',
+  'Pay any government programme fee separately unless a state offer clearly includes it.',
+  'Track your application in the state portal until the card is actually issued.'
+]
+
+/** The two entry paths, split so a first-timer and a renewal are not mixed up. */
+export const patientPaths = [
+  {
+    key: 'new',
+    eyebrow: 'First-time patient',
+    title: 'Starting a new application?',
+    body: 'Begin with your state, have your identification and medical history ready, and follow the instructions shown before your evaluation. Most intakes take about six minutes.',
+    action: 'Start a new application',
+    to: '/care'
+  },
+  {
+    key: 'renew',
+    eyebrow: 'Returning patient',
+    title: 'Need to renew?',
+    body: 'Renewal windows and registration steps change from year to year. Keep your current card nearby and check today’s requirements rather than assuming last year’s process still holds.',
+    action: 'Check renewal availability',
+    to: '/care'
+  }
+]
+
+/** Caregivers and under-18s follow different rules in most states. */
+export const caregiver = {
+  eyebrow: 'Caregivers and younger patients',
+  title: 'Some patients need a caregiver pathway.',
+  body: 'Rules for caregivers, patients under 18, background checks, registration and purchasing access vary by jurisdiction more than almost anything else in this process. Choose your state before relying on general guidance — the answer genuinely differs.',
+  action: 'Read the patient guide',
+  to: '/patient-info'
+}
+
+/** Two lines set word by word as they scroll into view. */
+export const tagline = [
+  'A clearer path to the evaluation you are considering.',
+  'Guided, secure, and built around your state.'
+]
+
+/** Compliance panel — deliberately three concrete points, not a badge wall. */
+export const compliance = {
+  eyebrow: 'Compliance and security',
+  title: 'Your health information deserves serious protection.',
+  body: 'FadeWell runs a HIPAA-aligned workflow built to protect patient information across the whole evaluation, not just the parts that are convenient to secure.',
+  points: [
+    { icon: 'lock', title: 'Encrypted in transit', note: 'Patient information is protected as it moves through the online workflow.' },
+    { icon: 'shield', title: 'Collected narrowly', note: 'We only gather what the evaluation actually needs, and stop there.' },
+    { icon: 'check', title: 'Clinician decides', note: 'Eligibility is a clinical judgement, never an automated outcome.' }
+  ]
+}
+
+/** Learning centre cards on the home page, and the index of the resource centre. */
+export const learningResources = [
+  {
+    slug: 'preparing-for-your-evaluation',
+    category: 'Preparation',
+    title: 'What to prepare for an online evaluation',
+    note: 'A practical checklist for identification, medical history, technology and renewals.',
+    body: [
+      'The evaluations themselves are short. Most of the work happens before the call, and almost all of it is paperwork you probably already have somewhere.',
+      'Have a current government-issued photo ID ready. That is the single most common reason a visit gets rescheduled, because we cannot verify identity without it.',
+      'If your state programme asks for proof of residency, find that document before you start rather than after. A utility bill or a lease agreement is usually enough.',
+      'Write down your current medications and any conditions a clinician should know about. You do not need a diagnosis letter — a clear list of what you take and why is more useful.',
+      'Check your camera and microphone work before the appointment if you are meeting by video. A five-minute test call removes almost all of the technical risk.'
+    ]
+  },
+  {
+    slug: 'certification-is-not-a-state-card',
+    category: 'Process',
+    title: 'Certification is not the same as a state card',
+    note: 'Understand the roles of the clinician, FadeWell and your state programme.',
+    body: [
+      'This is the single most common misunderstanding in the whole process, and it catches people out at the worst possible moment — after they have already paid for an evaluation.',
+      'A clinician certifies you. That is a medical judgement about whether an evaluation is appropriate, and it is entirely theirs to make. We do not make it, and no software does.',
+      'Your state programme then issues the card or the registration. That is a separate administrative process, with its own rules, its own forms, its own fee, and often its own waiting period.',
+      'FadeWell sits between the two. We handle the intake, the scheduling, the consultation and the tracking — and we tell you honestly which state steps remain after a clinician certifies you.',
+      'The practical consequence: treat the clinician decision and the state registration as two separate projects with two separate timelines. Planning for one to finish the other is what causes the frustration.'
+    ]
+  },
+  {
+    slug: 'what-changes-when-you-renew',
+    category: 'Renewals',
+    title: 'What changes when you renew',
+    note: 'The rules move, and last year’s process is not a reliable guide.',
+    body: [
+      'Renewal is usually faster and simpler than a first evaluation, but not identical to it. States change their rules more often than patients expect.',
+      'Check the current window before you assume you are eligible. Some states have tightened the qualifying-condition list since your last visit, and others have shortened the renewal period.',
+      'Bring your existing card or certification number. States that have moved to digital registries can usually renew without a new evaluation at all, which is worth knowing before you book anything.',
+      'A renewal still requires a clinician review where your state demands one. We cannot skip that step, and we will tell you plainly if your state does not require it either.'
+    ]
+  }
+]
+
+/** Interior page: the process explained in full. */
+export const serviceStages = [
+  {
+    num: '01',
+    title: 'Tell us what brings you in',
+    body: 'A short, private questionnaire about your goals, history, medications and allergies. No account, no password, about six minutes. You can stop and come back without losing your place.'
+  },
+  {
+    num: '02',
+    title: 'We check your state rules',
+    body: 'Medical card law differs in every state. FadeWell checks your jurisdiction automatically and shows you only the options that are actually available to you, rather than a generic page that does not apply.'
+  },
+  {
+    num: '03',
+    title: 'Pick a time that works',
+    body: 'Choose a live video or phone consultation from real clinician availability. You get a confirmation with everything you need to join, including what to have ready.'
+  },
+  {
+    num: '04',
+    title: 'Meet your clinician',
+    body: 'A licensed clinician reviews your intake, asks follow-up questions, and completes your evaluation. Bring your photo ID and any records you have — the decision is entirely theirs.'
+  },
+  {
+    num: '05',
+    title: 'Your application, tracked to the finish',
+    body: 'If approved, we submit to your state registry and keep you updated at every stage until your card is issued. You always know exactly where things stand.'
+  }
+]
+
+export const servicePromises = [
+  { icon: 'clock', title: 'Video or phone, your choice', note: 'You pick the format when you book, and it is not downgraded afterwards.' },
+  { icon: 'shield', title: 'Independent clinical decision', note: 'No clinician is steered by a quota, a ranking or an upsell.' },
+  { icon: 'card', title: 'Fees shown before you pay', note: 'Evaluation and state fees are itemised separately, every time.' },
+  { icon: 'map', title: 'Jurisdiction-aware from step one', note: 'Requirements are checked against live data, not a cached page.' }
+]
+
+/** Interior page: the patient guide. */
+export const guideSections = [
+  {
+    title: 'Before you start',
+    body: [
+      'You do not need to have decided anything. Choosing your state tells you what the process looks like where you live, and that is genuinely different from state to state.',
+      'You will need a current government-issued photo ID. If your state requires proof of residency, have that ready too.',
+      'Have a list of your current medications to hand. A clear list of what you take and why is more useful to a clinician than a folder of letters.'
+    ]
+  },
+  {
+    title: 'What your clinician will ask',
+    body: [
+      'Expect a conversation, not an interrogation. The clinician reviews your intake first, then asks about the things that intake could not answer on its own.',
+      'They will want to understand your history, your current treatment, and what you are hoping to get out of this. Bring a list of medications and any relevant records.',
+      'The decision is theirs alone. Nothing in our system recommends an outcome, and no clinician sees a target or a quota attached to your file.'
+    ]
+  },
+  {
+    title: 'How the consultation works',
+    body: [
+      'You choose video or phone when you book. Either way you get a confirmation with everything needed to join, including a reminder of what to have ready.',
+      'A typical consultation runs twenty to thirty minutes. If you need more, that is fine — the booking is yours to lengthen.',
+      'Everything stays in the same secure record, so you never have to repeat your history between steps, clinicians or states.'
+    ]
+  },
+  {
+    title: 'After a clinician certifies you',
+    body: [
+      'Certification is not a state card. Your state programme runs its own registration, with its own forms, its own fee and often its own waiting period.',
+      'FadeWell submits to your state registry and tracks the application from there. You will see every stage, and you always know whether something is waiting on you or on us.',
+      'State fees are separate from ours unless a state-specific offer clearly says otherwise. We itemise them rather than folding them into a single number.'
+    ]
+  }
+]
+
+export const guideChecklist = [
+  'Current government-issued photo ID',
+  'Proof of residency, if your state requires it',
+  'A list of your current medications',
+  'Any relevant medical records you already have',
+  'Your existing card, if you are renewing',
+  'A quiet ten minutes and a working camera or phone'
+]

@@ -8,6 +8,8 @@ import {
   getIntakeById,
   getWorkspace
 } from '../../lib/api.js'
+import { ConsultationRoom } from './ConsultationRoom.jsx'
+import { DateTimePicker } from './DateTimePicker.jsx'
 import { IconArrow, IconCheck, IconClock, IconVideo } from '../../components/Icons.jsx'
 
 const INTAKE_STATES = ['DRAFT', 'SUBMITTED', 'NEEDS_REVIEW', 'REVIEWED', 'SCHEDULED', 'COMPLETED']
@@ -78,19 +80,20 @@ function ClinicianSurface({ session }) {
   }
 
   const today = new Date().toISOString().slice(0, 10)
+  const [windowStart, setWindowStart] = useState('')
+  const [open, setOpen] = useState(null)
 
   async function publishWindow() {
     setBusy(true)
     setError(null)
     try {
-      await createAvailability(
-        {
-          startsAt: `${today}T09:00:00.000Z`,
-          endsAt: `${today}T12:00:00.000Z`,
-          mode: 'VIDEO'
-        },
-        session.csrf
-      )
+      // A window runs from the chosen start until the end of that day, so the
+      // clinician opens the hours they are actually free rather than a fixed
+      // three-hour block at nine in the morning.
+      const start = windowStart || `${today}T09:00`
+      const endsAt = `${start.slice(0, 10)}T17:00:00.000Z`
+      await createAvailability({ startsAt: `${start}:00.000Z`, endsAt, mode: 'VIDEO' }, session.csrf)
+      setWindowStart('')
       await load()
     } catch (err) {
       setError(err.message)
@@ -118,6 +121,18 @@ function ClinicianSurface({ session }) {
       {error ? <CareNotice tone="error">{error}</CareNotice> : null}
       {state === 'loading' ? <CareLoader /> : null}
 
+      {open ? (
+        <section className="care__card">
+          <ConsultationRoom
+            id={open.consultationId ?? open.id}
+            appointment={open}
+            isDoctor
+            csrf={session.csrf}
+            onBack={() => setOpen(null)}
+          />
+        </section>
+      ) : null}
+
       <section className="care__card">
         <h2 className="h4">Next up</h2>
         {upcoming.length ? (
@@ -126,6 +141,13 @@ function ClinicianSurface({ session }) {
               <li key={appointment.id}>
                 <span className="care__appt-when">{formatWhen(appointment.starts_at)}</span>
                 <span className="tag tag--moss">{appointment.mode.replace('_', ' ')}</span>
+                <button
+                  type="button"
+                  className="btn btn--quiet btn--sm"
+                  onClick={() => setOpen(appointment)}
+                >
+                  Open
+                </button>
               </li>
             ))}
           </ul>
@@ -138,9 +160,13 @@ function ClinicianSurface({ session }) {
         <div className="care__card-head">
           <h2 className="h4">Your availability</h2>
           <button type="button" className="btn btn--primary btn--sm" onClick={publishWindow} disabled={busy}>
-            Publish a 3-hour window
+            Open a window from{' '}
+            {windowStart ? new Date(windowStart).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : 'today, 09:00'}
           </button>
         </div>
+
+        <DateTimePicker name="window-start" label="Window start" onChange={setWindowStart} />
+
         {data.availability.length ? (
           <ul className="care__appointments">
             {data.availability.map((slot) => (

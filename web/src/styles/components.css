@@ -558,27 +558,60 @@
 
 /* ---------- Marquee ------------------------------------------ */
 
+/* The track holds two identical groups and translates by exactly -50%, so the
+   second group arrives where the first started and the seam is invisible.
+   Translating -100% (as this originally did) scrolls a single group's full
+   width and leaves a gap before the loop restarts. */
 .marquee {
   position: relative;
   display: flex;
+  align-items: center;
+  gap: var(--s-4);
   overflow: hidden;
-  gap: var(--s-6);
   padding-block: var(--s-4);
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  border-block: 1px solid var(--line);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
 .marquee__track {
   display: flex;
   align-items: center;
-  gap: var(--s-6);
   flex-shrink: 0;
   min-width: 100%;
   animation: marquee var(--marquee-duration, 40s) linear infinite;
+  will-change: transform;
 }
 
-.marquee:hover .marquee__track {
+.marquee__group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Both the hover pause and the explicit control resolve to the same state, so
+   a pointer user and a keyboard user get identical behaviour. */
+.marquee:hover .marquee__track,
+.marquee__track[data-paused='true'] {
   animation-play-state: paused;
+}
+
+.marquee__pause {
+  flex-shrink: 0;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line-2, var(--line));
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.marquee__pause:hover {
+  color: var(--forest);
+  border-color: var(--moss);
 }
 
 .marquee__item {
@@ -596,6 +629,16 @@
   color: var(--on-dark);
 }
 
+.band-dark .marquee {
+  border-block-color: var(--on-dark-3, rgba(255, 255, 255, 0.18));
+}
+
+.band-dark .marquee__pause {
+  background: transparent;
+  color: var(--on-dark-2, rgba(255, 255, 255, 0.72));
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
 .marquee__item::after {
   content: '';
   width: 6px;
@@ -607,11 +650,56 @@
 
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
+  to { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee__track { animation: none; }
+}
+
+/* ---------- Word reveal --------------------------------------- */
+
+/* Words start hidden and are switched in by index. The component also marks
+   every word active up front when motion is reduced, so this is a
+   presentation state rather than the only way the text becomes readable.
+
+   The resting opacity is 0, not a dim grey. A ghosted 0.12 put 70px type at a
+   1.22:1 contrast ratio against the ivory page, which is not "decorative" — it
+   is the only thing on screen for anyone who lands on the section before the
+   IntersectionObserver fires, and axe fails it as a serious violation. Fully
+   transparent means there is no low-contrast text to fail: the word is either
+   absent or present at full contrast. Screen readers read the whole line
+   either way, because opacity never removes content from the a11y tree. */
+.word-reveal {
+  font-size: var(--t-2xl);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.04em;
+  color: var(--forest);
+}
+
+.word-reveal__line {
+  display: block;
+}
+
+.word-reveal__word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.16em);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.word-reveal__word.is-active {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-reveal__word {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ---------- Scroll progress ---------------------------------- */

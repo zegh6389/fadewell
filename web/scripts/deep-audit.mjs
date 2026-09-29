@@ -23,7 +23,9 @@ import AxeBuilder from '@axe-core/playwright'
 const URL = (process.env.PROBE_URL ?? 'http://127.0.0.1:5173/').replace(/\/+$/, '')
 
 const MARKETING = [
-  '/', '/how-it-works', '/care', '/clinicians', '/pricing', '/faq',
+  '/', '/how-it-works', '/service', '/care', '/patient-info', '/clinicians',
+  '/clinicians/dr-amara-osei', '/blog', '/blog/certification-is-not-a-state-card',
+  '/pricing', '/faq',
   '/about', '/contact', '/privacy-policy', '/terms-conditions',
   '/refund-policy', '/telehealth-consent', '/medical-disclaimer',
   '/accessibility', '/this-page-does-not-exist'
@@ -90,6 +92,25 @@ async function auditRoute(context, path, { axe = true, scrollSweep = true } = {}
   glassy.forEach((g) => note(path, 'glass', g))
 
   // --- Broken images --------------------------------------------------
+  // Force every lazy image to load first. `loading="lazy"` images below the
+  // fold report `complete === false`, which is indistinguishable from broken
+  // and made four working assets on the home page look like 404s. This audit
+  // is asking whether an image works, not whether it is above the fold.
+  await page.evaluate(async () => {
+    const images = [...document.images].filter((img) => img.loading === 'lazy')
+    images.forEach((img) => {
+      img.loading = 'eager'
+    })
+    await Promise.all(
+      images.map((img) =>
+        img.complete ? img.decode().catch(() => {}) : new Promise((done) => {
+          img.addEventListener('load', done, { once: true })
+          img.addEventListener('error', done, { once: true })
+        })
+      )
+    )
+  })
+
   const brokenImages = await page.evaluate(() =>
     [...document.images]
       .filter((img) => !img.complete || img.naturalWidth === 0)

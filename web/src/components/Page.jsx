@@ -6,25 +6,41 @@ import { brand } from '../lib/content.js'
 
 /* ---------- Interior page hero ------------------------------- */
 
-export function PageHero({ eyebrow, title, accent, lede, children }) {
+/**
+ * The hero every interior page opens with.
+ *
+ * When `image` is given the hero splits into type and artwork, which is what
+ * gives the long-form pages a visual anchor. The image is decorative-adjacent
+ * rather than decorative: it carries a real `alt` describing the illustration,
+ * because the generated panels contain the page's subject matter in their
+ * typography.
+ */
+export function PageHero({ eyebrow, title, accent, lede, image, alt, children }) {
   return (
     <section className="page-hero">
-      <div className="shell page-hero__inner">
-        {eyebrow ? (
-          <p className="eyebrow eyebrow--accent" data-reveal="fade">
-            {eyebrow}
-          </p>
+      <div className={`shell page-hero__inner${image ? ' page-hero__inner--split' : ''}`}>
+        <div className="page-hero__copy">
+          {eyebrow ? (
+            <p className="eyebrow eyebrow--accent" data-reveal="fade">
+              {eyebrow}
+            </p>
+          ) : null}
+          <h1 className="h1" data-reveal>
+            {title}
+            {accent ? <span className="serif grad-text"> {accent}</span> : null}
+          </h1>
+          {lede ? (
+            <p className="lede" data-reveal>
+              {lede}
+            </p>
+          ) : null}
+          {children}
+        </div>
+        {image ? (
+          <div className="page-hero__art" data-reveal="scale">
+            <img src={image} alt={alt ?? ''} width="1200" height="820" loading="eager" decoding="async" />
+          </div>
         ) : null}
-        <h1 className="h1" data-reveal>
-          {title}
-          {accent ? <span className="serif grad-text"> {accent}</span> : null}
-        </h1>
-        {lede ? (
-          <p className="lede" data-reveal>
-            {lede}
-          </p>
-        ) : null}
-        {children}
       </div>
     </section>
   )

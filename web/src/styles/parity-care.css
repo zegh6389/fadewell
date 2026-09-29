@@ -1,0 +1,411 @@
+/* ==========================================================================
+   Care workspace controls
+   Intake chips, identity capture, the appointment picker and the
+   consultation room. Flat surfaces, no blur, no transparency stacking.
+   ========================================================================== */
+
+/* ---------- Quiz chips ------------------------------------------- */
+
+.quiz {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.quiz__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* The chip is a label wrapping a real radio. The input itself is transparent
+   rather than `display: none`, so it stays focusable and keeps native arrow-key
+   group navigation and its place in the accessibility tree. */
+.quiz__chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: var(--t-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.quiz__chip input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.quiz__chip:hover {
+  border-color: var(--moss);
+  color: var(--forest);
+}
+
+.quiz__chip:has(input:checked) {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--ivory);
+}
+
+.quiz__chip:has(input:disabled) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.quiz__chip:has(input:focus-visible) {
+  outline: 2px solid var(--moss);
+  outline-offset: 2px;
+}
+
+.quiz__mark {
+  color: var(--moss);
+  font-size: 0.85em;
+}
+
+.quiz__chip:has(input:checked) .quiz__mark {
+  color: var(--lime);
+}
+
+.quiz__custom {
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-2);
+}
+
+/* ---------- Identity capture ------------------------------------- */
+
+.idc {
+  display: grid;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+.idc__modal {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+.idc__viewfinder {
+  position: relative;
+  aspect-ratio: 1.586;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--forest-deep);
+}
+
+.idc__viewfinder video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* The capture guide. Four corner brackets rather than a full outline, so the
+   live image behind it stays readable. */
+.idc__guide {
+  position: absolute;
+  inset: 12%;
+  border: 2px dashed rgb(214 226 85 / 0.85);
+  border-radius: var(--r-sm);
+}
+
+.idc__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  align-items: center;
+}
+
+.idc__preview {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.idc__preview img {
+  display: block;
+  width: 100%;
+  max-width: 24rem;
+  height: auto;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+}
+
+/* ---------- Date and time picker --------------------------------- */
+
+.dtp {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--ivory);
+}
+
+.dtp__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+
+.dtp__heading strong {
+  color: var(--forest);
+  font-size: var(--t-base);
+}
+
+.dtp__month {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.dtp__month-name {
+  text-align: center;
+  font-weight: 600;
+  color: var(--forest);
+}
+
+.dtp__arrow {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.dtp__arrow:hover {
+  border-color: var(--moss);
+  color: var(--forest);
+}
+
+.dtp__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.15rem;
+}
+
+.dtp__weekday {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  color: var(--muted);
+  padding-bottom: var(--s-1);
+}
+
+.dtp__day {
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: var(--t-sm);
+  cursor: pointer;
+}
+
+.dtp__day:hover:not(:disabled) {
+  background: var(--sage);
+  border-color: var(--sage-dark);
+  color: var(--forest);
+}
+
+.dtp__day[aria-pressed='true'] {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--ivory);
+  font-weight: 600;
+}
+
+.dtp__day[aria-current='date']:not([aria-pressed='true']) {
+  border-color: var(--moss);
+  font-weight: 600;
+  color: var(--forest);
+}
+
+.dtp__day:disabled {
+  color: var(--muted-2);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.dtp__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.dtp__preset {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: var(--t-sm);
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+.dtp__preset:hover:not(:disabled) {
+  border-color: var(--moss);
+  color: var(--forest);
+}
+
+.dtp__preset[aria-pressed='true'] {
+  background: var(--lime);
+  border-color: var(--lime-deep);
+  color: var(--forest-ink);
+  font-weight: 600;
+}
+
+.dtp__preset:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Consultation room ------------------------------------ */
+
+.room {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.room__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.room__grid {
+  display: grid;
+  gap: var(--s-5);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .room__grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+}
+
+.room__stage {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--ivory);
+}
+
+.room__live {
+  position: relative;
+  display: grid;
+  gap: var(--s-3);
+  justify-items: center;
+}
+
+.room__live video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  background: var(--forest-deep);
+}
+
+.room__live video + video {
+  position: absolute;
+  right: var(--s-4);
+  top: var(--s-4);
+  width: 9rem;
+  aspect-ratio: 4 / 3;
+  border: 2px solid var(--white);
+  box-shadow: var(--sh-2);
+}
+
+.room__placeholder {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: center;
+  text-align: center;
+  padding: clamp(var(--s-6), 6vw, var(--s-9)) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--sage);
+  border: 1px solid var(--sage-dark);
+}
+
+.room__placeholder .card__body {
+  max-width: 44ch;
+}
+
+.room__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  justify-content: space-between;
+  font-size: var(--t-xs);
+  color: var(--muted);
+}
+
+.room__timer {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+.room__digits {
+  font-family: var(--font-mono);
+  font-size: clamp(2.4rem, 1.6rem + 3vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--forest);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.room__controls {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+  width: 100%;
+  margin-top: var(--s-2);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+}
+
+.room__pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.room__controls .field {
+  width: 100%;
+}

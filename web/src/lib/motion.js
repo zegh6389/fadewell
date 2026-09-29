@@ -260,10 +260,23 @@ export function useTrackOverflow(ref, viewportRef) {
     // the range move whenever the viewport does — not just on `resize`.
     if (section) observer.observe(section)
     if (pin) observer.observe(pin)
+    // `--journey-range-*` is an absolute scroll offset, so it goes stale
+    // whenever anything ABOVE the section changes height: a late image, a
+    // webfont swapping in, a reveal that expands a panel. None of those resize
+    // the section itself, so observing the section alone missed every one of
+    // them, and the track would begin translating before the pin had engaged —
+    // measured at 54px early once the home page grew above it. Observing the
+    // document catches height changes anywhere above.
+    observer.observe(document.documentElement)
     window.addEventListener('resize', measure)
+    // Text metrics change after first paint, and images can resolve after the
+    // effect has run. Both reflow the page above the pin.
+    window.addEventListener('load', measure)
+    document.fonts?.ready.then(measure, () => {})
     return () => {
       observer.disconnect()
       window.removeEventListener('resize', measure)
+      window.removeEventListener('load', measure)
     }
   }, [ref, viewportRef])
 }

@@ -12,8 +12,13 @@ import AxeBuilder from '@axe-core/playwright'
 const ROUTES = [
   { path: '/', name: 'home', expect: 'FadeWell' },
   { path: '/how-it-works', name: 'how-it-works', expect: 'Five steps' },
+  { path: '/service', name: 'service', expect: 'your card in hand' },
   { path: '/care', name: 'care', expect: 'Qualifying conditions' },
+  { path: '/patient-info', name: 'patient-info', expect: 'Feel prepared' },
   { path: '/clinicians', name: 'clinicians', expect: 'clinician' },
+  { path: '/clinicians/dr-amara-osei', name: 'clinician', expect: 'Amara Osei' },
+  { path: '/blog', name: 'blog', expect: 'Clearer answers' },
+  { path: '/blog/certification-is-not-a-state-card', name: 'article', expect: 'Certification is not' },
   { path: '/pricing', name: 'pricing', expect: 'Published prices' },
   { path: '/faq', name: 'faq', expect: 'Answered properly' },
   { path: '/about', name: 'about', expect: 'About FadeWell' },
@@ -184,6 +189,112 @@ test.describe('FadeWell marketing site', () => {
     })
 
     expect(errors).toEqual([])
+  })
+
+  test('the eligibility check answers, and the ticker stops when asked', async ({ page }) => {
+    const errors = watchErrors(page)
+    await page.goto('/', { waitUntil: 'networkidle' })
+
+    // The state picker is the most-used control on the site, and it sits in
+    // the final CTA at the bottom. Drive it the way a person would.
+    const picker = page.locator('.state-picker').last()
+    await picker.scrollIntoViewIfNeeded()
+
+    // Submitting with nothing chosen must say so, and return focus to the
+    // field rather than failing silently.
+    await picker.getByRole('button', { name: /check my eligibility/i }).click()
+    await expect(picker.locator('.state-picker__status')).toHaveClass(/is-error/)
+    await expect(picker.locator('.state-picker__status')).toContainText(/choose your state/i)
+    await expect(picker.locator('select')).toBeFocused()
+
+    // An open state resolves to a next step and offers a way into the intake.
+    await picker.locator('select').selectOption('Colorado')
+    await picker.getByRole('button', { name: /check my eligibility/i }).click()
+    await expect(picker.locator('.state-picker__status')).toHaveClass(/is-available/)
+    await expect(picker.locator('.state-picker__status')).toContainText(/Colorado/)
+    await expect(picker.getByRole('link', { name: /continue to the intake/i })).toBeVisible()
+
+    // A state we have not opened says so honestly, and routes to updates
+    // rather than pretending it is available.
+    await picker.locator('select').selectOption('Oklahoma')
+    await picker.getByRole('button', { name: /check my eligibility/i }).click()
+    await expect(picker.locator('.state-picker__status')).toHaveClass(/is-coming-soon/)
+    await expect(picker.locator('.state-picker__status')).toContainText(/coming soon/i)
+
+    // The ticker runs forever, so it has to be stoppable. WCAG 2.2.2.
+    const track = page.locator('.marquee__track').first()
+    const pause = page.locator('.marquee__pause').first()
+    await pause.scrollIntoViewIfNeeded()
+    // Park the pointer away from the marquee first. The ticker also pauses on
+    // hover, and an earlier click in this test leaves the virtual mouse
+    // wherever that click landed — which made "is it moving?" depend on scroll
+    // position rather than on the animation.
+    await page.mouse.move(2, 2)
+
+    const moving = async () => {
+      const first = await track.evaluate((el) => el.getBoundingClientRect().x)
+      await page.waitForTimeout(500)
+      const second = await track.evaluate((el) => el.getBoundingClientRect().x)
+      return Math.abs(second - first)
+    }
+
+    // A reduced-motion context never animates, so only assert the moving case
+    // there — the paused case is asserted either way.
+    if (await page.evaluate(() => !matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      expect(await moving(), 'ticker should be moving before it is paused').toBeGreaterThan(1)
+    }
+    await pause.click()
+    await expect(pause).toHaveAttribute('aria-pressed', 'true')
+    expect(await moving(), 'ticker must stop when paused').toBeLessThan(1)
+
+    expect(errors).toEqual([])
+  })
+
+  test('every home section renders with real content', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' })
+
+    // Each of these was missing at some point and shipped as an empty shell
+    // at least once, so assert on content rather than on the wrapper. Only
+    // element selectors that carry text can be filtered by `hasText` — an
+    // `<img>` has no text content, so the sample card is checked by its alt
+    // further down instead.
+    const sections = [
+      ['.proof__grid .proof__item', 3, /Online evaluation/i],
+      ['.proof__disc', 1, null],
+      ['.grid--4 .card', 4, /Photo identification/i],
+      ['.story-frame', 2, /Clarity, from the start/i],
+      ['.path-card', 2, /First-time patient/i],
+      ['.after__item', 3, /state portal/i],
+      ['.compliance__point', 3, /Encrypted in transit/i],
+      ['.preview__art img', 1, null],
+      ['.grid--3 .card', 3, /Read the piece/i],
+      ['.marquee__item', 5, /HIPAA-aligned/i]
+    ]
+
+    for (const [selector, min, text] of sections) {
+      const found = page.locator(selector)
+      await expect(found.first(), `${selector} should render`).toBeVisible()
+      // Assert the count outright rather than only when it already passes —
+      // the old guard skipped the check on exactly the case it existed for.
+      expect(await found.count(), `${selector} should render at least ${min}`).toBeGreaterThanOrEqual(min)
+      if (text) {
+        await expect(page.locator(selector).filter({ hasText: text }).first(), `${selector} copy`).toBeVisible()
+      }
+    }
+
+    // The coverage table reads from the live API, so it either lists states
+    // or explains why it cannot. It must never be silently empty.
+    await page.locator('.states').scrollIntoViewIfNeeded()
+    await page.waitForTimeout(1200)
+    const states = await page.locator('.states').innerText()
+    expect(states, 'coverage table must render rows or an honest failure').toMatch(
+      /open|coming soon|could not load|empty/i
+    )
+
+    // The sample card is an illustration, and says so. A card that reads like
+    // a real credential is the wrong thing to ship on a medical page.
+    const card = page.locator('.preview__art img')
+    await expect(card).toHaveAttribute('alt', /not a real credential/i)
   })
 
   test('decorative rules stay rules at every viewport', async ({ page }) => {
