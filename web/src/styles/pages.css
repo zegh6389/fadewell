@@ -324,6 +324,16 @@
 
 /* ---------- Pinned horizontal journey ------------------------ */
 
+/* The section is four viewport heights tall and the pin inside it is one, so
+   the pin is stuck for three of them — that surplus height is the scroll
+   distance the track is driven across.
+
+   It deliberately publishes no view timeline. The sticky pin never leaves the
+   viewport, so a `view()` on the track is frozen; and a `view()` on this
+   section maps its cover/contain ranges onto itself rather than onto the pin's
+   stuck window, so it starts the animation early. `useTrackOverflow` measures
+   the real window instead and publishes it as `--journey-range-start` /
+   `--journey-range-end` for the root scroll timeline in base.css. */
 .journey {
   position: relative;
   height: 400vh;
@@ -368,9 +378,27 @@
 }
 
 .journey__track {
+  --journey-gap: clamp(1rem, 1.8vw, 1.5rem);
   display: flex;
-  gap: clamp(1rem, 1.8vw, 1.5rem);
+  gap: var(--journey-gap);
   will-change: transform;
+  /* The viewport is full-bleed so panels can run off the edge, but the first
+     and last panel still have to land on the content column that the heading
+     and the progress rule use — otherwise their rounded corners are clipped
+     at exactly the two moments the reader looks at them.
+     `--journey-gutter` is measured off the real column by `useTrackOverflow`
+     rather than recomputed from the tokens, so it cannot drift from it. */
+  padding-inline-start: var(--journey-gutter, var(--gutter));
+}
+
+/* Trailing half of that same gutter. It has to be an element, not padding:
+   Chromium omits trailing padding from `scrollWidth`, and that is the number
+   `--track-overflow` is built from. */
+.journey__pad {
+  flex: 0 0 var(--journey-gutter, var(--gutter));
+  /* Cancels the flex gap in front of it, so the final panel comes to rest
+     exactly on the content column rather than one gap short of it. */
+  margin-inline-start: calc(var(--journey-gap) * -1);
 }
 
 .journey__panel {
@@ -1123,6 +1151,12 @@ a.contact-list__row:hover {
     width: 84vw;
     scroll-snap-align: center;
     min-height: 19rem;
+  }
+  /* The rule reports on the pinned track, and there is no pinned track here —
+     left in place it would sit permanently full and claim you had seen all
+     five steps. The scroller is the affordance instead. */
+  .journey__progress {
+    display: none;
   }
   .float-card--a,
   .float-card--b {

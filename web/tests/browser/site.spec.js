@@ -103,6 +103,78 @@ test.describe('FadeWell marketing site', () => {
     )
     expect(overflow, 'journey track overflow should be measured in px').toBeGreaterThan(0)
 
+    // Measuring the overflow is not evidence the track moves. A `view()`
+    // timeline on the track itself is dead on arrival — the track lives inside
+    // a sticky pin that never leaves the viewport, so its progress never
+    // changes. Assert the motion itself, at both ends of the pinned range.
+    const sampleAt = async (fraction) => {
+      await page.evaluate((f) => {
+        const journey = document.querySelector('.journey')
+        const pin = document.querySelector('.journey__pin')
+        // `behavior: instant` is required: the site sets
+        // `html { scroll-behavior: smooth }`, so a plain scrollTo animates and
+        // a short settle time reads the track mid-flight.
+        window.scrollTo({
+          top: journey.offsetTop + (journey.offsetHeight - pin.offsetHeight) * f,
+          behavior: 'instant'
+        })
+      }, fraction)
+      // A scroll-driven animation only updates on the next frame; reading in
+      // the same tick as scrollTo returns the previous position.
+      await page.waitForTimeout(400)
+      return page.evaluate(() => {
+        const box = (sel) => {
+          const r = document.querySelector(sel).getBoundingClientRect()
+          return { left: Math.round(r.left), right: Math.round(r.right) }
+        }
+        return {
+          translateX: new DOMMatrixReadOnly(
+            getComputedStyle(document.querySelector('.journey__track')).transform
+          ).m41,
+          first: box('.journey__panel:first-of-type'),
+          last: box('.journey__panel:last-of-type'),
+          // The content column the heading and the progress rule both sit on.
+          column: box('.journey__progress'),
+        }
+      })
+    }
+
+    // Below 640px the section deliberately unpins and becomes a native
+    // horizontal scroller, so the track must NOT be translated there.
+    const isStacked = await page.evaluate(() => window.innerWidth <= 640)
+
+    if (isStacked) {
+      expect((await sampleAt(0.9)).translateX, 'stacked track must not be translated').toBe(0)
+    } else {
+      // Sample the true endpoints of the pinned range: the keyframes are
+      // defined there, so these are exact rather than approximate.
+      const start = await sampleAt(0)
+      const end = await sampleAt(1)
+
+      // The range is published as a measurement, so both ends should land
+      // exactly. A loose tolerance here is what let an off-by-88px range ship:
+      // the track was already part-way across before the pin had even engaged.
+      expect(Math.abs(start.translateX), 'track should start untranslated').toBeLessThan(2)
+      expect(end.translateX - start.translateX, 'track should travel the full width').toBeLessThan(-100)
+      expect(
+        Math.abs(end.translateX + overflow),
+        'track should finish exactly at the measured overflow'
+      ).toBeLessThan(2)
+
+      // The viewport is full-bleed, so the track has to place its own panels
+      // back on the content column — otherwise the first and last card lose
+      // their rounded corners to the screen edge, at exactly the two moments
+      // the reader looks straight at them.
+      expect(
+        Math.abs(start.first.left - start.column.left),
+        'first panel should start on the content column'
+      ).toBeLessThan(3)
+      expect(
+        Math.abs(end.last.right - end.column.right),
+        'last panel should finish on the content column'
+      ).toBeLessThan(3)
+    }
+
     // Full-page capture for design review.
     await page.evaluate(() => window.scrollTo(0, 0))
     await page.waitForTimeout(500)

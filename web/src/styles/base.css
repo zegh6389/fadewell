@@ -370,11 +370,40 @@ h4 {
       animation-name: fill-x;
     }
 
-    /* The pinned horizontal journey. */
+    /* The pinned horizontal journey.
+     *
+     * Three things had to be worked out here, and none of them can be guessed:
+     *
+     * 1. The timeline cannot be view() on the track itself. The track sits
+     *    inside a sticky pin that stays fixed for the whole section, so its own
+     *    view progress never changes and the animation freezes dead.
+     *
+     * 2. It cannot be view() on .journey either. A view timeline maps its own
+     *    cover/contain ranges onto the subject, and Chromium's mapping does not
+     *    land on the window the sticky pin is actually stuck for. Measured, it
+     *    starts about 88px early, so the track is already part-way across by
+     *    the time the pin engages. Expressing the range as a guessed slice of
+     *    cover only moves that error somewhere less obvious.
+     *
+     * 3. So the range is measured rather than derived. useTrackOverflow
+     *    publishes the pin's real stuck window as --journey-range-start and
+     *    --journey-range-end in document scroll pixels, and a root scroll
+     *    timeline takes those as absolute offsets with no mapping step to get
+     *    wrong. The track sits at 0 exactly as the pin engages and at -100%
+     *    exactly as it releases, at any section height.
+     */
     .pin-track {
       animation: track-x linear both;
-      animation-timeline: view();
-      animation-range: cover 8% cover 92%;
+      animation-timeline: scroll(root block);
+      animation-range: var(--journey-range-start, 0px) var(--journey-range-end, 100%);
+    }
+
+    /* The progress rule rides the same timeline and the same range, so it
+       cannot drift out of sync with the track it is reporting on. */
+    .journey__progress-fill {
+      animation: fill-x linear both;
+      animation-timeline: scroll(root block);
+      animation-range: var(--journey-range-start, 0px) var(--journey-range-end, 100%);
     }
 
     /* Slow ambient rotation on flat outlined rings. */
@@ -429,5 +458,36 @@ h4 {
     -webkit-mask-image: none !important;
     mask-image: none !important;
     transform: none !important;
+  }
+
+  /* The pinned journey must be dismantled, not merely frozen.
+     Collapsing the duration to ~0 makes a scroll-driven animation jump to its
+     FINAL keyframe, which would park the track at the far end of its travel
+     and hide steps 1-3 for good. Un-pin the section and hand the overflow to a
+     native horizontal scroller, so every step stays reachable without motion.
+     This mirrors the small-viewport fallback in pages.css. */
+  .journey {
+    height: auto !important;
+  }
+  .journey__pin {
+    position: static !important;
+    height: auto !important;
+  }
+  .journey__viewport {
+    overflow-x: auto !important;
+    scroll-snap-type: x proximity;
+  }
+  .journey__track {
+    animation: none !important;
+    transform: none !important;
+  }
+  .journey__panel {
+    scroll-snap-align: center;
+  }
+  /* The rule reports on the pinned track. With the track unpinned it cannot
+     report anything, and it would sit permanently full — the scroller is the
+     affordance instead. */
+  .journey__progress {
+    display: none !important;
   }
 }

@@ -215,6 +215,10 @@ function Journey() {
                 <p className="float-card__meta">{item.detail}</p>
               </article>
             ))}
+            {/* Trailing gutter, as a real element rather than trailing padding:
+                Chromium leaves trailing padding out of `scrollWidth`, and
+                `useTrackOverflow` derives the travel distance from it. */}
+            <span className="journey__pad" aria-hidden="true" />
           </div>
         </div>
 

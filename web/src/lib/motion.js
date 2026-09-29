@@ -198,8 +198,25 @@ export function useSticky(breakpoint = 24) {
 /* ---------- Horizontal pinned track --------------------------- */
 
 /**
- * Publishes how far a `.pin-track` must travel to reveal its last panel.
- * The CSS `track-x` keyframe reads it via `--track-overflow`.
+ * Everything the pinned horizontal track needs, measured off the live layout
+ * rather than derived in CSS. Three published values:
+ *
+ * - `--track-overflow`   how far the track must travel for the last panel to
+ *                        land on the content column. The `track-x` keyframe
+ *                        reads it.
+ * - `--journey-gutter`   the content gutter. The track's viewport is
+ *                        full-bleed, so the track has to supply the gutter
+ *                        itself; it is read off the real column (the nearest
+ *                        `.shell`) rather than recomputed from the tokens, so
+ *                        the panels cannot drift out of line with the heading
+ *                        above them.
+ * - `--journey-range-*`  the scroll offsets at which the sticky pin engages
+ *                        and releases. A `view()` timeline will not do: its
+ *                        cover/contain ranges do not map onto the pin's stuck
+ *                        window, so the track would already be part-way across
+ *                        when the pin engaged. These go on the section, so the
+ *                        track and the progress rule inherit one range and
+ *                        cannot disagree.
  */
 export function useTrackOverflow(ref, viewportRef) {
   useEffect(() => {
@@ -207,15 +224,42 @@ export function useTrackOverflow(ref, viewportRef) {
     const viewport = viewportRef?.current
     if (!track || !viewport) return
 
+    const section = viewport.closest('.journey')
+    const pin = viewport.closest('.journey__pin')
+
     const measure = () => {
+      const column = pin?.querySelector('.shell')
+      if (column) {
+        // The shell's border box is not the content column — its own
+        // `padding-inline` is the gutter that actually aligns the text.
+        const cs = getComputedStyle(column)
+        const inset = column.getBoundingClientRect().left
+          + parseFloat(cs.paddingLeft)
+          - viewport.getBoundingClientRect().left
+        track.style.setProperty('--journey-gutter', `${Math.max(0, Math.round(inset))}px`)
+      }
+
       const overflow = Math.max(0, track.scrollWidth - viewport.clientWidth)
       track.style.setProperty('--track-overflow', `${overflow}px`)
+
+      // The pin is stuck from the moment the section's top reaches the top of
+      // the viewport until the section's bottom reaches the bottom of it.
+      if (section && pin) {
+        const top = section.getBoundingClientRect().top + window.scrollY
+        const end = top + section.offsetHeight - pin.offsetHeight
+        section.style.setProperty('--journey-range-start', `${Math.round(top)}px`)
+        section.style.setProperty('--journey-range-end', `${Math.round(end)}px`)
+      }
     }
 
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(track)
     observer.observe(viewport)
+    // The section is `400vh` and the pin is `100svh`, so both endpoints of
+    // the range move whenever the viewport does — not just on `resize`.
+    if (section) observer.observe(section)
+    if (pin) observer.observe(pin)
     window.addEventListener('resize', measure)
     return () => {
       observer.disconnect()

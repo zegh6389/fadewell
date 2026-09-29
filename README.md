@@ -89,6 +89,8 @@ in-memory API instead of `npm run dev` — see **Browser tests** below.
 | `node scripts/audit-classes.mjs` | Token / class / import audit |
 | `node scripts/deep-audit.mjs` | Full-route browser audit (see below) |
 | `node scripts/probe-mask.mjs` | Prove the reveal technique survives IntersectionObserver |
+| `node scripts/shoot-journey.mjs` | Assert the pinned journey travels and lands on the column |
+| `node scripts/probe-journey-fallbacks.mjs` | Assert every step stays reachable without motion |
 | `node scripts/shoot.mjs` | Capture design reference screenshots |
 | `node scripts/generate-assets.mjs` | Regenerate brand imagery |
 
@@ -142,12 +144,11 @@ motion tokens live in `web/src/styles/tokens.css`.
 
 **Motion.** Two deliberate layers:
 
-1. **Native CSS scroll-driven animations** (`animation-timeline: view()`) drive
-   continuous effects — parallax drift, the pinned horizontal journey,
-   self-drawing rules, the progress rail — off the main thread.
+1. **Native CSS scroll-driven animations** drive continuous effects — parallax
+   drift, self-drawing rules — off the main thread via `animation-timeline: view()`.
 2. **`web/src/lib/motion.js`** handles what CSS timelines cannot express:
    one-shot reveals, count-up statistics, the magnetic button, the sticky
-   masthead and the horizontal-track measurement.
+   masthead, and the measurements behind the pinned journey.
 
 Reveals use a **`mask-size` wipe, not `clip-path`** — and that is load-bearing,
 not a style preference. Chromium folds a target's own `clip-path` into its
@@ -156,8 +157,37 @@ collapses the observed box to zero and the element never reveals at all. A mask
 is a paint effect and leaves the observed geometry untouched. Both behaviours
 are measured in `web/scripts/probe-mask.mjs`; if you change the reveal, re-run it.
 
+**The pinned journey is measured, not derived.** The five steps scroll
+horizontally while the section stays stuck. Three things about that cannot be
+guessed, and each was found by measuring it:
+
+- The track cannot take a `view()` timeline from itself. It lives inside a
+  sticky pin that never leaves the viewport, so its own progress never changes
+  and the animation freezes.
+- Nor can it take one from the tall section. A view timeline maps its own
+  `cover`/`contain` ranges onto the subject, and Chromium's mapping does not
+  land on the window the pin is actually stuck for — measured, it starts about
+  88px early, so the track is already part-way across when the pin engages.
+- The track's viewport is full-bleed, so the track has to supply the content
+  gutter itself, or the first and last cards lose their rounded corners to the
+  screen edge at exactly the two moments the reader looks at them.
+
+So `useTrackOverflow` measures all three — the travel distance, the gutter off
+the real content column, and the pin's stuck window — and publishes them as
+custom properties. A root scroll timeline consumes the window as absolute
+offsets, with no range mapping to get wrong. `web/scripts/shoot-journey.mjs`
+asserts the result: the track starts untranslated, finishes exactly at the
+measured travel, and both end panels land on the same column as the heading and
+the progress rule.
+
 Everything is wrapped in `prefers-reduced-motion`, and every effect degrades to a
-static, fully readable layout where scroll timelines are unsupported.
+static, fully readable layout where scroll timelines are unsupported. Note that
+reduced motion has to **dismantle** the pinned journey rather than freeze it:
+collapsing the animation duration to ~0 makes a scroll-driven animation jump to
+its *final* keyframe, which would park the track at the far end and hide steps
+1–3 permanently. Both non-pinned fallbacks — reduced motion and narrow
+viewports — un-pin the section and hand the overflow to a native horizontal
+scroller, asserted by `web/scripts/probe-journey-fallbacks.mjs`.
 
 **CSP compliance.** The strict policy (`style-src 'self'; font-src 'self'`)
 means no inline styles, no inline scripts and no third-party fonts. All styling
