@@ -86,6 +86,9 @@ in-memory API instead of `npm run dev` — see **Browser tests** below.
 | `npm run preview` | Serve the production bundle |
 | `npm run lint` | oxlint |
 | `npm run test:e2e` | Playwright browser suite |
+| `node scripts/audit-classes.mjs` | Token / class / import audit |
+| `node scripts/probe-mask.mjs` | Prove the reveal technique survives IntersectionObserver |
+| `node scripts/shoot.mjs` | Capture design reference screenshots |
 | `node scripts/generate-assets.mjs` | Regenerate brand imagery |
 
 ---
@@ -129,19 +132,28 @@ questionnaire, consent, jurisdiction and deployment review first.
 
 ### The web client
 
-**Design language.** A deep-indigo base with aurora light, self-hosted variable
-fonts (Sora, Instrument Serif, JetBrains Mono), and a single accent ramp used
-consistently across marketing and workspaces. All colour, type, space, radius
-and motion tokens live in `web/src/styles/tokens.css`.
+**Design language.** A flat editorial system: ivory paper, forest ink, moss for
+accents and a lime highlight. No glassmorphism, no blur, no transparency
+stacking — inverted sections are solid colour blocks (`.band-dark`), and every
+card is an opaque surface with a hairline border. Self-hosted variable fonts
+(Sora, Instrument Serif, JetBrains Mono). All colour, type, space, radius and
+motion tokens live in `web/src/styles/tokens.css`.
 
 **Motion.** Two deliberate layers:
 
-1. **Native CSS scroll-driven animations** (`animation-timeline: view()` and
-   `scroll()`) drive continuous effects — parallax drift, the pinned horizontal
-   journey, the progress rails — off the main thread.
+1. **Native CSS scroll-driven animations** (`animation-timeline: view()`) drive
+   continuous effects — parallax drift, the pinned horizontal journey,
+   self-drawing rules, the progress rail — off the main thread.
 2. **`web/src/lib/motion.js`** handles what CSS timelines cannot express:
-   one-shot reveals, count-up statistics, pointer-tracked spotlights, the
-   magnetic button and the horizontal-track measurement.
+   one-shot reveals, count-up statistics, the magnetic button, the sticky
+   masthead and the horizontal-track measurement.
+
+Reveals use a **`mask-size` wipe, not `clip-path`** — and that is load-bearing,
+not a style preference. Chromium folds a target's own `clip-path` into its
+IntersectionObserver rectangle, so a `clip-path: inset(0 0 100%)` reveal
+collapses the observed box to zero and the element never reveals at all. A mask
+is a paint effect and leaves the observed geometry untouched. Both behaviours
+are measured in `web/scripts/probe-mask.mjs`; if you change the reveal, re-run it.
 
 Everything is wrapped in `prefers-reduced-motion`, and every effect degrades to a
 static, fully readable layout where scroll timelines are unsupported.
@@ -151,6 +163,14 @@ means no inline styles, no inline scripts and no third-party fonts. All styling
 is in stylesheets, all fonts are self-hosted in `web/public/fonts`, and pointer
 tracking writes CSS custom properties through the CSSOM rather than style
 attributes.
+
+**Design-token audit.** `web/scripts/audit-classes.mjs` cross-checks CSS custom
+properties, JSX class names and local imports. A refactor that renames a token
+or drops a stylesheet rule fails it immediately:
+
+```sh
+node web/scripts/audit-classes.mjs
+```
 
 ---
 

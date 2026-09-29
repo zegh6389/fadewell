@@ -111,7 +111,7 @@ function Hero() {
                 </div>
                 <div className="float-row">
                   <span className="float-row__label">State registry</span>
-                  <span className="tag tag--mint">Filed</span>
+                  <span className="tag tag--lime">Filed</span>
                 </div>
               </article>
 
@@ -120,7 +120,7 @@ function Hero() {
                 <p className="float-card__title" data-reveal="fade">
                   Colorado · Active
                 </p>
-                <span className="tag tag--cyan" data-reveal="fade">
+                <span className="tag tag--moss" data-reveal="fade">
                   Verified rules
                 </span>
               </article>
@@ -363,7 +363,7 @@ function PricingTeaser() {
 
         <div className="grid grid--2">
           <div className="plan plan--featured" data-reveal>
-            <span className="tag tag--cyan plan__badge">{featured.badge}</span>
+            <span className="tag tag--moss plan__badge">{featured.badge}</span>
             <h3 className="plan__name">{featured.name}</h3>
             <p className="plan__price">
               ${featured.price}
@@ -423,7 +423,7 @@ function ClosingCta() {
     <section className="section" aria-labelledby="cta-title">
       <div className="shell">
         <div className="cta" data-reveal="scale">
-          <span className="cta__halo" aria-hidden="true" />
+          <span className="" aria-hidden="true" />
           <div className="cta__inner">
             <span className="pill">
               <IconSpark size={13} />

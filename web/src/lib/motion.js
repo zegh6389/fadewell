@@ -6,8 +6,8 @@
  *  1. Native CSS scroll-driven animations (`animation-timeline`) declared in
  *     base.css handle continuous, scroll-linked effects off the main thread.
  *  2. This module handles the things CSS timelines cannot express:
- *     one-shot entrance reveals, number counting, pointer tracking, the
- *     top scroll rail, and the horizontal-track overflow calculation.
+ *     one-shot entrance reveals, number counting, pointer tracking on the
+ *     magnetic buttons, the top scroll rail, and horizontal-track overflow.
  *
  * Everything degrades: with JavaScript unavailable the reveal elements are
  * hidden only by CSS that the observer immediately reverses, and every
@@ -159,88 +159,6 @@ export function useSticky(breakpoint = 24) {
   }, [breakpoint])
 
   return { ref, stuck }
-}
-
-/* ---------- Pointer tracking ----------------------------------- */
-
-/**
- * Tracks the pointer across the page and writes `--mx` / `--my` on the
- * elements listed in `selectors`, feeding the CSS card spotlight.
- * Written through CSSOM (setProperty), never as an inline style attribute,
- * so the strict `style-src 'self'` policy is never exercised.
- */
-export function usePointerSpotlight(selectors = '.card, .spotlight-cell') {
-  useEffect(() => {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
-
-    let frame = 0
-    let last = { x: 0, y: 0 }
-
-    const apply = () => {
-      frame = 0
-      for (const el of document.querySelectorAll(selectors)) {
-        const rect = el.getBoundingClientRect()
-        if (rect.bottom < -200 || rect.top > window.innerHeight + 200) continue
-        const x = ((last.x - rect.left) / rect.width) * 100
-        const y = ((last.y - rect.top) / rect.height) * 100
-        el.style.setProperty('--mx', `${x.toFixed(2)}%`)
-        el.style.setProperty('--my', `${y.toFixed(2)}%`)
-      }
-    }
-
-    const onMove = (event) => {
-      last = { x: event.clientX, y: event.clientY }
-      if (!frame) frame = requestAnimationFrame(apply)
-    }
-
-    window.addEventListener('pointermove', onMove, { passive: true })
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      cancelAnimationFrame(frame)
-    }
-  }, [selectors])
-}
-
-/** Soft glow that follows the cursor across the whole page. */
-export function useCursorGlow() {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const node = ref.current
-    if (!node) return
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
-
-    let frame = 0
-    let x = window.innerWidth / 2
-    let y = window.innerHeight / 2
-    let cx = x
-    let cy = y
-
-    const tick = () => {
-      cx += (x - cx) * 0.12
-      cy += (y - cy) * 0.12
-      node.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`
-      frame = requestAnimationFrame(tick)
-    }
-
-    const onMove = (event) => {
-      x = event.clientX
-      y = event.clientY
-      node.classList.add('is-on')
-    }
-    const onLeave = () => node.classList.remove('is-on')
-
-    frame = requestAnimationFrame(tick)
-    window.addEventListener('pointermove', onMove, { passive: true })
-    document.addEventListener('pointerleave', onLeave)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      document.removeEventListener('pointerleave', onLeave)
-      cancelAnimationFrame(frame)
-    }
-  }, [])
-
-  return ref
 }
 
 /* ---------- Horizontal pinned track --------------------------- */

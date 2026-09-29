@@ -34,7 +34,7 @@ export default function Contact() {
           </h2>
 
           <div className="split split--flip">
-            <div className="card card--glow" data-reveal="right">
+            <div className="card" data-reveal="right">
               {sent ? (
                 <div className="notice notice--ok" role="status">
                   <strong>Message received.</strong>
@@ -140,8 +140,8 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="band-light section" aria-labelledby="not-title">
-        <div className="shell on-light">
+      <section className="band-sage section" aria-labelledby="not-title">
+        <div className="shell">
           <SectionHead
             id="not-title"
             eyebrow="Set expectations"

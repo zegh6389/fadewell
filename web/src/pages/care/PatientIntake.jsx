@@ -168,7 +168,7 @@ function IntakeForm({ session, questionnaire, jurisdictions, existing, onSaved, 
     <div className="care__stack">
       <div className="care__status">
         <div>
-          <span className={`tag tag--${state.tone === 'ok' ? 'mint' : state.tone === 'warn' ? 'amber' : 'cyan'}`}>
+          <span className={`tag tag--${state.tone === 'ok' ? 'lime' : state.tone === 'warn' ? 'amber' : 'sage'}`}>
             {state.label}
           </span>
           <p className="care__status-note">{state.note}</p>
@@ -534,7 +534,7 @@ function PatientSurface({ session }) {
                     timeStyle: 'short'
                   })}
                 </span>
-                <span className="tag tag--cyan">{appointment.mode.replace('_', ' ')}</span>
+                <span className="tag tag--moss">{appointment.mode.replace('_', ' ')}</span>
               </li>
             ))}
           </ul>

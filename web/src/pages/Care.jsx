@@ -54,7 +54,7 @@ export default function Care() {
           <div className="spotlight-grid spotlight-grid--2">
             {conditions.map((item) => (
               <article className="spotlight-cell" key={item.title} data-reveal>
-                <span className="tag tag--violet">{item.tag}</span>
+                <span className="tag tag--forest">{item.tag}</span>
                 <h3 className="h4 card__title">{item.title}</h3>
                 <p className="card__body">{item.body}</p>
               </article>
@@ -63,8 +63,8 @@ export default function Care() {
         </div>
       </section>
 
-      <section className="band-light section" aria-labelledby="check-title">
-        <div className="shell on-light">
+      <section className="band-sage section" aria-labelledby="check-title">
+        <div className="shell">
           <div className="split split--flip">
             <div className="split__body" data-reveal="left">
               <p className="eyebrow eyebrow--accent">Step one, always</p>

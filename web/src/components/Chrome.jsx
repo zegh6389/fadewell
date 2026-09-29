@@ -4,16 +4,17 @@ import { BrandMark, IconArrow } from './Icons.jsx'
 import { primaryNav, footerNav, brand } from '../lib/content.js'
 import { useSticky, useMagnetic, useScrollProgress } from '../lib/motion.js'
 
-/* ---------- Ambient background ------------------------------- */
+/* ---------- Ambient field ------------------------------------ */
+/* Flat colour washes and outlined rings. No blur filters, no
+   transparency stacking — the page stays on solid paper. */
 
-export function Aurora() {
+export function Ambient() {
   return (
-    <div className="aurora" aria-hidden="true">
-      <span className="aurora__blob aurora__blob--violet" />
-      <span className="aurora__blob aurora__blob--cyan" />
-      <span className="aurora__blob aurora__blob--rose" />
-      <span className="aurora__grain" />
-      <span className="aurora__vignette" />
+    <div className="ambient" aria-hidden="true">
+      <span className="ambient__blob ambient__blob--sage" />
+      <span className="ambient__blob ambient__blob--lime" />
+      <span className="ambient__dot ambient__dot--a" />
+      <span className="ambient__dot ambient__dot--b" />
     </div>
   )
 }
@@ -27,62 +28,21 @@ export function ScrollRail() {
   )
 }
 
-export function CursorGlow() {
-  const ref = useRef(null)
-  useEffect(() => {
-    const node = ref.current
-    if (!node) return
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    let frame = 0
-    let x = window.innerWidth / 2
-    let y = window.innerHeight / 2
-    let cx = x
-    let cy = y
-
-    const tick = () => {
-      cx += (x - cx) * 0.11
-      cy += (y - cy) * 0.11
-      node.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`
-      frame = requestAnimationFrame(tick)
-    }
-    const onMove = (event) => {
-      x = event.clientX
-      y = event.clientY
-      node.classList.add('is-on')
-    }
-    const onLeave = () => node.classList.remove('is-on')
-
-    frame = requestAnimationFrame(tick)
-    window.addEventListener('pointermove', onMove, { passive: true })
-    document.addEventListener('pointerleave', onLeave)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      document.removeEventListener('pointerleave', onLeave)
-      cancelAnimationFrame(frame)
-    }
-  }, [])
-
-  return <div className="cursor-glow" ref={ref} aria-hidden="true" />
-}
-
 /* ---------- Magnetic button ----------------------------------- */
 
 export function MagneticLink({ to, href, className = 'btn btn--primary', children, ...rest }) {
   const ref = useMagnetic()
-  const inner = <>{children}</>
   const cls = `${className} magnetic`
   if (to) {
     return (
       <Link ref={ref} to={to} className={cls} {...rest}>
-        {inner}
+        {children}
       </Link>
     )
   }
   return (
     <a ref={ref} href={href} className={cls} {...rest}>
-      {inner}
+      {children}
     </a>
   )
 }
@@ -94,12 +54,10 @@ export function Masthead() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
 
-  // Close the sheet on navigation.
   useEffect(() => {
     setOpen(false)
   }, [location.pathname])
 
-  // Lock scroll while the mobile sheet is open.
   useEffect(() => {
     if (!open) return
     const previous = document.body.style.overflow
@@ -109,7 +67,6 @@ export function Masthead() {
     }
   }, [open])
 
-  // Escape closes the sheet.
   useEffect(() => {
     if (!open) return
     const onKey = (event) => {
@@ -140,7 +97,7 @@ export function Masthead() {
         </nav>
 
         <div className="masthead__actions">
-          <Link to="/patient" className="btn btn--primary btn--sm">
+          <Link to="/patient" className="btn btn--forest btn--sm">
             Start intake
           </Link>
           <button
@@ -191,7 +148,8 @@ export function Footer() {
               <span>{brand.name}</span>
             </Link>
             <p className="card__body footer__blurb" data-reveal>
-              {brand.tagline} Guided medical card evaluation with licensed clinicians in fourteen states.
+              {brand.tagline} Guided medical card evaluation with licensed clinicians in fourteen
+              states.
             </p>
             <p className="footer__contact" data-reveal>
               <a href={`mailto:${brand.email}`} className="link-arrow">
@@ -227,9 +185,10 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="footer__bottom" data-reveal>
-          {brand.name} is not a healthcare provider. Evaluations are performed by independently licensed
-          clinicians. Approval of any card is decided by the relevant state registry, not by {brand.name}.
+        <p className="footer__note" data-reveal>
+          {brand.name} is not a healthcare provider. Evaluations are performed by independently
+          licensed clinicians. Approval of any card is decided by the relevant state registry, not by{' '}
+          {brand.name}.
         </p>
       </div>
     </footer>

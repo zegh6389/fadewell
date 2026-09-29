@@ -2,9 +2,12 @@
  * FadeWell — brand asset generator.
  *
  * Renders every brand image from SVG source so the output is deterministic and
- * reproducible. Two deliberate decisions:
+ * reproducible. Three deliberate decisions:
  *
- *  - Clinician imagery is an abstract gradient + monogram, not a synthetic
+ *  - The system is flat: solid colour fields, concentric rules and one warm
+ *    accent. No blurred aurora, no glow. Imagery must sit on the same paper
+ *    as the interface.
+ *  - Clinician imagery is an abstract composition + monogram, not a synthetic
  *    photograph. Inventing a face for a real medical role would misrepresent
  *    who will actually evaluate a patient.
  *  - Nothing is fetched from the network: `img-src 'self' data:` under the
@@ -22,8 +25,20 @@ const here = dirname(fileURLToPath(import.meta.url))
 const publicDir = join(here, '..', 'public')
 const assets = join(publicDir, 'assets')
 
-const VOID = '#05060E'
-const INK = '#0A0D1C'
+/* ---------- Palette (mirrors src/styles/tokens.css) -------------- */
+
+const IVORY = '#FAF8F3'
+const IVORY_2 = '#F3EFE6'
+const SAGE = '#EEF3EC'
+const SAGE_2 = '#E2EBE0'
+const SAGE_DARK = '#CFDCCD'
+const FOREST = '#174A32'
+const FOREST_DEEP = '#0F3323'
+const MOSS = '#347458'
+const MOSS_LIGHT = '#4A8F6C'
+const LIME = '#D6E255'
+const LIME_DEEP = '#BFD13C'
+const CLAY = '#C96F4A'
 
 /* ---------- Shared SVG fragments ------------------------------- */
 
@@ -37,77 +52,38 @@ function seeded(seed) {
 }
 
 /**
- * Aurora field.
+ * Flat ground.
  *
- * The palette is passed in rather than sampled at random: unconstrained colour
- * picking drifted off-brand (murky olive) and read as a rendering fault rather
- * than a deliberate gradient. Each asset gets an explicit, controlled mix.
+ * A solid paper colour, a diagonal band of the next tone up, and concentric
+ * rules. Everything is a hard-edged shape — no gradients, no filters — so the
+ * imagery reads as part of the same flat layout rather than a separate asset.
  */
-function auroraField({ width, height, seed, blobs, palette }) {
+function flatGround({ width, height, seed, paper, band, disc, rings }) {
   const rand = seeded(seed)
-  const defs = blobs
-    .map((blob, i) => {
-      const cx = Math.round(rand() * width)
-      const cy = Math.round(rand() * height)
-      const r = Math.round(blob * (0.6 + rand() * 0.8))
-      const color = palette[i % palette.length]
-      return `<radialGradient id="a${i}" cx="50%" cy="50%">
-        <stop offset="0%" stop-color="${color}" stop-opacity="${(0.72 + rand() * 0.24).toFixed(2)}"/>
-        <stop offset="55%" stop-color="${color}" stop-opacity="0.34"/>
-        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-      </radialGradient>`
-    })
-    .join('')
+  const cx = Math.round(width * (0.5 + (rand() - 0.5) * 0.1))
+  const cy = Math.round(height * 0.4)
+  const r = Math.round(width * 0.3)
 
-  const shapes = blobs
-    .map((blob, i) => {
-      const cx = Math.round(rand() * width)
-      const cy = Math.round(rand() * height)
-      const r = Math.round(blob * (0.6 + rand() * 0.8))
-      return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#a${i})"/>`
-    })
-    .join('')
+  const rule = (radius, opacity, dash) =>
+    `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${rings}"
+       stroke-opacity="${opacity}"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`
 
-  // A light blur keeps the aurora reading as light rather than as flat blocks,
-  // without hazing the whole composition into a single muddy tone.
-  return `<defs>${defs}
-    <filter id="soft" x="-25%" y="-25%" width="150%" height="150%">
-      <feGaussianBlur stdDeviation="${Math.round(width * 0.035)}"/>
-    </filter>
-    <linearGradient id="wash" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0%" stop-color="#4B46FF" stop-opacity="0.20"/>
-      <stop offset="50%" stop-color="#7C5CFF" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="#34E0E8" stop-opacity="0.16"/>
-    </linearGradient>
-  </defs>
-  <rect width="${width}" height="${height}" fill="${VOID}"/>
-  <rect width="${width}" height="${height}" fill="url(#wash)"/>
-  <g filter="url(#soft)">${shapes}</g>`
+  return `
+    <rect width="${width}" height="${height}" fill="${paper}"/>
+    <path d="M0 ${height} L${width} ${height - height * 0.42} L${width} ${height} Z" fill="${band}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="${disc}"/>
+    ${rule(Math.round(r * 1.14), 0.5)}
+    ${rule(Math.round(r * 1.3), 0.3, '6 10')}
+    ${rule(Math.round(r * 0.72), 0.34)}`
 }
 
-/** On-brand aurora mixes, one per asset so no two read identically. */
-const PALETTES = {
-  amara: ['#7C5CFF', '#4B46FF', '#34E0E8'],
-  rafael: ['#4B46FF', '#34E0E8', '#6EE7B7'],
-  priya: ['#FF6B9D', '#7C5CFF', '#FFC46B'],
-  marcus: ['#34E0E8', '#6EE7B7', '#4B46FF'],
-  brand: ['#7C5CFF', '#4B46FF', '#34E0E8', '#FF6B9D'],
-  studio: ['#4B46FF', '#7C5CFF', '#34E0E8']
-}
-
-/** The FadeWell horizon mark, drawn at an arbitrary scale. */
-function mark(cx, cy, size, opacity = 1) {
+/** The FadeWell mark at an arbitrary scale — a curve that fades then recovers. */
+function mark(cx, cy, size, ink = LIME, opacity = 1) {
   const s = size / 32
   return `<g transform="translate(${cx - size / 2} ${cy - size / 2}) scale(${s})" opacity="${opacity}">
-    <defs>
-      <linearGradient id="mg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#7C5CFF"/><stop offset="0.55" stop-color="#4B46FF"/><stop offset="1" stop-color="#34E0E8"/>
-      </linearGradient>
-    </defs>
-    <path d="M7 20.5h18" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M7 20.5h11" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round" opacity="0.55"/>
-    <path d="M7 16.5c3.6 0 5-4.6 9-4.6s5.4 4.6 9 4.6" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
-    <circle cx="24.5" cy="11.4" r="2.1" fill="#34E0E8"/>
+    <path d="M7 20.5c2.6 0 3.2-6.5 5.6-6.5s2.6 6.5 5 6.5 2.4-3.4 4.4-3.4"
+          fill="none" stroke="${ink}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7 24.2h18" fill="none" stroke="${ink}" stroke-width="1.8" stroke-linecap="round" opacity="0.45"/>
   </g>`
 }
 
@@ -115,7 +91,8 @@ const NOISE = `<filter id="n" x="0" y="0" width="100%" height="100%">
     <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3"/>
   </filter>`
 
-function grain(width, height, opacity = 0.05) {
+/** Barely-there paper grain — texture, not texture-as-effect. */
+function grain(width, height, opacity = 0.03) {
   return `<rect width="${width}" height="${height}" filter="url(#n)" opacity="${opacity}"/>`
 }
 
@@ -123,9 +100,22 @@ function svg(width, height, body) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${NOISE}${body}</svg>`
 }
 
+/**
+ * On-brand mixes, one per asset so no two read identically.
+ * Each is an ordered set: paper, band, disc, rules.
+ */
+const PALETTES = {
+  amara: { paper: SAGE, band: SAGE_2, disc: FOREST, rings: IVORY },
+  rafael: { paper: IVORY, band: SAGE, disc: MOSS, rings: FOREST },
+  priya: { paper: SAGE_2, band: IVORY, disc: FOREST_DEEP, rings: CLAY },
+  marcus: { paper: IVORY_2, band: SAGE, disc: MOSS_LIGHT, rings: FOREST },
+  studio: { paper: SAGE, band: IVORY, disc: FOREST, rings: MOSS },
+  brand: { paper: IVORY, band: SAGE_2, disc: FOREST, rings: MOSS }
+}
+
 /* ---------- Assets --------------------------------------------- */
 
-/** Abstract gradient portrait carrying the clinician's initials. */
+/** Abstract flat composition carrying the clinician's initials. */
 function clinicianSvg(initials, seed, palette) {
   const w = 720
   const h = 900
@@ -133,63 +123,78 @@ function clinicianSvg(initials, seed, palette) {
     w,
     h,
     `
-    ${auroraField({ width: w, height: h, seed, blobs: [300, 260, 320], palette })}
-    <g opacity="0.5">
-      <circle cx="${w / 2}" cy="${h * 0.42}" r="150" fill="none" stroke="#ffffff" stroke-opacity="0.10"/>
-      <circle cx="${w / 2}" cy="${h * 0.42}" r="196" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-dasharray="5 9"/>
-    </g>
-    <circle cx="${w / 2}" cy="${h * 0.42}" r="118" fill="${INK}" fill-opacity="0.55"
-            stroke="#ffffff" stroke-opacity="0.16"/>
-    <text x="${w / 2}" y="${h * 0.42 + 34}" text-anchor="middle"
+    ${flatGround({ width: w, height: h, seed, ...palette })}
+    <circle cx="${w / 2}" cy="${h * 0.4}" r="132" fill="${FOREST}"/>
+    <text x="${w / 2}" y="${h * 0.4 + 34}" text-anchor="middle"
           font-family="Sora, Segoe UI, Helvetica, Arial, sans-serif" font-size="86" font-weight="600"
-          letter-spacing="-4" fill="#F4F5FB">${initials}</text>
-    <text x="${w / 2}" y="${h * 0.42 + 78}" text-anchor="middle"
+          letter-spacing="-4" fill="${IVORY}">${initials}</text>
+    <text x="${w / 2}" y="${h * 0.4 + 84}" text-anchor="middle"
           font-family="JetBrains Mono, Consolas, monospace" font-size="19" letter-spacing="4"
-          fill="#34E0E8" fill-opacity="0.85">FADEWELL CLINICIAN</text>
-    <defs>
-      <linearGradient id="fade" x1="0" y1="0" x2="${w}" y2="0">
-        <stop stop-color="#7C5CFF"/><stop offset="0.55" stop-color="#4B46FF"/><stop offset="1" stop-color="#34E0E8"/>
-      </linearGradient>
-    </defs>
-    <rect x="0" y="${h - 8}" width="${w}" height="8" fill="url(#fade)"/>
-    ${grain(w, h, 0.045)}`
+          fill="${LIME}">FADEWELL CLINICIAN</text>
+    <rect x="0" y="${h - 10}" width="${w}" height="10" fill="${LIME_DEEP}"/>
+    ${grain(w, h, 0.03)}`
   )
 }
 
-/** Brand cover used for the About split and social sharing. */
+/**
+ * Brand cover used for the About split and social sharing.
+ *
+ * Split composition: type on the light paper at the left, a solid forest panel
+ * at the right carrying the mark. Type size is fitted to the available column
+ * so a long line and a short one both set correctly instead of overflowing.
+ */
 function coverSvg({ width, height, title, subtitle, seed, palette }) {
+  const split = Math.round(width * 0.55)
+  const left = Math.round(width * 0.07)
+  const col = split - left - Math.round(width * 0.06)
+  const panelCx = Math.round((split + width) / 2)
+  const panelCy = Math.round(height / 2)
+
+  // Sora semibold averages ~0.52em per glyph; fit the line to the column.
+  const fit = (text, max) => Math.max(18, Math.min(max, Math.floor(col / (text.length * 0.52))))
+  const titleSize = fit(title, Math.round(height * 0.2))
+  const subSize = fit(subtitle, Math.round(height * 0.085))
+  const subLines = [subtitle]
+  const lineGap = Math.round(subSize * 1.2)
+  const blockTop = Math.round(height / 2 - (titleSize + lineGap * subLines.length) / 2)
+
+  const ring = (r, opacity, dash) =>
+    `<circle cx="${panelCx}" cy="${panelCy}" r="${r}" fill="none" stroke="${LIME}"
+       stroke-opacity="${opacity}"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`
+
   return svg(
     width,
     height,
     `
-    ${auroraField({ width, height, seed, blobs: [340, 280, 320, 240], palette })}
-    <rect width="${width}" height="${height}" fill="${VOID}" fill-opacity="0.14"/>
-    ${mark(width * 0.14, height * 0.2, 84)}
-    <text x="${width * 0.08}" y="${height * 0.47}"
-          font-family="Sora, Segoe UI, Helvetica, Arial, sans-serif" font-size="${Math.round(width * 0.072)}"
-          font-weight="600" letter-spacing="-4" fill="#F4F5FB">${title}</text>
-    <text x="${width * 0.08}" y="${height * 0.57}"
-          font-family="Instrument Serif, Georgia, serif" font-style="italic"
-          font-size="${Math.round(width * 0.048)}" fill="#A9B0CD">${subtitle}</text>
-    <g>
-      <rect x="${width * 0.08}" y="${height * 0.66}" width="${Math.round(width * 0.16)}" height="6" rx="3" fill="#7C5CFF"/>
-      <rect x="${width * 0.08 + Math.round(width * 0.17)}" y="${height * 0.66}" width="${Math.round(width * 0.1)}" height="6" rx="3" fill="#34E0E8" fill-opacity="0.7"/>
-    </g>
-    <text x="${width * 0.08}" y="${height * 0.82}"
-          font-family="JetBrains Mono, Consolas, monospace" font-size="${Math.round(width * 0.017)}"
-          letter-spacing="7" fill="#6D7594">FADEWELL.COM</text>
-    ${grain(width, height, 0.05)}`
+    <rect width="${width}" height="${height}" fill="${palette.paper}"/>
+    <path d="M0 ${height} L${split} ${Math.round(height * 0.62)} L${split} ${height} Z" fill="${palette.band}"/>
+    <rect x="${split}" y="0" width="${width - split}" height="${height}" fill="${FOREST}"/>
+    ${ring(Math.round(height * 0.34), 0.22)}
+    ${ring(Math.round(height * 0.4), 0.12, '7 12')}
+    ${mark(panelCx, panelCy, Math.round(height * 0.3), LIME)}
+    <text x="${left}" y="${blockTop}"
+          font-family="Sora, Segoe UI, Helvetica, Arial, sans-serif" font-size="${titleSize}"
+          font-weight="600" letter-spacing="${-Math.round(titleSize * 0.045)}" fill="${FOREST}">${title}</text>
+    ${subLines
+      .map(
+        (line, i) =>
+          `<text x="${left}" y="${blockTop + titleSize + lineGap * (i + 0.75)}"
+             font-family="Instrument Serif, Georgia, serif" font-style="italic"
+             font-size="${subSize}" fill="${MOSS}">${line}</text>`
+      )
+      .join('')}
+    <rect x="${left}" y="${Math.round(height * 0.78)}" width="${Math.round(width * 0.1)}" height="6" rx="3" fill="${FOREST}"/>
+    <rect x="${left + Math.round(width * 0.11)}" y="${Math.round(height * 0.78)}" width="${Math.round(width * 0.06)}" height="6" rx="3" fill="${LIME_DEEP}"/>
+    <text x="${left}" y="${Math.round(height * 0.88)}"
+          font-family="JetBrains Mono, Consolas, monospace" font-size="${Math.round(width * 0.014)}"
+          letter-spacing="6" fill="${MOSS}">FADEWELL.COM</text>
+    ${grain(width, height, 0.03)}`
   )
 }
 
 function iconSvg(size, rounded) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-    <defs>
-      <linearGradient id="g" x1="0" y1="0" x2="${size}" y2="${size}" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#7C5CFF"/><stop offset="0.55" stop-color="#4B46FF"/><stop offset="1" stop-color="#34E0E8"/>
-      </linearGradient>
-    </defs>
-    <rect width="${size}" height="${size}" rx="${rounded}" fill="#0A0D1C"/>
+    <rect width="${size}" height="${size}" rx="${rounded}" fill="${FOREST}"/>
     ${mark(size / 2, size / 2, size * 0.74)}
   </svg>`
 }
@@ -197,14 +202,12 @@ function iconSvg(size, rounded) {
 /* ---------- Write ---------------------------------------------- */
 
 async function writeWebp(name, markup) {
-  const target = join(assets, name)
-  await sharp(Buffer.from(markup)).webp({ quality: 86 }).toFile(target)
-  console.log(`  ${name}`)
+  await sharp(Buffer.from(markup)).webp({ quality: 86 }).toFile(join(assets, name))
+  console.log(`  assets/${name}`)
 }
 
 async function writePng(name, markup) {
-  const target = join(publicDir, name)
-  await sharp(Buffer.from(markup)).png().toFile(target)
+  await sharp(Buffer.from(markup)).png().toFile(join(publicDir, name))
   console.log(`  ${name}`)
 }
 
@@ -256,8 +259,7 @@ async function main() {
     seed: 424242,
     palette: PALETTES.brand
   })
-  const ogPath = join(assets, 'og-cover.png')
-  await sharp(Buffer.from(ogMarkup)).png().toFile(ogPath)
+  await sharp(Buffer.from(ogMarkup)).png().toFile(join(assets, 'og-cover.png'))
   console.log('  assets/og-cover.png')
   await sharp(Buffer.from(ogMarkup)).jpeg({ quality: 90 }).toFile(join(assets, 'og-cover.jpg'))
   console.log('  assets/og-cover.jpg')

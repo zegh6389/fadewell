@@ -58,14 +58,14 @@ export default function About() {
                 width="1200"
                 height="900"
               />
-              <span className="split__glow" aria-hidden="true" />
+              <span className="" aria-hidden="true" />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="band-light section" aria-labelledby="values-title">
-        <div className="shell on-light">
+      <section className="band-sage section" aria-labelledby="values-title">
+        <div className="shell">
           <SectionHead
             id="values-title"
             eyebrow="How we work"

@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 
-import { Aurora, ScrollRail, CursorGlow, Masthead, Footer } from './components/Chrome.jsx'
-import { useRevealRoot, usePointerSpotlight } from './lib/motion.js'
+import { Ambient, ScrollRail, Masthead, Footer } from './components/Chrome.jsx'
+import { useRevealRoot } from './lib/motion.js'
 import { PRIVATE_ROUTES } from './pages/care/routes.jsx'
 
 import Home from './pages/Home.jsx'
@@ -42,7 +42,6 @@ function ScrollManager() {
 
 export default function App() {
   useRevealRoot()
-  usePointerSpotlight()
 
   return (
     <>
@@ -52,9 +51,8 @@ export default function App() {
           path="*"
           element={
             <>
-              <Aurora />
+              <Ambient />
               <ScrollRail />
-              <CursorGlow />
               <a className="skip-link" href="#main-content">
                 Skip to content
               </a>

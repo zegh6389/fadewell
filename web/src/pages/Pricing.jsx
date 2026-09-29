@@ -29,7 +29,7 @@ export default function Pricing() {
                 key={plan.name}
                 data-reveal
               >
-                {plan.badge ? <span className="tag tag--cyan plan__badge">{plan.badge}</span> : null}
+                {plan.badge ? <span className="tag tag--moss plan__badge">{plan.badge}</span> : null}
                 <h3 className="plan__name">{plan.name}</h3>
                 <p className="plan__price">
                   ${plan.price}
@@ -54,15 +54,15 @@ export default function Pricing() {
             ))}
           </div>
 
-          <div className="card card--glow pricing-notes" data-reveal>
+          <div className="card pricing-notes" data-reveal>
             <p className="card__num">THE FINE PRINT, IN LARGE TYPE</p>
             <Checklist items={pricingNotes} />
           </div>
         </div>
       </section>
 
-      <section className="band-light section" aria-labelledby="value-title">
-        <div className="shell on-light">
+      <section className="band-sage section" aria-labelledby="value-title">
+        <div className="shell">
           <div className="split">
             <div className="split__body" data-reveal="left">
               <p className="eyebrow eyebrow--accent">Why it is this cheap</p>
@@ -75,7 +75,7 @@ export default function Pricing() {
                 anywhere. The clinician evaluates you; nothing else is being sold.
               </p>
             </div>
-            <ul className="plan__list plan__list--light" data-reveal="right">
+            <ul className="plan__list" data-reveal="right">
               {[
                 'No dispensary partnerships or affiliate revenue',
                 'No referral commission from anywhere you might spend',

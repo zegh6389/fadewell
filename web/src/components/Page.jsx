@@ -81,7 +81,6 @@ export function CtaBand({
     <section className="section">
       <div className="shell">
         <div className="cta" data-reveal="scale">
-          <span className="cta__halo" aria-hidden="true" />
           <div className="cta__inner">
             <span className="pill">
               <IconSpark size={13} />

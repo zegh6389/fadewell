@@ -125,7 +125,7 @@ function ClinicianSurface({ session }) {
             {upcoming.map((appointment) => (
               <li key={appointment.id}>
                 <span className="care__appt-when">{formatWhen(appointment.starts_at)}</span>
-                <span className="tag tag--cyan">{appointment.mode.replace('_', ' ')}</span>
+                <span className="tag tag--moss">{appointment.mode.replace('_', ' ')}</span>
               </li>
             ))}
           </ul>

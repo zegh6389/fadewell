@@ -165,7 +165,7 @@ export function Icon({ name, ...rest }) {
   return Component ? <Component {...rest} /> : null
 }
 
-/** FadeWell wordmark — a soft horizon line dissolving into light. */
+/** FadeWell wordmark — a flat forest tile with a lime recovery curve. */
 export function BrandMark({ size = 30, ...rest }) {
   return (
     <svg
@@ -177,38 +177,23 @@ export function BrandMark({ size = 30, ...rest }) {
       focusable="false"
       {...rest}
     >
-      <defs>
-        <linearGradient id="fw-mark" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#7C5CFF" />
-          <stop offset="0.55" stopColor="#4B46FF" />
-          <stop offset="1" stopColor="#34E0E8" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="9" fill="#0A0D1C" />
-      <rect x="0.5" y="0.5" width="31" height="31" rx="8.5" stroke="url(#fw-mark)" strokeOpacity="0.5" />
-      {/* horizon: solid line fading out */}
+      <rect width="32" height="32" rx="9" fill="#174A32" />
+      {/* the "fade": a line that dips, then recovers to a steady level */}
       <path
-        d="M7 20.5h18"
-        stroke="url(#fw-mark)"
+        d="M7 20.5c2.6 0 3.2-6.5 5.6-6.5s2.6 6.5 5 6.5 2.4-3.4 4.4-3.4"
+        stroke="#D6E255"
         strokeWidth="2.2"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
+      {/* settled baseline */}
       <path
-        d="M7 20.5h11"
-        stroke="url(#fw-mark)"
-        strokeWidth="2.2"
+        d="M7 24.2h18"
+        stroke="#D6E255"
+        strokeWidth="1.8"
         strokeLinecap="round"
-        opacity="0.55"
+        opacity="0.45"
       />
-      {/* rising arc */}
-      <path
-        d="M7 16.5c3.6 0 5-4.6 9-4.6s5.4 4.6 9 4.6"
-        stroke="url(#fw-mark)"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        opacity="0.9"
-      />
-      <circle cx="24.5" cy="11.4" r="2.1" fill="#34E0E8" />
     </svg>
   )
 }

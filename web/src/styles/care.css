@@ -1,14 +1,14 @@
 /* ============================================================
-   FadeWell — Care workspaces + forms
-   Functional surfaces: denser, calmer, no ambient motion.
+   FadeWell — Care workspaces + forms (flat)
+   Functional surfaces: solid panels, hairline borders.
    ============================================================ */
 
 .care {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--ink-950);
-  color: var(--paper);
+  background: var(--ivory);
+  color: var(--ink);
 }
 
 .care__bar {
@@ -21,9 +21,7 @@
   height: 62px;
   padding-inline: clamp(1rem, 3vw, 2.5rem);
   border-bottom: 1px solid var(--line);
-  background: rgb(7 9 23 / 0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--white);
 }
 
 .care__bar-mid {
@@ -36,7 +34,7 @@
 .care__who {
   font-family: var(--font-mono);
   font-size: var(--t-xs);
-  color: var(--paper-4);
+  color: var(--muted);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -74,7 +72,7 @@
   padding: clamp(1.25rem, 2.2vw, 1.75rem);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.012));
+  background: var(--white);
 }
 
 .care__card-head {
@@ -86,8 +84,8 @@
 }
 
 .care__card--detail {
-  border-color: rgb(124 92 255 / 0.35);
-  box-shadow: var(--glow-violet);
+  border-color: var(--moss);
+  border-width: 2px;
 }
 
 /* ---------- Gate / sign-in ------------------------------------ */
@@ -106,8 +104,8 @@
   padding: clamp(1.5rem, 3vw, 2.5rem);
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.015));
-  box-shadow: var(--sh-3);
+  background: var(--white);
+  box-shadow: var(--sh-2);
 }
 
 .care__points {
@@ -121,23 +119,23 @@
   align-items: flex-start;
   gap: 0.7rem;
   font-size: var(--t-sm);
-  color: var(--paper-2);
+  color: var(--ink-2);
 }
 
 .care__points svg {
   flex-shrink: 0;
   margin-top: 0.22rem;
-  color: var(--mint);
+  color: var(--moss);
 }
 
 .care__points strong {
   display: block;
-  color: var(--paper);
+  color: var(--ink);
   font-weight: 600;
 }
 
 .care__point-body {
-  color: var(--paper-3);
+  color: var(--muted);
   font-size: var(--t-xs);
 }
 
@@ -149,7 +147,7 @@
   gap: var(--s-4);
   padding: clamp(3rem, 10vh, 6rem) var(--s-4);
   text-align: center;
-  color: var(--paper-2);
+  color: var(--ink-2);
 }
 
 .care__state--blocked {
@@ -165,15 +163,13 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 2px solid var(--line-strong);
-  border-top-color: var(--cyan);
+  border: 3px solid var(--sage-2);
+  border-top-color: var(--moss);
   animation: spin 0.8s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .care__spinner {
-    animation-duration: 2.4s;
-  }
+  .care__spinner { animation-duration: 2.4s; }
 }
 
 /* ---------- Notices ------------------------------------------- */
@@ -184,39 +180,37 @@
   padding: 1rem 1.15rem;
   border-radius: var(--r-md);
   border: 1px solid var(--line);
-  background: var(--glass);
+  background: var(--sage);
   font-size: var(--t-sm);
   line-height: 1.6;
-  color: var(--paper-2);
+  color: var(--ink-2);
 }
 
 .notice strong {
-  color: var(--paper);
+  color: var(--ink);
   font-weight: 600;
 }
 
-.notice p {
-  color: inherit;
-}
+.notice p { color: inherit; }
 
 .notice--ok {
-  border-color: rgb(110 231 183 / 0.35);
-  background: rgb(110 231 183 / 0.08);
+  border-color: var(--sage-dark);
+  background: var(--sage-2);
 }
 
 .notice--warn {
-  border-color: rgb(255 196 107 / 0.4);
-  background: rgb(255 196 107 / 0.08);
+  border-color: #e8d3a0;
+  background: #fdf6e6;
 }
 
 .notice--error {
-  border-color: rgb(255 107 157 / 0.42);
-  background: rgb(255 107 157 / 0.08);
+  border-color: #eec4b6;
+  background: #fbeeea;
 }
 
 .notice--info {
-  border-color: rgb(52 224 232 / 0.32);
-  background: rgb(52 224 232 / 0.07);
+  border-color: var(--sage-dark);
+  background: var(--white);
 }
 
 .care__issues {
@@ -243,11 +237,11 @@
   font-size: var(--t-xs);
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: var(--paper-2);
+  color: var(--ink-2);
 }
 
 .field__hint {
-  color: var(--paper-4);
+  color: var(--muted-2);
   font-weight: 400;
 }
 
@@ -256,28 +250,26 @@
   padding: 0.8rem 0.95rem;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-sm);
-  background: rgb(255 255 255 / 0.04);
-  color: var(--paper);
+  background: var(--white);
+  color: var(--ink);
   font-size: var(--t-sm);
   transition:
     border-color var(--d-fast) var(--ease-out),
-    background var(--d-fast) var(--ease-out),
     box-shadow var(--d-fast) var(--ease-out);
 }
 
 .field__control::placeholder {
-  color: var(--paper-4);
+  color: var(--muted-2);
 }
 
 .field__control:hover {
-  border-color: rgb(255 255 255 / 0.26);
+  border-color: var(--moss);
 }
 
 .field__control:focus {
   outline: none;
-  border-color: var(--violet);
-  background: rgb(124 92 255 / 0.07);
-  box-shadow: 0 0 0 3px rgb(124 92 255 / 0.18);
+  border-color: var(--moss);
+  box-shadow: 0 0 0 3px rgb(52 116 88 / 0.18);
 }
 
 .field__control--area {
@@ -295,8 +287,8 @@
 
 select.field__control {
   appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, var(--paper-3) 50%),
-    linear-gradient(135deg, var(--paper-3) 50%, transparent 50%);
+  background-image: linear-gradient(45deg, transparent 50%, var(--moss) 50%),
+    linear-gradient(135deg, var(--moss) 50%, transparent 50%);
   background-position:
     calc(100% - 18px) calc(50% + 2px),
     calc(100% - 13px) calc(50% + 2px);
@@ -305,33 +297,24 @@ select.field__control {
   padding-right: 2.5rem;
 }
 
-select.field__control option {
-  background: var(--ink-850);
-  color: var(--paper);
-}
-
-/* Radio / checkbox */
-
 .choice {
   display: grid;
   gap: 0.25rem;
   padding: 0.9rem 1rem;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-md);
-  background: rgb(255 255 255 / 0.025);
+  background: var(--white);
   cursor: pointer;
-  transition:
-    border-color var(--d-fast) var(--ease-out),
-    background var(--d-fast) var(--ease-out);
+  transition: border-color var(--d-fast) var(--ease-out), background var(--d-fast) var(--ease-out);
 }
 
 .choice:hover {
-  border-color: rgb(255 255 255 / 0.28);
+  border-color: var(--moss);
 }
 
 .choice.is-selected {
-  border-color: var(--violet);
-  background: rgb(124 92 255 / 0.12);
+  border-color: var(--moss);
+  background: var(--sage);
 }
 
 .choice--inline {
@@ -343,16 +326,17 @@ select.field__control option {
 .choice__title {
   font-size: var(--t-sm);
   font-weight: 600;
+  color: var(--ink);
 }
 
 .choice__note {
   font-size: var(--t-xs);
-  color: var(--paper-3);
+  color: var(--muted);
 }
 
 .choice input,
 .check input {
-  accent-color: var(--violet);
+  accent-color: var(--moss);
   width: 1.05rem;
   height: 1.05rem;
   flex-shrink: 0;
@@ -365,16 +349,16 @@ select.field__control option {
   padding: 0.9rem 1rem;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: rgb(255 255 255 / 0.025);
+  background: var(--white);
   font-size: var(--t-sm);
-  color: var(--paper-2);
+  color: var(--ink-2);
   cursor: pointer;
   line-height: 1.55;
 }
 
 .check strong {
   display: block;
-  color: var(--paper);
+  color: var(--ink);
   font-weight: 600;
 }
 
@@ -401,12 +385,11 @@ select.field__control option {
   padding: clamp(1.25rem, 2.2vw, 1.75rem);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  background: linear-gradient(160deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.012));
-  border-style: solid;
+  background: var(--white);
 }
 
 .care__group:disabled {
-  opacity: 0.62;
+  opacity: 0.6;
 }
 
 .care__legend {
@@ -417,14 +400,14 @@ select.field__control option {
   font-size: var(--t-md);
   font-weight: 600;
   letter-spacing: -0.025em;
-  color: var(--paper);
+  color: var(--ink);
 }
 
 .care__legend-num {
   font-family: var(--font-mono);
   font-size: var(--t-xs);
   letter-spacing: 0.14em;
-  color: var(--cyan);
+  color: var(--moss);
 }
 
 .care__row {
@@ -439,6 +422,7 @@ select.field__control option {
   padding: var(--s-4);
   border: 1px dashed var(--line-strong);
   border-radius: var(--r-md);
+  background: var(--ivory);
 }
 
 .care__status {
@@ -450,12 +434,12 @@ select.field__control option {
   padding: 0.9rem 1.15rem;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: var(--glass);
+  background: var(--white);
 }
 
 .care__status-note {
   font-size: var(--t-xs);
-  color: var(--paper-3);
+  color: var(--muted);
   margin-top: 0.35rem;
 }
 
@@ -464,7 +448,7 @@ select.field__control option {
   align-items: center;
   gap: 0.35rem;
   font-size: var(--t-xs);
-  color: var(--mint);
+  color: var(--moss);
 }
 
 .care__actions {
@@ -484,11 +468,11 @@ select.field__control option {
   gap: 0.4rem;
   flex-wrap: wrap;
   font-size: var(--t-xs);
-  color: var(--paper-4);
+  color: var(--muted);
 }
 
 .care__fineprint a {
-  color: var(--cyan);
+  color: var(--moss);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -514,12 +498,13 @@ select.field__control option {
   padding: 0.8rem 0.95rem;
   border: 1px solid var(--line-soft);
   border-radius: var(--r-sm);
-  background: rgb(255 255 255 / 0.022);
+  background: var(--ivory);
 }
 
 .care__row-title {
   font-size: var(--t-sm);
   font-weight: 600;
+  color: var(--ink);
 }
 
 .care__appointments {
@@ -535,7 +520,7 @@ select.field__control option {
   padding: 0.75rem 0.95rem;
   border: 1px solid var(--line-soft);
   border-radius: var(--r-sm);
-  background: rgb(255 255 255 / 0.022);
+  background: var(--ivory);
   font-size: var(--t-sm);
 }
 
@@ -551,7 +536,7 @@ select.field__control option {
 
 .care__dl dt {
   font-size: var(--t-xs);
-  color: var(--paper-4);
+  color: var(--muted);
   letter-spacing: 0.02em;
 }
 
@@ -559,16 +544,17 @@ select.field__control option {
   margin: 0;
   font-size: var(--t-sm);
   font-weight: 500;
+  color: var(--ink);
 }
 
 .care__reason {
   padding: 0.9rem 1.1rem;
-  border-left: 2px solid var(--violet);
-  background: rgb(124 92 255 / 0.07);
+  border-left: 3px solid var(--lime-deep);
+  background: var(--sage);
   border-radius: 0 var(--r-sm) var(--r-sm) 0;
   font-size: var(--t-sm);
   line-height: 1.65;
-  color: var(--paper-2);
+  color: var(--ink-2);
 }
 
 .care__answer {
@@ -583,7 +569,7 @@ select.field__control option {
   font-size: var(--t-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--paper-4);
+  color: var(--muted);
 }
 
 .care__book {
@@ -593,14 +579,12 @@ select.field__control option {
   border-top: 1px solid var(--line);
 }
 
-/* ---------- Switcher count ------------------------------------ */
-
 .switcher__count {
   display: inline-block;
   margin-left: 0.45rem;
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  opacity: 0.65;
+  opacity: 0.7;
 }
 
 @media (max-width: 640px) {

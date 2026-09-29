@@ -54,8 +54,8 @@ export default function Clinicians() {
         </div>
       </section>
 
-      <section className="band-light section" aria-labelledby="standards-title">
-        <div className="shell on-light">
+      <section className="band-sage section" aria-labelledby="standards-title">
+        <div className="shell">
           <div className="split">
             <div className="split__body" data-reveal="left">
               <p className="eyebrow eyebrow--accent">Credentialing</p>
@@ -70,7 +70,7 @@ export default function Clinicians() {
               </p>
             </div>
 
-            <ul className="plan__list plan__list--light" data-reveal="right">
+            <ul className="plan__list" data-reveal="right">
               {standards.map((item) => (
                 <li key={item}>
                   <IconCheck size={16} />

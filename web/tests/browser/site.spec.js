@@ -114,6 +114,24 @@ test.describe('FadeWell marketing site', () => {
     expect(errors).toEqual([])
   })
 
+  test('decorative rules stay rules at every viewport', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' })
+    await page.locator('.story__rail-line').scrollIntoViewIfNeeded()
+
+    // The story rail is a 3px rule on desktop and becomes a horizontal rule
+    // when the layout stacks. It has previously rendered as a 3rem solid block,
+    // which is indistinguishable from an empty button. Keep it thin.
+    const box = await page.locator('.story__rail-line').evaluate((el) => {
+      const r = el.getBoundingClientRect()
+      return { width: r.width, height: r.height }
+    })
+    expect(box.width).toBeGreaterThan(0)
+    expect(
+      Math.min(box.width, box.height),
+      'rail rule should stay thin in both axes'
+    ).toBeLessThan(8)
+  })
+
   test('every navigation link resolves to a real page', async ({ page }) => {
     const errors = watchErrors(page)
     await page.goto('/', { waitUntil: 'networkidle' })

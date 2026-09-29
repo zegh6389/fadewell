@@ -55,8 +55,8 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      <section className="band-light section" aria-labelledby="reassure-title">
-        <div className="shell on-light">
+      <section className="band-sage section" aria-labelledby="reassure-title">
+        <div className="shell">
           <div className="split">
             <div className="split__body" data-reveal="left">
               <p className="eyebrow eyebrow--accent">What you can count on</p>

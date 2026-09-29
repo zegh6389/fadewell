@@ -12,11 +12,11 @@ import { IconArrow, IconCalendar, IconCheck, IconClock } from '../../components/
 
 const QUEUES = [
   { key: 'NEEDS_REVIEW', label: 'Needs attention', tone: 'amber' },
-  { key: 'SUBMITTED', label: 'Awaiting review', tone: 'cyan' },
-  { key: 'REVIEWED', label: 'Ready to schedule', tone: 'mint' },
-  { key: 'SCHEDULED', label: 'Scheduled', tone: 'violet' },
-  { key: 'COMPLETED', label: 'Complete', tone: 'violet' },
-  { key: 'DRAFT', label: 'Draft', tone: 'violet' }
+  { key: 'SUBMITTED', label: 'Awaiting review', tone: 'moss' },
+  { key: 'REVIEWED', label: 'Ready to schedule', tone: 'lime' },
+  { key: 'SCHEDULED', label: 'Scheduled', tone: 'forest' },
+  { key: 'COMPLETED', label: 'Complete', tone: 'forest' },
+  { key: 'DRAFT', label: 'Draft', tone: 'sage' }
 ]
 
 function formatWhen(value) {

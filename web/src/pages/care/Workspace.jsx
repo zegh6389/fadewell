@@ -25,8 +25,9 @@ export function CareShell({ area, session, onSignOut, children }) {
         <Link to="/" className="brand" aria-label={`${brand.name} home`}>
           <BrandMark className="brand__mark" size={26} />
           <span>{brand.name}</span>
-        </Link>        <div className="care__bar-mid">
-          <span className="tag tag--violet">{meta?.label ?? 'Workspace'}</span>
+        </Link>
+        <div className="care__bar-mid">
+          <span className="tag tag--forest">{meta?.label ?? 'Workspace'}</span>
           {session ? <span className="care__who">{session.role.toLowerCase()}</span> : null}
         </div>
         <div className="care__bar-actions">
