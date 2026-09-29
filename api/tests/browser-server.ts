@@ -73,7 +73,15 @@ const app = await buildApp(
     // service rejects every mutating request as cross-origin (403). The web
     // test suite serves the bundle with `vite preview` on 4173, so it sets
     // APP_ORIGIN to match; local dev keeps the Vite default.
-    ...loadConfig({ APP_ORIGIN: process.env.APP_ORIGIN || 'http://127.0.0.1:5173' }),
+    //
+    // `scripts/serve-lan.mjs` serves the same bundle on both the loopback and
+    // the LAN address at once, so APP_ORIGINS has to be forwarded here too.
+    // It silently was not, and the symptom was a site that loaded over the LAN
+    // and then refused every write with a 403.
+    ...loadConfig({
+      APP_ORIGIN: process.env.APP_ORIGIN || 'http://127.0.0.1:5173',
+      APP_ORIGINS: process.env.APP_ORIGINS || ''
+    }),
     encryptionKey,
     intakeEnabled: true
   },

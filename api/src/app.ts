@@ -61,8 +61,9 @@ export async function buildApp(
     )
       return reply.code(308).redirect(`${config.origin}${request.url}`)
     if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+      const origin = request.headers.origin
       if (
-        request.headers.origin !== config.origin ||
+        (origin !== config.origin && !config.extraOrigins.includes(origin ?? '')) ||
         request.headers['sec-fetch-site'] === 'cross-site'
       )
         throw denied()

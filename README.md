@@ -60,6 +60,54 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 To exercise the care workspaces locally without a database, run the synthetic
 in-memory API instead of `npm run dev` — see **Browser tests** below.
 
+### Opening it on your local network
+
+```sh
+cd web
+npm run build      # once, or after any change
+npm run lan
+```
+
+It prints something like:
+
+```
+  On this machine : http://127.0.0.1:4173
+  On your network : http://192.168.2.47:4173
+```
+
+Open the second address on a phone or another laptop on the same Wi-Fi. It uses
+the synthetic in-memory API, so the care workspaces are fully usable but nothing
+is persisted and no real patient data is involved.
+
+Two things are deliberate here:
+
+- **The API stays bound to `127.0.0.1`.** Only `vite preview` listens on
+  `0.0.0.0`; Vite proxies `/api` to the API server-side. Nothing but your own
+  machine can reach the API port, so exposing the site does not expose the
+  workspaces' backend.
+- **`APP_ORIGIN` has to match the address you actually type.** The API refuses
+  any state-changing request whose `Origin` it does not recognise, and it
+  matches exactly — not by subnet, so `http://192.168.2.99:4173` is refused even
+  though `http://192.168.2.47:4173` is allowed. Get this wrong and the failure is
+  confusing rather than loud: the site loads, and then nothing you click works.
+  `serve-lan.mjs` therefore sets the loopback origin as canonical and passes the
+  LAN address in `APP_ORIGINS`, so one build serves both.
+
+To allow a second address, add it to `APP_ORIGINS` rather than widening the
+check — a comma-separated list of exact origins, e.g.
+`APP_ORIGINS="http://192.168.2.47:4173,http://192.168.2.48:4173"`. In production
+every allowed origin must be HTTPS.
+
+Verify the LAN path actually works — loading the site proves little, since only
+writes are origin-checked:
+
+```sh
+PROBE_URL=http://192.168.2.47:4173 node scripts/probe-lan.mjs
+```
+
+If a phone cannot connect at all, the block is almost always the Windows
+firewall rather than the app.
+
 ---
 
 ## Commands
@@ -84,6 +132,7 @@ in-memory API instead of `npm run dev` — see **Browser tests** below.
 | `npm run dev` | Vite dev server |
 | `npm run build` | Production bundle → `web/dist` |
 | `npm run preview` | Serve the production bundle |
+| `npm run lan` | Serve on the local network so a phone can open it (see below) |
 | `npm run lint` | oxlint |
 | `npm run test:e2e` | Playwright browser suite |
 | `node scripts/audit-classes.mjs` | Token / class / import audit |
@@ -91,6 +140,8 @@ in-memory API instead of `npm run dev` — see **Browser tests** below.
 | `node scripts/probe-mask.mjs` | Prove the reveal technique survives IntersectionObserver |
 | `node scripts/shoot-journey.mjs` | Assert the pinned journey travels and lands on the column |
 | `node scripts/probe-journey-fallbacks.mjs` | Assert every step stays reachable without motion |
+| `node scripts/probe-journey-range.mjs` | Compare the published pinned range against the live layout |
+| `npm run probe:lan` | Prove the LAN address loads **and accepts writes** (needs `PROBE_URL`) |
 | `node scripts/shoot.mjs` | Capture design reference screenshots |
 | `node scripts/generate-assets.mjs` | Regenerate brand imagery |
 
