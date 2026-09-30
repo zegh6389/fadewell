@@ -20,14 +20,42 @@ export const cookieName = (config: Config) =>
  *
  * Still read so a rename cannot sign every signed-in user out the moment it
  * deploys. It is never written — the current name is the only one issued — and
- * logout clears it so the stale cookie does not outlive the session it named.
+ * every revocation path consumes it alongside the current one, so the stale
+ * cookie cannot outlive the session it named.
  */
 export const legacyCookieName = (config: Config) =>
   config.origin.startsWith('https://') ? '__Host-fadewell-session' : 'fadewell-session'
 
+/**
+ * Every session token the browser presented, current name first, de-duplicated.
+ *
+ * A rolling deploy can leave both names on one client: a new instance issues the
+ * current cookie while an old instance still issues the legacy one. Reading only
+ * the preferred name would leave the other session row alive in the database, so
+ * rotation, logout, and join revocation all consume this list.
+ */
+export const sessionTokens = (request: FastifyRequest, config: Config) => {
+  const tokens = new Set<string>()
+  for (const name of [cookieName(config), legacyCookieName(config)]) {
+    const value = request.cookies[name]
+    if (value) tokens.add(value)
+  }
+  return [...tokens]
+}
+
 /** Reads the session cookie under the current name, falling back to the legacy one. */
 export const sessionCookie = (request: FastifyRequest, config: Config) =>
-  request.cookies[cookieName(config)] ?? request.cookies[legacyCookieName(config)]
+  sessionTokens(request, config)[0]
+
+/**
+ * Deletes the session rows behind these tokens.
+ *
+ * Clearing a cookie is a browser-side act: it does not revoke the database
+ * session. Anything holding the token keeps its access until the row expires.
+ */
+export async function revokeSessionTokens(sql: Sql, tokens: string[]) {
+  for (const token of tokens) await sql.query('DELETE FROM sessions WHERE token_hash=$1', [hash(token)])
+}
 export const usernameInput = z.string().trim().regex(/^[A-Za-z0-9_.-]{3,64}$/)
 const authFailed = () => new Fault(401, 'AUTH_FAILED', 'Check your username, password, or authenticator code.')
 const locked = () => new Fault(429, 'ACCOUNT_LOCKED', 'Too many attempts. Try again in 15 minutes.')
@@ -61,8 +89,9 @@ async function rejectAttempt(sql: Sql, row: Row | undefined, requestId: string) 
 }
 async function writeSession(sql: Sql, request: FastifyRequest, config: Config, actor: { id: string; role: Role }) {
   const token = randomToken()
-  const previous = sessionCookie(request, config)
-  if (previous) await sql.query('DELETE FROM sessions WHERE token_hash=$1', [hash(previous)])
+  // Revoke every presented session, not just the preferred one, so a token left
+  // behind under the legacy cookie cannot survive this rotation.
+  await revokeSessionTokens(sql, sessionTokens(request, config))
   await sql.query(
     "INSERT INTO sessions(token_hash,actor_id,csrf,expires_at) VALUES ($1,$2,$3,now()+interval '4 hours')",
     [hash(token), actor.id, randomToken()]
@@ -247,7 +276,9 @@ export function registerAuth(app: FastifyInstance, database: Database | undefine
   app.post('/api/auth/logout', async (request, reply) => {
     const actor = await authenticate(request, database, config)
     await db().transaction(async (sql) => {
-      await sql.query('DELETE FROM sessions WHERE token_hash=$1', [actor.sessionHash])
+      // Revoke both names, not just the one that authenticated this request:
+      // clearSession() only removes the cookies from the browser.
+      await revokeSessionTokens(sql, sessionTokens(request, config))
       await audit(sql, actor, 'SESSION_REVOKED', 'identity', actor.id, request.id)
     })
     clearSession(reply)

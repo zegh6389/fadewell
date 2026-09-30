@@ -1,4 +1,5 @@
 import { writeFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
 const root = new URL('../public/', import.meta.url)
@@ -57,6 +58,6 @@ const card = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="630" 
   </g></g><rect x="2" y="2" width="996" height="626" rx="32" fill="none" stroke="#dce7da" stroke-width="3"/>
 </svg>`
 await writeFile(new URL('assets/card-premium.svg', root), card)
-await sharp(Buffer.from(card)).webp({ quality: 94 }).toFile(new URL('assets/card-premium.webp', root).pathname.replace(/^\/([A-Za-z]:)/, '$1'))
+await sharp(Buffer.from(card)).webp({ quality: 94 }).toFile(fileURLToPath(new URL('assets/card-premium.webp', root)))
 await writeFile(new URL('assets/photography-sources.txt', root), Object.entries(photos).map(([name, id]) => `${name}: https://unsplash.com/photos/${id.replace('photo-', '')}\nSource: https://images.unsplash.com/${id}\nEditorial stock imagery; not a representation of an actual MmjGreen clinician or patient.\n`).join('\n'))
 console.log('Premium brand, sample card, and three optimized editorial photographs written.')

@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict'
+﻿import assert from 'node:assert/strict'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
@@ -8,7 +8,7 @@ import { buildApp } from '../src/app.ts'
 import { loadConfig } from '../src/config.ts'
 import { hashPassword } from '../src/auth.ts'
 import { migrate } from '../src/migrate.ts'
-import { open } from '../src/security.ts'
+import { open, hash, randomToken } from '../src/security.ts'
 import type { Database } from '../src/db.ts'
 import { testDatabase } from './database.ts'
 
@@ -334,4 +334,68 @@ test('admin user creation issues TOTP setup key, and TOTP/password reset rotate 
   assert.equal(listAfterDelete.json().users.some((row: { id: string }) => row.id === createdBody.id), false)
   const selfDelete = await app.inject({ method: 'DELETE', url: `/api/v1/admin/users/${adminId}`, headers: deleteHeaders })
   assert.equal(selfDelete.statusCode, 403, selfDelete.body)
+})
+
+
+test('a session presented under the pre-rebrand cookie is revoked by logout and by rotation', async (t) => {
+  const db = await testDatabase()
+  t.after(() => db.close())
+  await migrate(db)
+  const password = 'Synthetic-Password-2026'
+  const config = { ...loadConfig({}), origin: 'https://care.example.test', encryptionKey: randomBytes(32).toString('base64') }
+  const app = await buildApp(config, db, () => {})
+  t.after(() => app.close())
+  let requests = 0
+  const post = (path: string, body: unknown, cookie = '', csrf = '') => app.inject({
+    method: 'POST', url: `/api/auth/${path}`, remoteAddress: `192.0.2.${++requests}`,
+    headers: { origin: config.origin, 'content-type': 'application/json', cookie, 'x-csrf-token': csrf }, payload: body as any
+  })
+  const id = randomUUID()
+  await db.query("INSERT INTO identities(id,issuer,subject,role) VALUES ($1,'local',$2,'ADMIN')", [id, 'DualCookie'])
+  await db.query('INSERT INTO local_credentials(identity_id,username,password_hash) VALUES ($1,$2,$3)', [id, 'DualCookie', await hashPassword(password)])
+
+  // The current name is the only one issued. The legacy one is still read so a
+  // rename cannot sign every signed-in user out the moment it deploys.
+  const CURRENT = '__Host-mmjgreen-session'
+  const LEGACY = '__Host-fadewell-session'
+  const PENDING = '__Host-mmjgreen-login'
+  const session = (cookie: string) => app.inject({ url: '/api/v1/session', headers: { cookie } })
+  const live = async () => (await db.query('SELECT count(*)::int AS n FROM sessions')).rows[0].n as number
+  const surviving = async () => (await db.query('SELECT token_hash FROM sessions')).rows[0].token_hash as string
+  const plant = async (name: string) => {
+    const token = randomToken()
+    await db.query(
+      "INSERT INTO sessions(token_hash,actor_id,csrf,expires_at) VALUES ($1,$2,$3,now()+interval '4 hours')",
+      [hash(token), id, randomToken()]
+    )
+    return { token, header: `${name}=${token}` }
+  }
+
+  // --- logout revokes both names, not just the one that authenticated -----
+  const held = await plant(CURRENT)
+  const stranded = await plant(LEGACY)
+  assert.equal((await session(held.header)).statusCode, 200)
+  assert.equal((await session(stranded.header)).statusCode, 200, 'The legacy cookie alone must still authenticate')
+  assert.equal((await session(`${held.header}; ${stranded.header}`)).statusCode, 200, 'The current cookie takes precedence')
+  assert.equal(await live(), 2)
+  const actor = (await session(`${held.header}; ${stranded.header}`)).json()
+  assert.equal((await post('logout', {}, `${held.header}; ${stranded.header}`, actor.csrf)).statusCode, 200)
+  assert.equal(await live(), 0, 'Logout must revoke the row named by the legacy cookie, not only clear it from the browser')
+  assert.equal((await session(stranded.header)).statusCode, 401)
+
+  // --- rotation is the other issuance path -------------------------------
+  const carried = await plant(CURRENT)
+  const orphaned = await plant(LEGACY)
+  assert.equal(await live(), 2)
+  const started = await post('login', { username: 'DualCookie', password })
+  const secret = started.json().secret
+  assert.ok(secret, `${started.statusCode}: ${started.body}`)
+  const pending = started.cookies.find((item) => item.name === PENDING)!
+  assert.ok(pending, `${started.statusCode}: ${started.body}`)
+  const final = await post('mfa', { code: generateSync({ secret }) }, `${PENDING}=${pending.value}; ${carried.header}; ${orphaned.header}`)
+  assert.equal(final.statusCode, 200, final.body)
+  assert.equal(await live(), 1, 'Rotation must leave exactly the newly issued session')
+  assert.notEqual(await surviving(), hash(orphaned.token), 'The session named by the legacy cookie must not survive rotation')
+  assert.notEqual(await surviving(), hash(carried.token), 'The session being rotated must not survive it')
+  assert.equal((await session(orphaned.header)).statusCode, 401, 'The legacy session is revoked, not merely unpresented')
 })

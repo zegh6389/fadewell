@@ -81,7 +81,13 @@ const relativeLuminance = (rgb) => {
   })
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
-const parse = (value) => value.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number)
+// Computed colours are usually `rgb()`/`rgba()`, but a transparent or gradient
+// value carries no channels at all. Return null rather than throwing on `.slice`
+// of a null match, so the caller can skip the part instead of crashing the probe.
+const parse = (value) => {
+  const parts = (value.match(/\d+(\.\d+)?/g) ?? []).slice(0, 3).map(Number)
+  return parts.length === 3 ? parts : null
+}
 const ratio = (a, b) => {
   const [l1, l2] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x)
   return (l1 + 0.05) / (l2 + 0.05)
@@ -89,13 +95,22 @@ const ratio = (a, b) => {
 
 console.log('\n--- every painted part, measured ---')
 const bg = parse(painted.cardBackground)
-for (const p of painted.parts) {
-  const r = ratio(parse(p.color), bg)
-  const large = parseFloat(p.fontSize) >= 24
-  const needed = large ? 3 : 4.5
-  console.log(
-    `  ${p.sel.padEnd(22)} ${p.color.padEnd(20)} ${r.toFixed(2)}:1  needs ${needed}:1  ${r >= needed ? 'ok' : 'FAIL'}`
-  )
+if (!bg) {
+  console.log(`card background ${painted.cardBackground} carries no rgb channels; skipping measurement.`)
+} else {
+  for (const p of painted.parts) {
+    const fg = parse(p.color)
+    if (!fg) {
+      console.log(`  ${p.sel.padEnd(22)} ${p.color.padEnd(20)} skipped — no rgb channels`)
+      continue
+    }
+    const r = ratio(fg, bg)
+    const large = parseFloat(p.fontSize) >= 24
+    const needed = large ? 3 : 4.5
+    console.log(
+      `  ${p.sel.padEnd(22)} ${p.color.padEnd(20)} ${r.toFixed(2)}:1  needs ${needed}:1  ${r >= needed ? 'ok' : 'FAIL'}`
+    )
+  }
 }
 
 console.log('\n--- axe on the featured card ---')

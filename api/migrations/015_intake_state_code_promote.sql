@@ -1,8 +1,8 @@
 -- Promote the NOT VALID FK + nullable column from migration
 -- 007_intake_state_code.sql to a fully validated, NOT NULL constraint.
 --
--- This migration is intentionally a NO-OP today: MmjGreen is pre-launch and
--- the legacy → MmjGreen data import tooling does not exist yet. When that
+-- This migration is intentionally a NO-OP today: FadeWell is pre-launch and
+-- the legacy → FadeWell data import tooling does not exist yet. When that
 -- tooling lands, the import is expected to populate intakes.state_code from
 -- the legacy users.state column for every historical intake row BEFORE this
 -- promotion migration runs. If the import leaves any rows with NULL

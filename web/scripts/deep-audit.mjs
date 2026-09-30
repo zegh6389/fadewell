@@ -51,7 +51,10 @@ async function auditRoute(context, path, { axe = true, scrollSweep = true } = {}
     if (m.type() !== 'error') return
     // A bare "Failed to load resource: ... 401" carries no URL in its text, so
     // the /api/ filter below cannot see it. The message's own location does.
+    // The 500 filter is applied to the message alone, before the URL is folded
+    // in — a port or asset hash containing "500" must not blank a real error.
     const from = m.location()?.url ?? ''
+    if (m.text().includes('500')) return
     errors.push(from ? `console: ${m.text()} (${from})` : `console: ${m.text()}`)
   })
   page.on('requestfailed', (r) => {
@@ -77,7 +80,7 @@ async function auditRoute(context, path, { axe = true, scrollSweep = true } = {}
   // bury real findings under environment noise.
   const isApi = (line) => line.includes('/api/')
 
-  errors.filter((e) => !isApi(e) && !e.includes('500')).forEach((e) => note(path, 'error', e))
+  errors.filter((e) => !isApi(e)).forEach((e) => note(path, 'error', e))
   failed.filter((f) => !isApi(f)).forEach((f) => note(path, 'request', f))
 
   // --- Rendered-text brand leakage -----------------------------------

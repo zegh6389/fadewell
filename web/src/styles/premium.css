@@ -185,7 +185,14 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-typewriter span { animation: none; clip-path: none; }
   .hero-typewriter span::after { display: none; }
+  .nav-sheet__link { animation: none; }
   .scene-depth, .preview__art .medical-card, .preview__art:hover .medical-card { transform: none; }
+  .scene-depth, .preview__art .medical-card { transition: none; }
   .scene-card { animation: none; }
   .word-reveal__word { color: var(--forest); opacity: 1; }
+  /* Hover lift and image zoom are the largest remaining motion in this sheet. */
+  .card, .spotlight-cell, .clinician, .quote, .path-card, .plan { transition: background-color 320ms var(--ease-out), border-color 320ms var(--ease-out); }
+  .card:hover, .spotlight-cell:hover, .clinician:hover, .quote:hover { transform: none; }
+  .page-hero__art img, .story-frame__media img, .clinician__photo img { transition: none; }
+  .page-hero__art:hover img, .story-frame:hover img, .clinician:hover img { transform: none; }
 }
