@@ -13,7 +13,49 @@ export const roleHome: Record<Role, string> = {
   PATIENT: '/patient', DOCTOR: '/portal', STAFF: '/staff', ADMIN: '/admin'
 }
 export const cookieName = (config: Config) =>
+  config.origin.startsWith('https://') ? '__Host-mmjgreen-session' : 'mmjgreen-session'
+
+/**
+ * The pre-rebrand cookie name.
+ *
+ * Still read so a rename cannot sign every signed-in user out the moment it
+ * deploys. It is never written — the current name is the only one issued — and
+ * every revocation path consumes it alongside the current one, so the stale
+ * cookie cannot outlive the session it named.
+ */
+export const legacyCookieName = (config: Config) =>
   config.origin.startsWith('https://') ? '__Host-fadewell-session' : 'fadewell-session'
+
+/**
+ * Every session token the browser presented, current name first, de-duplicated.
+ *
+ * A rolling deploy can leave both names on one client: a new instance issues the
+ * current cookie while an old instance still issues the legacy one. Reading only
+ * the preferred name would leave the other session row alive in the database, so
+ * rotation, logout, and join revocation all consume this list.
+ */
+export const sessionTokens = (request: FastifyRequest, config: Config) => {
+  const tokens = new Set<string>()
+  for (const name of [cookieName(config), legacyCookieName(config)]) {
+    const value = request.cookies[name]
+    if (value) tokens.add(value)
+  }
+  return [...tokens]
+}
+
+/** Reads the session cookie under the current name, falling back to the legacy one. */
+export const sessionCookie = (request: FastifyRequest, config: Config) =>
+  sessionTokens(request, config)[0]
+
+/**
+ * Deletes the session rows behind these tokens.
+ *
+ * Clearing a cookie is a browser-side act: it does not revoke the database
+ * session. Anything holding the token keeps its access until the row expires.
+ */
+export async function revokeSessionTokens(sql: Sql, tokens: string[]) {
+  for (const token of tokens) await sql.query('DELETE FROM sessions WHERE token_hash=$1', [hash(token)])
+}
 export const usernameInput = z.string().trim().regex(/^[A-Za-z0-9_.-]{3,64}$/)
 const authFailed = () => new Fault(401, 'AUTH_FAILED', 'Check your username, password, or authenticator code.')
 const locked = () => new Fault(429, 'ACCOUNT_LOCKED', 'Too many attempts. Try again in 15 minutes.')
@@ -47,8 +89,9 @@ async function rejectAttempt(sql: Sql, row: Row | undefined, requestId: string) 
 }
 async function writeSession(sql: Sql, request: FastifyRequest, config: Config, actor: { id: string; role: Role }) {
   const token = randomToken()
-  const previous = request.cookies[cookieName(config)]
-  if (previous) await sql.query('DELETE FROM sessions WHERE token_hash=$1', [hash(previous)])
+  // Revoke every presented session, not just the preferred one, so a token left
+  // behind under the legacy cookie cannot survive this rotation.
+  await revokeSessionTokens(sql, sessionTokens(request, config))
   await sql.query(
     "INSERT INTO sessions(token_hash,actor_id,csrf,expires_at) VALUES ($1,$2,$3,now()+interval '4 hours')",
     [hash(token), actor.id, randomToken()]
@@ -59,7 +102,7 @@ async function writeSession(sql: Sql, request: FastifyRequest, config: Config, a
 
 export async function authenticate(request: FastifyRequest, db: Database | undefined, config: Config, roles?: Role[]): Promise<Actor> {
   const database = requireDb(db)
-  const token = request.cookies[cookieName(config)]
+  const token = sessionCookie(request, config)
   if (!token || !/^[A-Za-z0-9_-]{43}$/.test(token))
     throw new Fault(401, 'AUTH_REQUIRED', 'Sign in to continue.')
   const tokenHash = hash(token)
@@ -87,9 +130,14 @@ export function registerAuth(app: FastifyInstance, database: Database | undefine
   const key = () => { if (!config.encryptionKey) throw unavailable(); return config.encryptionKey }
   const options = { config: { rateLimit: { max: 10, timeWindow: '1 minute' } } }
   const cookies = { path: '/', httpOnly: true, secure: config.origin.startsWith('https://'), sameSite: 'strict' as const }
-  const pendingCookie = cookies.secure ? '__Host-fadewell-login' : 'fadewell-login'
+  const pendingCookie = cookies.secure ? '__Host-mmjgreen-login' : 'mmjgreen-login'
   const setSession = (reply: FastifyReply, token: string) =>
     reply.setCookie(cookieName(config), token, { ...cookies, sameSite: 'lax', maxAge: 14400 })
+  /** Clears the current cookie and any pre-rebrand one still on the browser. */
+  const clearSession = (reply: FastifyReply) => {
+    reply.clearCookie(cookieName(config), cookies)
+    reply.clearCookie(legacyCookieName(config), cookies)
+  }
   const credentialQuery = `SELECT i.id,i.role,i.enabled,c.* FROM identities i
     JOIN local_credentials c ON c.identity_id=i.id`
 
@@ -221,17 +269,19 @@ export function registerAuth(app: FastifyInstance, database: Database | undefine
       return { changed: true }
     })
     if ('error' in result) throw result.error
-    reply.clearCookie(cookieName(config), cookies)
+    clearSession(reply)
     return { changed: true, step: 'login' }
   })
 
   app.post('/api/auth/logout', async (request, reply) => {
     const actor = await authenticate(request, database, config)
     await db().transaction(async (sql) => {
-      await sql.query('DELETE FROM sessions WHERE token_hash=$1', [actor.sessionHash])
+      // Revoke both names, not just the one that authenticated this request:
+      // clearSession() only removes the cookies from the browser.
+      await revokeSessionTokens(sql, sessionTokens(request, config))
       await audit(sql, actor, 'SESSION_REVOKED', 'identity', actor.id, request.id)
     })
-    reply.clearCookie(cookieName(config), cookies)
+    clearSession(reply)
     reply.clearCookie(pendingCookie, cookies)
     return { signedOut: true }
   })
@@ -244,7 +294,7 @@ export function registerAuth(app: FastifyInstance, database: Database | undefine
     key()
     if (!z.object({}).strict().safeParse(request.body).success) throw denied()
     const result = await db().transaction(async (sql) => {
-      const previous = request.cookies[cookieName(config)]
+      const previous = sessionCookie(request, config)
       if (previous) {
         const existing = (await sql.query(`SELECT i.role FROM sessions s JOIN identities i ON i.id=s.actor_id
           WHERE s.token_hash=$1 AND i.enabled=true AND s.expires_at>now() AND s.last_seen_at>now()-interval '15 minutes'`, [hash(previous)])).rows[0]

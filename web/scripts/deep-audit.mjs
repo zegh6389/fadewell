@@ -1,5 +1,5 @@
 /**
- * FadeWell — deep browser audit.
+ * MmjGreen — deep browser audit.
  *
  * Deliberately goes beyond the Playwright suite. That suite proves routes
  * render without errors; this one proves the *design* is what it claims to
@@ -47,15 +47,28 @@ async function auditRoute(context, path, { axe = true, scrollSweep = true } = {}
   const failed = []
 
   page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`))
-  page.on('console', (m) => m.type() === 'error' && errors.push(`console: ${m.text()}`))
+  page.on('console', (m) => {
+    if (m.type() !== 'error') return
+    // A bare "Failed to load resource: ... 401" carries no URL in its text, so
+    // the /api/ filter below cannot see it. The message's own location does.
+    // The 500 filter is applied to the message alone, before the URL is folded
+    // in — a port or asset hash containing "500" must not blank a real error.
+    const from = m.location()?.url ?? ''
+    if (m.text().includes('500')) return
+    errors.push(from ? `console: ${m.text()} (${from})` : `console: ${m.text()}`)
+  })
   page.on('requestfailed', (r) => {
     // Vite dev injects an HMR websocket we do not care about.
     if (!r.url().startsWith('ws')) failed.push(`${r.url()} — ${r.failure()?.errorText}`)
   })
   page.on('response', (r) => {
-    if (r.status() >= 400 && !r.url().includes('__vite')) {
-      failed.push(`${r.status()} ${r.url()}`)
-    }
+    if (r.status() < 400 || r.url().includes('__vite')) return
+    // `GET /api/v1/session` is the signed-in check, and it is *meant* to answer
+    // 401 when nobody is signed in — the private workspaces render their
+    // session gate off exactly that 401. Counting it as a finding reported the
+    // gate working as four errors on every run.
+    if (r.status() === 401 && r.url().endsWith('/api/v1/session')) return
+    failed.push(`${r.status()} ${r.url()}`)
   })
 
   await page.goto(`${URL}${path}`, { waitUntil: 'networkidle' })
@@ -67,7 +80,7 @@ async function auditRoute(context, path, { axe = true, scrollSweep = true } = {}
   // bury real findings under environment noise.
   const isApi = (line) => line.includes('/api/')
 
-  errors.filter((e) => !isApi(e) && !e.includes('500')).forEach((e) => note(path, 'error', e))
+  errors.filter((e) => !isApi(e)).forEach((e) => note(path, 'error', e))
   failed.filter((f) => !isApi(f)).forEach((f) => note(path, 'request', f))
 
   // --- Rendered-text brand leakage -----------------------------------

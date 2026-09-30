@@ -18,7 +18,7 @@ export default function PatientInfo() {
         title="Feel prepared."
         accent="One step at a time."
         image="/assets/page-patient-info.webp"
-        alt="Illustration summarising what to bring to a FadeWell evaluation"
+        alt="Illustration summarising what to bring to a MmjGreen evaluation"
       >
         Know what to bring, what your clinician will review, and what happens after your visit. Written for
         people doing this for the first time, and for people renewing who want to know what has changed.

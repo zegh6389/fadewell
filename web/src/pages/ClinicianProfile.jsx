@@ -33,7 +33,7 @@ export default function ClinicianProfile() {
           <div className="profile__art" data-reveal="scale">
             <img
               src={person.photo}
-              alt={`Abstract FadeWell portrait marking for ${person.name}`}
+              alt={`Abstract MmjGreen portrait marking for ${person.name}`}
               width="720"
               height="900"
               loading="lazy"

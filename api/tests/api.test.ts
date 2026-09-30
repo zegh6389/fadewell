@@ -103,7 +103,7 @@ test("healthcare API authorization, persistence and transactions", async (t) => 
       token,
       csrf,
       headers: {
-        cookie: `__Host-fadewell-session=${token}`,
+        cookie: `__Host-mmjgreen-session=${token}`,
         origin: config.origin,
         "content-type": "application/json",
         "x-csrf-token": csrf,
@@ -172,7 +172,7 @@ test("healthcare API authorization, persistence and transactions", async (t) => 
         (
           await app.inject({
             url: "/api/auth/callback?state=invalid&code=SECRET",
-            headers: { cookie: "fadewell-login=other" },
+            headers: { cookie: "mmjgreen-login=other" },
           })
         ).statusCode,
         404,

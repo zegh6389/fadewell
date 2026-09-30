@@ -1,6 +1,6 @@
 import { plans, pricingNotes, faqs } from '../lib/content.js'
 import { PageHero, SectionHead, CtaBand, FaqList, Checklist } from '../components/Page.jsx'
-import { IconArrow } from '../components/Icons.jsx'
+import { IconCheck } from '../components/Icons.jsx'
 import { MagneticLink } from '../components/Chrome.jsx'
 
 const priceFaqs = faqs.filter((item) =>
@@ -39,7 +39,7 @@ export default function Pricing() {
                 <ul className="plan__list">
                   {plan.features.map((feature) => (
                     <li key={feature} className={index === 0 ? 'd-1' : undefined}>
-                      <IconArrow size={14} className="plan__tick" />
+                      <IconCheck size={16} className="plan__tick" />
                       {feature}
                     </li>
                   ))}
@@ -70,7 +70,7 @@ export default function Pricing() {
             We do not pay for your card.
               </h2>
               <p className="lede">
-                Plenty of card services are funded by dispensaries who then want your business. FadeWell
+                Plenty of card services are funded by dispensaries who then want your business. MmjGreen
                 is not affiliated with any dispensary, and we do not take a cut of what you spend
                 anywhere. The clinician evaluates you; nothing else is being sold.
               </p>
@@ -83,7 +83,7 @@ export default function Pricing() {
                 'Priced to cover the clinician, the platform and the filings'
               ].map((item) => (
                 <li key={item}>
-                  <IconArrow size={14} className="plan__tick" />
+                  <IconCheck size={16} className="plan__tick" />
                   {item}
                 </li>
               ))}

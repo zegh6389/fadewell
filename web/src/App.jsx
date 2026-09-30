@@ -27,6 +27,7 @@ import './styles/pages.css'
 import './styles/parity.css'
 import './styles/care.css'
 import './styles/parity-care.css'
+import './styles/premium.css'
 
 /** Restores scroll position on navigation, and honours in-page hashes. */
 function ScrollManager() {
@@ -47,7 +48,8 @@ function ScrollManager() {
 }
 
 export default function App() {
-  useRevealRoot()
+  const { pathname } = useLocation()
+  useRevealRoot(pathname)
 
   return (
     <>

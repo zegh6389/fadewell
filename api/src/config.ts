@@ -23,10 +23,20 @@ export   type Config = {
   minPasswordLength: number
 }
 
+/**
+ * Whether the operator has explicitly opted out of TLS verification.
+ *
+ * Reads the legacy `FADEWELL_ALLOW_INSECURE_TLS` as a fallback so a rebrand
+ * cannot silently re-enable certificate verification on a host that only has
+ * the old variable set — that would fail closed at connection time instead.
+ */
+export const allowInsecureTls = (env = process.env) =>
+  (env.MMJGREEN_ALLOW_INSECURE_TLS ?? env.FADEWELL_ALLOW_INSECURE_TLS) === 'true'
+
 export function loadConfig(env = process.env, mode: 'api' | 'worker' = 'api'): Config {
   const production = env.NODE_ENV === 'production'
-  if (env.NODE_TLS_REJECT_UNAUTHORIZED === '0' && process.env.FADEWELL_ALLOW_INSECURE_TLS !== 'true')
-    throw new Error('TLS certificate verification must remain enabled unless the operator opts in with FADEWELL_ALLOW_INSECURE_TLS')
+  if (env.NODE_TLS_REJECT_UNAUTHORIZED === '0' && !allowInsecureTls(env))
+    throw new Error('TLS certificate verification must remain enabled unless the operator opts in with MMJGREEN_ALLOW_INSECURE_TLS')
 
   /**
    * An origin is a scheme, host and port and nothing else. A path, query or

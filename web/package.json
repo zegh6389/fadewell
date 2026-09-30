@@ -1,9 +1,9 @@
 {
-  "name": "fadewell-web",
+  "name": "mmjgreen-web",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "FadeWell — guided medical-card evaluation and telehealth. Public site + care workspaces.",
+  "description": "MmjGreen — guided medical-card evaluation and telehealth. Public site + care workspaces.",
   "engines": {
     "node": ">=20"
   },

@@ -25,7 +25,9 @@
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
-  padding: 0.5rem 0.85rem;
+  /* 0.6rem, not 0.5rem: these measured 43px, just under the 44px touch
+     target. The chips are the primary way to answer on a phone. */
+  padding: 0.6rem 0.85rem;
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
   background: var(--white);

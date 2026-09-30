@@ -10,7 +10,7 @@ import AxeBuilder from '@axe-core/playwright'
  */
 
 const ROUTES = [
-  { path: '/', name: 'home', expect: 'FadeWell' },
+  { path: '/', name: 'home', expect: 'MmjGreen' },
   { path: '/how-it-works', name: 'how-it-works', expect: 'Five steps' },
   { path: '/service', name: 'service', expect: 'your card in hand' },
   { path: '/care', name: 'care', expect: 'Qualifying conditions' },
@@ -21,7 +21,7 @@ const ROUTES = [
   { path: '/blog/certification-is-not-a-state-card', name: 'article', expect: 'Certification is not' },
   { path: '/pricing', name: 'pricing', expect: 'Published prices' },
   { path: '/faq', name: 'faq', expect: 'Answered properly' },
-  { path: '/about', name: 'about', expect: 'About FadeWell' },
+  { path: '/about', name: 'about', expect: 'About MmjGreen' },
   { path: '/contact', name: 'contact', expect: 'Ask us anything' },
   { path: '/privacy-policy', name: 'privacy', expect: 'Privacy policy' },
   { path: '/terms-conditions', name: 'terms', expect: 'Terms of service' },
@@ -29,7 +29,7 @@ const ROUTES = [
   { path: '/telehealth-consent', name: 'telehealth', expect: 'Telehealth consent' },
   { path: '/medical-disclaimer', name: 'disclaimer', expect: 'Medical disclaimer' },
   { path: '/accessibility', name: 'accessibility', expect: 'Accessibility' },
-  { path: '/this-page-does-not-exist', name: 'not-found', expect: 'faded out' }
+  { path: '/this-page-does-not-exist', name: 'not-found', expect: 'not here' }
 ]
 
 /** Collects console errors and failed requests for the life of the test. */
@@ -53,7 +53,7 @@ function watchErrors(page) {
   return errors
 }
 
-test.describe('FadeWell marketing site', () => {
+test.describe('MmjGreen marketing site', () => {
   for (const route of ROUTES) {
     test(`${route.path} renders without errors`, async ({ page }, testInfo) => {
       const errors = watchErrors(page)
@@ -72,8 +72,10 @@ test.describe('FadeWell marketing site', () => {
         route.expect.toLowerCase()
       )
 
-      // FadeWell branding only — no legacy brand may survive anywhere.
-      expect(body).not.toMatch(/medcardaccess|medefy|medaccess/i)
+      // MmjGreen branding only — no legacy brand may survive anywhere. FadeWell
+      // is the previous name, so it is asserted here too: a rename that misses
+      // a page would otherwise pass silently.
+      expect(body).not.toMatch(/medcardaccess|medefy|medaccess|fadewell/i)
 
       await page.waitForTimeout(400)
       await page.screenshot({
@@ -90,7 +92,7 @@ test.describe('FadeWell marketing site', () => {
     await page.goto('/', { waitUntil: 'networkidle' })
 
     // Wordmark + primary navigation.
-    await expect(page.locator('.brand').first()).toContainText('FadeWell')
+    await expect(page.locator('.brand').first()).toContainText('MmjGreen')
     await expect(page.locator('nav.nav .nav__link')).toHaveCount(6)
 
     // Reveal elements start hidden and animate in as they enter the viewport.
@@ -328,7 +330,7 @@ test.describe('FadeWell marketing site', () => {
       expect(response?.status(), `${href} returned ${response?.status()}`).toBeLessThan(400)
       // Guard against a link silently falling through to the 404 page.
       const h1 = await page.locator('h1').first().innerText()
-      expect(h1, `${href} resolved to the 404 page`).not.toContain('faded out')
+      expect(h1, `${href} resolved to the 404 page`).not.toContain('not here')
     }
 
     expect(errors).toEqual([])

@@ -81,7 +81,7 @@ export class JurisdictionUnknownError extends Fault {
 }
 export class JurisdictionNotSupportedError extends Fault {
   constructor(code: string) {
-    super(422, 'JURISDICTION_NOT_SUPPORTED', `FadeWell does not operate in jurisdiction "${code}" yet.`)
+    super(422, 'JURISDICTION_NOT_SUPPORTED', `MmjGreen does not operate in jurisdiction "${code}" yet.`)
   }
 }
 export class JurisdictionComingSoonError extends Fault {

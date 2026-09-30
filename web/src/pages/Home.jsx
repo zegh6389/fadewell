@@ -9,7 +9,6 @@ import {
   pillars,
   testimonials,
   plans,
-  brand,
   proofRibbon,
   preparationItems,
   afterAppointment,
@@ -20,7 +19,7 @@ import {
   learningResources
 } from '../lib/content.js'
 import { useCountUp, useTrackOverflow, useReveal } from '../lib/motion.js'
-import { Icon, IconCheck, IconStar, IconArrow, IconSpark } from '../components/Icons.jsx'
+import { Icon, IconCheck, IconStar, IconArrow } from '../components/Icons.jsx'
 import { MagneticLink } from '../components/Chrome.jsx'
 import { Marquee, WordReveal } from '../components/Motion.jsx'
 import { LaunchNotice } from '../components/LaunchNotice.jsx'
@@ -28,6 +27,7 @@ import { StateSelector } from '../components/StateSelector.jsx'
 import { QuerySection } from '../components/QuerySection.jsx'
 import { PatientHelp } from '../components/PatientHelp.jsx'
 import { StatesPanel } from '../components/StatesPanel.jsx'
+import { SampleCard, TelehealthScene } from '../components/PremiumHero.jsx'
 
 /* ---------- Animated stat ------------------------------------- */
 
@@ -59,19 +59,16 @@ function Hero() {
 
           <h1 className="hero__title">
             <span className="reveal-line">
-              <span className="d-1">Care that meets you</span>
+              <span className="d-1">Your medical card.</span>
             </span>
             <span className="reveal-line">
-              <span className="serif grad-text d-2">{hero.titleAccent}</span>
+              <span className="grad-text d-2">Your kind of care.</span>
             </span>
           </h1>
 
-          {/*
-            The headline spans the full shell so the display type can run large
-            without wrapping. Everything below it settles into two columns.
-          */}
           <div className="hero__lower">
             <div className="hero__intro">
+              <p className="hero-typewriter"><span>Less waiting. More living.</span></p>
               <p className="lede" data-reveal>
                 {hero.lede}
               </p>
@@ -97,55 +94,7 @@ function Hero() {
             </div>
 
             <div className="hero__visual" data-reveal="scale">
-              <span className="orb-ring orb-ring--1 spin-slow" aria-hidden="true" />
-              <span className="orb-ring orb-ring--2 spin-rev" aria-hidden="true" />
-
-              <article className="float-card float-card--main">
-                <div className="float-card__head">
-                  <span className="float-avatar" aria-hidden="true">
-                    AO
-                  </span>
-                  <div>
-                    <p className="float-card__title">Dr. Amara Osei, MD</p>
-                    <p className="float-card__meta">Evaluating physician · Colorado</p>
-                  </div>
-                </div>
-
-                <div className="float-row">
-                  <span className="float-row__label">Intake review</span>
-                  <span className="float-row__value">Complete</span>
-                </div>
-                <div className="float-bar">
-                  <span className="float-bar__fill" />
-                </div>
-
-                <div className="float-row">
-                  <span className="float-row__label">Consultation</span>
-                  <span className="float-row__value">Today, 4:30 PM</span>
-                </div>
-                <div className="float-row">
-                  <span className="float-row__label">State registry</span>
-                  <span className="tag tag--lime">Filed</span>
-                </div>
-              </article>
-
-              <article className="float-card float-card--a">
-                <p className="float-card__meta">Jurisdiction</p>
-                <p className="float-card__title" data-reveal="fade">
-                  Colorado · Active
-                </p>
-                <span className="tag tag--moss" data-reveal="fade">
-                  Verified rules
-                </span>
-              </article>
-
-              <article className="float-card float-card--b">
-                <p className="float-card__meta">Median decision</p>
-                <p className="float-card__title" data-reveal="fade">
-                  2.4 days
-                </p>
-                <p className="float-card__meta">Tracked to issuance</p>
-              </article>
+              <TelehealthScene />
             </div>
           </div>
         </div>
@@ -253,7 +202,7 @@ function Story() {
     <section className="section" aria-labelledby="story-title">
       <div className="shell story">
         <div className="story__rail">
-          <p className="eyebrow eyebrow--accent">Why FadeWell</p>
+          <p className="eyebrow eyebrow--accent">Why MmjGreen</p>
           <h2 className="h2" id="story-title" data-reveal>
             Built to remove the friction, not the rigour.
           </h2>
@@ -283,7 +232,7 @@ function Story() {
 
 function Stats() {
   return (
-    <section className="section--tight" aria-label="FadeWell by the numbers">
+    <section className="section--tight" aria-label="MmjGreen by the numbers">
       <div className="shell">
         <div className="stats" data-reveal="scale">
           {stats.map((stat) => (
@@ -506,8 +455,8 @@ function Prepare() {
 function VisualStory() {
   const panels = [
     {
-      src: '/assets/story-wide.webp',
-      alt: 'Illustration representing your FadeWell evaluation, from intake to decision',
+      src: '/assets/telehealth-consultation.webp',
+      alt: 'Illustrative stock photograph of a physician with a stethoscope, not an actual MmjGreen clinician',
       index: '01 / Your evaluation',
       title: 'Clarity, from the start.',
       body: 'Understand what to prepare, meet with a licensed clinician where your state allows it, and keep the state process separate from the medical decision.',
@@ -515,8 +464,8 @@ function VisualStory() {
       to: '/service'
     },
     {
-      src: '/assets/story-portrait.webp',
-      alt: 'Illustration representing what happens after a clinician approves your evaluation',
+      src: '/assets/botanical-bud.webp',
+      alt: 'Detail of a cannabis flower, accompanying guidance about medical card registration',
       index: '02 / After approval',
       title: 'A calmer next chapter.',
       body: 'If you are approved, we handle the registry submission and track it to issuance, so you always know which step is yours and which is ours.',
@@ -526,12 +475,12 @@ function VisualStory() {
   ]
 
   return (
-    <section className="band-sage section" aria-labelledby="story-title">
+    <section className="band-sage section" aria-labelledby="visual-story-title">
       <div className="shell">
         <div className="section-head" data-reveal="fade">
           <div>
             <p className="eyebrow eyebrow--accent">Designed around the journey</p>
-            <h2 className="h2" id="story-title">
+            <h2 className="h2" id="visual-story-title">
               Built so the hard part
               <span className="serif grad-text"> feels obvious.</span>
             </h2>
@@ -739,14 +688,8 @@ function CardPreview() {
         </div>
 
         <div className="preview__art" data-reveal="scale">
-          <img
-            src="/assets/card-sample.webp"
-            alt="Illustration of a sample FadeWell medical card, marked as not a real credential"
-            width="860"
-            height="540"
-            loading="lazy"
-            decoding="async"
-          />
+          <SampleCard />
+          <p className="sample-caption">A preview of the possibilities. Actual cards are issued by your state.</p>
         </div>
       </div>
     </section>

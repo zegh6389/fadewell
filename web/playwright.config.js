@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
 /**
- * FadeWell browser tests.
+ * MmjGreen browser tests.
  *
  * The suite starts two isolated servers itself:
  *   - the synthetic in-memory API from ../api/tests/browser-server.ts (port 3001)

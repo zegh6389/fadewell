@@ -3,7 +3,7 @@ import type { ServerResponse } from 'node:http'
 import type { FastifyInstance, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { createVideoRoom, mintVideoToken } from './providers.ts'
-import { authenticate, cookieName, hashPassword, usernameInput } from './auth.ts'
+import { authenticate, cookieName, hashPassword, revokeSessionTokens, sessionTokens, usernameInput } from './auth.ts'
 import type { Config } from './config.ts'
 import { audit, requireDb, event as enqueueOutbox } from './db.ts'
 import type { Database, Row, Sql } from './db.ts'
@@ -943,7 +943,7 @@ export function registerRoutes(
     }).then(async ({ id, mode, created }) => {
       // ponytail: room attach is best-effort outside the booking transaction; booking never fails on video
       if (!created || mode === 'PHONE') return { id }
-      const roomId = await createVideoRoom(process.env, `fadewell-${id}`)
+      const roomId = await createVideoRoom(process.env, `mmjgreen-${id}`)
       if (roomId) await db().query('UPDATE appointments SET video_room_id=$1 WHERE id=$2', [roomId, id])
       return { id }
     })
@@ -1023,11 +1023,22 @@ export function registerRoutes(
         throw new Fault(425, 'TOO_EARLY', 'This link becomes active 15 minutes before your consultation.')
       if (now > windowEnd)
         throw new Fault(410, 'LINK_EXPIRED', 'This consultation link is no longer valid.')
-      const previous = request.cookies[cookieName(config)]
-      if (previous) {
-        const existing = (await sql.query('SELECT actor_id FROM sessions WHERE token_hash=$1 AND expires_at>now()', [hash(previous)])).rows[0]
-        if (existing && existing.actor_id !== row.patient_id) throw denied()
-        await sql.query('DELETE FROM sessions WHERE token_hash=$1', [hash(previous)])
+      // Ownership is checked against every presented session, and all of them are
+      // revoked: consuming the join token must not leave a session behind under
+      // either the current or the legacy cookie name.
+      //
+      // A browser can present a patient's session and someone else's at the same
+      // time, so the test is "does ANY live session belong to another actor" —
+      // never "does the first row match", which would depend on row order and
+      // would let a join silently revoke an unrelated account's session.
+      const previous = sessionTokens(request, config)
+      if (previous.length) {
+        const foreign = (await sql.query(
+          'SELECT 1 FROM sessions WHERE token_hash=ANY($1::text[]) AND expires_at>now() AND actor_id<>$2 LIMIT 1',
+          [previous.map(hash), row.patient_id]
+        )).rows[0]
+        if (foreign) throw denied()
+        await revokeSessionTokens(sql, previous)
       }
       await sql.query(
         "UPDATE appointments SET patient_join_token_hash=NULL, patient_join_token_expires_at=NULL, updated_at=now() WHERE id=$1",

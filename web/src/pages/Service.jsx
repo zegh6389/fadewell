@@ -19,7 +19,7 @@ export default function Service() {
         title="From your first question to"
         accent="your card in hand."
         image="/assets/page-service.webp"
-        alt="Illustration of the five FadeWell evaluation steps"
+        alt="Illustration of the five MmjGreen evaluation steps"
       >
         A guided intake, an independent clinician review, and a registration
         process we track for you. Here is the whole thing, in order, with

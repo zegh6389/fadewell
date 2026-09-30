@@ -13,10 +13,10 @@ export default function About() {
   return (
     <>
       <PageHero
-        eyebrow="About FadeWell"
+        eyebrow="About MmjGreen"
         title="We build the paperwork"
         accent="so you can do the talking."
-        lede="FadeWell exists because getting a medical card is mostly administrative, and nobody has ever enjoyed the administrative part. We did not set out to reinvent medicine — we set out to remove everything standing between a person and a conversation with a clinician."
+        lede="MmjGreen exists because getting a medical card is mostly administrative, and nobody has ever enjoyed the administrative part. We did not set out to reinvent medicine — we set out to remove everything standing between a person and a conversation with a clinician."
       />
 
       <section className="section" aria-labelledby="origin-title">
@@ -53,7 +53,7 @@ export default function About() {
             <div className="split__media" data-reveal="right">
               <img
                 src="/assets/about-studio.webp"
-                alt="The FadeWell clinical operations studio, with clinicians reviewing an evaluation together"
+                alt="The MmjGreen clinical operations studio, with clinicians reviewing an evaluation together"
                 loading="lazy"
                 width="1200"
                 height="900"
@@ -107,7 +107,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section--tight" aria-label="FadeWell by the numbers">
+      <section className="section--tight" aria-label="MmjGreen by the numbers">
         <div className="shell">
           <div className="stats" data-reveal="scale">
             {stats.map((stat) => (

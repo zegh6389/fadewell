@@ -21,7 +21,7 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
   t.after(() => app.close())
   const headers = { origin: config.origin, 'content-type': 'application/json' }
   const start = await app.inject({ method: 'POST', url: '/api/auth/guest', payload: {}, headers })
-  const cookie = start.cookies.find(c => c.name === '__Host-fadewell-session')!
+  const cookie = start.cookies.find(c => c.name === '__Host-mmjgreen-session')!
   const sessionHeaders = { ...headers, cookie: `${cookie.name}=${cookie.value}` }
   const session = (await app.inject({ url: '/api/v1/session', headers: sessionHeaders })).json()
   const saved = await app.inject({ method: 'PUT', url: '/api/v1/intake', payload: {
@@ -71,7 +71,7 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
     const token = randomBytes(32).toString('base64url')
     const csrf = randomBytes(32).toString('base64url')
     await db.query("INSERT INTO sessions(token_hash,actor_id,csrf,expires_at,last_seen_at) VALUES ($1,$2,$3,now()+interval '4 hours',now())", [hashToken(token), identity.id, csrf])
-    return { ...headers, cookie: `__Host-fadewell-session=${token}`, 'x-csrf-token': csrf }
+    return { ...headers, cookie: `__Host-mmjgreen-session=${token}`, 'x-csrf-token': csrf }
   }
   const staffHeaders = await headersFor('synthetic', 'staff-join-2')
   const intakeRecord = await app.inject({ url: `/api/v1/intakes/${intakeId}`, headers: staffHeaders })
@@ -102,7 +102,7 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
   const consumed = exchanges.find(r => r.statusCode === 200)!
   assert.equal(consumed.statusCode, 200)
   assert.equal(consumed.json().consultationId, appointment.id)
-  const exchangedCookie = consumed.cookies.find(c => c.name === '__Host-fadewell-session')!
+  const exchangedCookie = consumed.cookies.find(c => c.name === '__Host-mmjgreen-session')!
   assert.equal(exchangedCookie.httpOnly, true)
   assert.equal(exchangedCookie.secure, true)
   assert.equal((await app.inject({ url: `/api/v1/consultations/${appointment.id}`, headers: {
@@ -142,6 +142,38 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
 
   const unknown = await app.inject({ method: 'POST', url: '/api/v1/join', payload: { token: randomBytes(32).toString('base64url') }, headers })
   assert.equal(unknown.statusCode, 403, unknown.body)
+
+  // One browser can hold the patient's session and someone else's at the same
+  // time, because the pre-rebrand cookie name is still read alongside the current
+  // one. The join must be refused on the strength of ANY presented session, never
+  // on whichever row the lookup happens to return first — otherwise the outcome
+  // depends on row order, and a legitimate join silently revokes an unrelated
+  // account's session.
+  const scopedToken = randomBytes(32).toString('base64url')
+  await db.query(
+    "UPDATE appointments SET patient_join_token_hash=$1, patient_join_token_expires_at=now()+interval '30 minutes' WHERE id=$2",
+    [hashToken(scopedToken), appointment.id]
+  )
+  const patientSession = randomBytes(32).toString('base64url')
+  const foreignSession = randomBytes(32).toString('base64url')
+  for (const [token, actor] of [[patientSession, session.id], [foreignSession, staff.rows[0].id]] as const)
+    await db.query(
+      "INSERT INTO sessions(token_hash,actor_id,csrf,expires_at,last_seen_at) VALUES ($1,$2,$3,now()+interval '4 hours',now())",
+      [hashToken(token), actor, randomBytes(32).toString('base64url')]
+    )
+  const mixed = await app.inject({ method: 'POST', url: '/api/v1/join', payload: { token: scopedToken },
+    headers: { ...headers, cookie: `__Host-mmjgreen-session=${patientSession}; __Host-fadewell-session=${foreignSession}` } })
+  assert.equal(mixed.statusCode, 403, mixed.body)
+  assert.equal(
+    (await db.query('SELECT actor_id FROM sessions WHERE token_hash=ANY($1::text[])',
+      [[hashToken(patientSession), hashToken(foreignSession)]])).rows.length,
+    2,
+    'A refused join must not revoke the presented sessions'
+  )
+  // The patient's own session alone is still accepted against the same link.
+  const patientOnly = await app.inject({ method: 'POST', url: '/api/v1/join', payload: { token: scopedToken },
+    headers: { ...headers, cookie: `__Host-mmjgreen-session=${patientSession}` } })
+  assert.equal(patientOnly.statusCode, 200, patientOnly.body)
 
   const preferences = (await app.inject({ url: '/api/v1/preferences', headers: sessionHeaders })).json().preferences
   assert.equal((await app.inject({ method: 'PATCH', url: '/api/v1/preferences', headers: { ...sessionHeaders, 'x-csrf-token': session.csrf },

@@ -11,7 +11,7 @@ export default function NotFound() {
           Error 404
         </p>
         <h1 className="display" data-reveal>
-          This page <span className="serif grad-text">faded out.</span>
+          This page <span className="serif grad-text">is not here.</span>
         </h1>
         <p className="lede" data-reveal>
           The link may be out of date, or the address may have a typo in it. Here is everything that

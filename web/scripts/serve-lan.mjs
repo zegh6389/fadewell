@@ -1,5 +1,5 @@
 /**
- * Serve FadeWell on the local network, so a phone or another laptop can open it.
+ * Serve MmjGreen on the local network, so a phone or another laptop can open it.
  *
  * Two processes, deliberately split:
  *

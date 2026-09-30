@@ -73,11 +73,11 @@ test("Telnyx requires explicit complete configuration and preserves ambiguous se
 });
 
 test("video helpers fail closed without a key, a room, or provider approval", async (t) => {
-  assert.equal(await createVideoRoom({}, "fadewell-test"), null);
+  assert.equal(await createVideoRoom({}, "mmjgreen-test"), null);
   assert.equal(await mintVideoToken({ TELNYX_API_KEY: "k" }, "not-a-uuid"), null);
   t.mock.method(globalThis, "fetch", async () => new Response("{}", { status: 500 }));
   const env = { TELNYX_API_KEY: "synthetic" };
-  assert.equal(await createVideoRoom(env, "fadewell-test"), null);
+  assert.equal(await createVideoRoom(env, "mmjgreen-test"), null);
   assert.equal(await mintVideoToken(env, randomUUID()), null);
 });
 
@@ -92,7 +92,7 @@ test("booking attaches a Telnyx room and scoped participants mint join tokens", 
     if (target === "https://api.telnyx.com/v2/rooms") {
       assert.equal(new Headers(init?.headers).get("Authorization"), "Bearer synthetic");
       const body = JSON.parse(String(init?.body));
-      assert.match(body.unique_name, /^fadewell-/);
+      assert.match(body.unique_name, /^mmjgreen-/);
       assert.equal(body.max_participants, 2);
       return Response.json({ data: { id: roomId } }, { status: 201 });
     }
@@ -122,7 +122,7 @@ test("booking attaches a Telnyx room and scoped participants mint join tokens", 
   const staffToken = randomBytes(32).toString("base64url"),
     staffCsrf = randomBytes(32).toString("base64url");
   await db.query("INSERT INTO sessions(token_hash,actor_id,csrf,expires_at,last_seen_at) VALUES ($1,$2,$3,now()+interval '4 hours',now())", [hashToken(staffToken), staff.id, staffCsrf]);
-  const headers = { origin: config.origin, "content-type": "application/json", cookie: `__Host-fadewell-session=${staffToken}`, "x-csrf-token": staffCsrf };
+  const headers = { origin: config.origin, "content-type": "application/json", cookie: `__Host-mmjgreen-session=${staffToken}`, "x-csrf-token": staffCsrf };
   const patient = (await db.query("INSERT INTO identities(issuer,subject,role) VALUES ('synthetic','patient-video','PATIENT') RETURNING id")).rows[0];
   const intakeId = randomUUID();
   const intake = (await db.query("INSERT INTO intakes(id,patient_id,questionnaire_version,encrypted_payload,state,state_code) VALUES ($1,$2,'2026-09-initial',$3,'VERIFIED','CA') RETURNING id", [intakeId, patient.id, seal({ mode: 'VIDEO' }, config.encryptionKey!, `intake:${intakeId}`)])).rows[0];
@@ -137,7 +137,7 @@ test("booking attaches a Telnyx room and scoped participants mint join tokens", 
   const patientToken = randomBytes(32).toString("base64url"),
     patientCsrf = randomBytes(32).toString("base64url");
   await db.query("INSERT INTO sessions(token_hash,actor_id,csrf,expires_at,last_seen_at) VALUES ($1,$2,$3,now()+interval '4 hours',now())", [hashToken(patientToken), patient.id, patientCsrf]);
-  const patientHeaders = { origin: config.origin, "content-type": "application/json", cookie: `__Host-fadewell-session=${patientToken}`, "x-csrf-token": patientCsrf };
+  const patientHeaders = { origin: config.origin, "content-type": "application/json", cookie: `__Host-mmjgreen-session=${patientToken}`, "x-csrf-token": patientCsrf };
   const staffMedia = await app.inject({ url: `/api/v1/consultations/${created.json().id}/media`, headers });
   assert.equal(staffMedia.statusCode, 403, staffMedia.body);
   const media = await app.inject({ url: `/api/v1/consultations/${created.json().id}/media`, headers: patientHeaders });
