@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { IconVideo, IconCheck, IconShield } from './Icons.jsx'
 
+export const RESOURCE_IMAGES = {
+  'preparing-for-your-evaluation': '/assets/care-preparation.webp',
+  'certification-is-not-a-state-card': '/assets/card-premium.webp',
+  'what-changes-when-you-renew': '/assets/botanical-leaves.webp'
+}
+
 export function SampleCard({ eager = false }) {
   return <img className="medical-card" src="/assets/card-premium.webp" alt="Demo medical cannabis card for Avery Morgan, with sample portrait, patient ID, birth date, issue date, expiry date and state. Not a real credential." width="1000" height="630" loading={eager ? 'eager' : 'lazy'} decoding="async" />
 }

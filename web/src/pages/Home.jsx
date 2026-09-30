@@ -27,7 +27,7 @@ import { StateSelector } from '../components/StateSelector.jsx'
 import { QuerySection } from '../components/QuerySection.jsx'
 import { PatientHelp } from '../components/PatientHelp.jsx'
 import { StatesPanel } from '../components/StatesPanel.jsx'
-import { SampleCard, TelehealthScene } from '../components/PremiumHero.jsx'
+import { RESOURCE_IMAGES, SampleCard, TelehealthScene } from '../components/PremiumHero.jsx'
 
 /* ---------- Animated stat ------------------------------------- */
 
@@ -719,6 +719,7 @@ function Learning() {
         <div className="grid grid--3">
           {learningResources.map((item) => (
             <article className="card" key={item.slug} data-reveal="fade">
+              <img className="resource-cover" src={RESOURCE_IMAGES[item.slug]} alt="" width="1000" height="667" loading="lazy" decoding="async" />
               <span className="tag tag--moss">{item.category}</span>
               <h3 className="card__title">{item.title}</h3>
               <p className="card__body">{item.note}</p>

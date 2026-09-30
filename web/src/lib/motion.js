@@ -16,6 +16,17 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+/* ---------- Shared preference ---------------------------------- */
+
+/**
+ * Whether the viewer has asked the OS to reduce motion.
+ *
+ * Every effect in this module and in components/Motion.jsx gates on this one
+ * query, so it is defined once here rather than re-spelled at each call site.
+ */
+export const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 /* ---------- Entrance reveals ---------------------------------- */
 
 /**
@@ -32,7 +43,7 @@ function wireReveal(root = document) {
     for (const n of pending()) n.classList.add('is-in')
   }
 
-  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (!('IntersectionObserver' in window) || prefersReducedMotion()) {
     revealAll()
     return () => {}
   }
@@ -71,7 +82,7 @@ export function useCountUp(value, { decimals = 0, duration = 1600 } = {}) {
     const node = ref.current
     if (!node) return
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduced = prefersReducedMotion()
     if (reduced) {
       setDisplay(value)
       return
@@ -272,7 +283,7 @@ export function useMagnetic(strength = 0.28) {
     const node = ref.current
     if (!node) return
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (prefersReducedMotion()) return
 
     let frame = 0
     const onMove = (event) => {
@@ -315,22 +326,4 @@ export function useReveal() {
   }, [])
 
   return ref
-}
-
-/* ---------- Media query ---------------------------------------- */
-
-export function useMediaQuery(query) {
-  const [matches, setMatches] = useState(() =>
-    typeof window === 'undefined' ? false : window.matchMedia(query).matches
-  )
-
-  useEffect(() => {
-    const mql = window.matchMedia(query)
-    const onChange = (event) => setMatches(event.matches)
-    setMatches(mql.matches)
-    mql.addEventListener('change', onChange)
-    return () => mql.removeEventListener('change', onChange)
-  }, [query])
-
-  return matches
 }

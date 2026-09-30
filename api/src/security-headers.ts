@@ -4,6 +4,13 @@
 // regardless of where the bundle ships from.
 export const PRIVATE_ROUTE_PATTERN = /^\/(patient|portal|staff|admin)(?:[/?]|$)/
 
+/**
+ * The subset of private routes that mount the consultation room and therefore
+ * need camera and microphone. Narrower than PRIVATE_ROUTE_PATTERN on purpose:
+ * staff and admin are back-office surfaces and never open a media device.
+ */
+export const CONSULTATION_ROUTE_PATTERN = /^\/(patient|portal)(?:[/?]|$)/
+
 export const PRIVATE_CSP =
   "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.telnyx.com wss://video.telnyx.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
 

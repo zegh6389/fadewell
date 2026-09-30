@@ -7,11 +7,7 @@
 
 export const brand = {
   name: 'MmjGreen',
-  domain: 'mmjgreen.com',
-  origin: 'https://mmjgreen.com',
   tagline: 'Medical card evaluation, made calm.',
-  description:
-    'MmjGreen guides you from a short online intake to a live consultation with a licensed clinician — with clear next steps at every stage.',
   email: 'care@mmjgreen.com',
   phone: '(888) 555-0142',
   phoneHref: '+18885550142',
@@ -74,8 +70,6 @@ export const footerNav = [
 
 export const hero = {
   pill: 'Accepting new patients in 14 states',
-  titleLines: ['Care that meets you', 'where you are.'],
-  titleAccent: 'where you are.',
   lede:
     'A short online intake, a real clinician, and a clear path to your medical card. No waiting rooms, no guesswork — just the next step, made obvious.',
   primaryCta: { label: 'Start your intake', to: '/patient' },
@@ -429,15 +423,11 @@ export const pillars = [
 
 export const careAreas = [
   {
-    path: '/patient',
-    role: 'PATIENT',
     key: 'patient',
     label: 'Patient',
-    kicker: 'Your next step, made clear',
     title: 'Your care.\nOne calm place.',
     body:
       'Complete your intake, follow your appointment and prepare for your conversation with a clinician — without creating a password.',
-    action: 'Open your intake',
     points: [
       ['No account needed', 'Finish your form and questionnaire in one secure session.'],
       ['Always know the next step', 'See review status, appointment details and application progress in one view.'],
@@ -445,15 +435,11 @@ export const careAreas = [
     ]
   },
   {
-    path: '/portal',
-    role: 'DOCTOR',
     key: 'portal',
     label: 'Clinician',
-    kicker: 'More focus for the person in front of you',
     title: 'Your day.\nRoom for care.',
     body:
       'A focused workspace for your schedule, assigned evaluations, availability, and the consultation controls you need.',
-    action: 'Continue to clinician sign in',
     points: [
       ['A clear view of your day', 'Appointments and assigned patients, ordered by what is next.'],
       ['Time on your terms', 'Publish availability and adjust consultation duration as you go.'],
@@ -461,15 +447,11 @@ export const careAreas = [
     ]
   },
   {
-    path: '/staff',
-    role: 'STAFF',
     key: 'staff',
     label: 'Care operations',
-    kicker: 'Every next step has a home',
     title: 'Less searching.\nMore helping.',
     body:
       'Move from intake review to scheduling with clear queues, contact history, and a record of every action taken.',
-    action: 'Continue to operations sign in',
     points: [
       ['Work from a real queue', 'Find submissions needing review or corrected information.'],
       ['Keep the handoff intact', 'Record contact attempts and administrative review notes.'],
@@ -477,15 +459,11 @@ export const careAreas = [
     ]
   },
   {
-    path: '/admin',
-    role: 'ADMIN',
     key: 'admin',
     label: 'Administration',
-    kicker: 'Clarity behind every action',
     title: 'A considered view.\nAccountable control.',
     body:
       'Review access, operational activity and delivery readiness from a dedicated administrative workspace.',
-    action: 'Continue to administrator sign in',
     points: [
       ['Purposeful access', 'Review accounts and revoke access when responsibilities change.'],
       ['Traceable activity', 'Inspect record access and operational changes.'],

@@ -52,8 +52,8 @@ export default function About() {
 
             <div className="split__media" data-reveal="right">
               <img
-                src="/assets/about-studio.webp"
-                alt="The MmjGreen clinical operations studio, with clinicians reviewing an evaluation together"
+                src="/assets/care-workspace.webp"
+                alt="Illustrative stock photograph of a bright workspace, not an actual MmjGreen office"
                 loading="lazy"
                 width="1200"
                 height="900"

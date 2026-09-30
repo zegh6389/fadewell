@@ -20,12 +20,9 @@ export class CareError extends Error {
 
 const DEFAULT_TIMEOUT = 15000
 
-async function request(path, { method = 'GET', body, csrf, signal, timeout = DEFAULT_TIMEOUT } = {}) {
+async function request(path, { method = 'GET', body, csrf, timeout = DEFAULT_TIMEOUT } = {}) {
   const controller = new AbortController()
-  const onAbort = () => controller.abort()
-  const timer = setTimeout(onAbort, timeout)
-  if (signal?.aborted) controller.abort()
-  else signal?.addEventListener('abort', onAbort, { once: true })
+  const timer = setTimeout(() => controller.abort(), timeout)
 
   let response
   try {
@@ -50,7 +47,6 @@ async function request(path, { method = 'GET', body, csrf, signal, timeout = DEF
     )
   } finally {
     clearTimeout(timer)
-    signal?.removeEventListener('abort', onAbort)
   }
 
   if (!response.headers.get('content-type')?.includes('application/json')) {
@@ -99,7 +95,6 @@ export const getJurisdictions = (opts) => request('/jurisdictions', opts)
 
 /* ---------- Patient ------------------------------------------ */
 
-export const startSession = (body, opts) => request('/join', { ...opts, method: 'POST', body })
 export const getIntake = (opts) => request('/intake', opts)
 export const saveIntake = (body, csrf, opts) =>
   request('/intake', { ...opts, method: 'PUT', body, csrf })
@@ -107,9 +102,6 @@ export const uploadIdDocument = (body, csrf, opts) =>
   request('/intake/id-document', { ...opts, method: 'POST', body, csrf })
 export const submitIntake = (body, csrf, opts) =>
   request('/intake/submit', { ...opts, method: 'POST', body, csrf })
-export const getPreferences = (opts) => request('/preferences', opts)
-export const savePreferences = (body, csrf, opts) =>
-  request('/preferences', { ...opts, method: 'PATCH', body, csrf })
 
 /* ---------- Shared workspace --------------------------------- */
 
@@ -125,8 +117,6 @@ export const reviewIntake = (id, body, csrf, opts) =>
   request(`/intakes/${encodeURIComponent(id)}/review`, { ...opts, method: 'POST', body, csrf })
 export const addNote = (id, body, csrf, opts) =>
   request(`/intakes/${encodeURIComponent(id)}/notes`, { ...opts, method: 'POST', body, csrf })
-export const prescribe = (id, body, csrf, opts) =>
-  request(`/intakes/${encodeURIComponent(id)}/prescription`, { ...opts, method: 'POST', body, csrf })
 
 export const createAvailability = (body, csrf, opts) =>
   request('/availability', { ...opts, method: 'POST', body, csrf })
@@ -135,33 +125,12 @@ export const deleteAvailability = (id, csrf, opts) =>
 
 export const bookAppointment = (body, csrf, opts) =>
   request('/appointments', { ...opts, method: 'POST', body, csrf })
-export const shareAppointment = (id, body, csrf, opts) =>
-  request(`/appointments/${encodeURIComponent(id)}/share-link`, { ...opts, method: 'POST', body, csrf })
-export const cancelAppointment = (id, body, csrf, opts) =>
-  request(`/appointments/${encodeURIComponent(id)}/cancel`, { ...opts, method: 'POST', body, csrf })
-
-/* ---------- Consultation room -------------------------------- */
-
-export const getConsultation = (id, opts) =>
-  request(`/consultations/${encodeURIComponent(id)}`, opts)
-export const getConsultationEvents = (id, opts) =>
-  request(`/consultations/${encodeURIComponent(id)}/events`, { ...opts, timeout: 0 })
-export const getConsultationMedia = (id, opts) =>
-  request(`/consultations/${encodeURIComponent(id)}/media`, opts)
-export const controlTimer = (id, body, csrf, opts) =>
-  request(`/consultations/${encodeURIComponent(id)}/timer`, { ...opts, method: 'POST', body, csrf })
 
 /* ---------- Administration ----------------------------------- */
 
 export const getAuditLog = (opts) => request('/admin/audit', opts)
 export const listUsers = (opts) => request('/admin/users', opts)
-export const createUser = (body, opts) =>
-  request('/admin/users', { ...opts, method: 'POST', body })
 export const updateUser = (id, body, opts) =>
   request(`/admin/users/${encodeURIComponent(id)}`, { ...opts, method: 'PATCH', body })
-export const deleteUser = (id, csrf, opts) =>
-  request(`/admin/users/${encodeURIComponent(id)}`, { ...opts, method: 'DELETE', csrf })
-export const resetTotp = (id, body, opts) =>
-  request(`/admin/users/${encodeURIComponent(id)}/reset-totp`, { ...opts, method: 'POST', body })
 export const setPassword = (id, body, opts) =>
   request(`/admin/users/${encodeURIComponent(id)}/password`, { ...opts, method: 'PATCH', body })

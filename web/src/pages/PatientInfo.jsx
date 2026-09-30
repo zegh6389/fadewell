@@ -17,8 +17,8 @@ export default function PatientInfo() {
         eyebrow="Patient guide"
         title="Feel prepared."
         accent="One step at a time."
-        image="/assets/page-patient-info.webp"
-        alt="Illustration summarising what to bring to a MmjGreen evaluation"
+        image="/assets/care-preparation.webp"
+        alt="Illustrative stock photograph of a laptop and stethoscope used for care preparation"
       >
         Know what to bring, what your clinician will review, and what happens after your visit. Written for
         people doing this for the first time, and for people renewing who want to know what has changed.
@@ -100,7 +100,6 @@ export default function PatientInfo() {
       </section>
 
       <CtaBand
-        eyebrow="Ready when you are"
         title="You know more"
         accent="than you think."
         body="The intake takes about six minutes and you can stop and come back. No account, no password."

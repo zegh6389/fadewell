@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { BrandMark, IconArrow } from './Icons.jsx'
 import { primaryNav, footerNav, brand } from '../lib/content.js'
@@ -59,6 +59,13 @@ export function Masthead() {
   }, [location.pathname])
 
   useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 901px)')
+    const closeOnDesktop = (event) => { if (event.matches) setOpen(false) }
+    desktop.addEventListener('change', closeOnDesktop)
+    return () => desktop.removeEventListener('change', closeOnDesktop)
+  }, [])
+
+  useEffect(() => {
     if (!open) return
     const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -117,15 +124,15 @@ export function Masthead() {
 
       <div id="nav-sheet" className={`nav-sheet${open ? ' is-open' : ''}`} hidden={!open}>
         {primaryNav.map((item) => (
-          <Link key={item.to} to={item.to} className="nav-sheet__link">
+          <NavLink key={item.to} to={item.to} className="nav-sheet__link" onClick={() => setOpen(false)}>
             {item.label}
-          </Link>
+          </NavLink>
         ))}
         <div className="nav-sheet__actions">
-          <Link to="/patient" className="btn btn--primary btn--block">
+          <Link to="/patient" className="btn btn--primary btn--block" onClick={() => setOpen(false)}>
             Start your intake
           </Link>
-          <Link to="/contact" className="btn btn--ghost btn--block">
+          <Link to="/contact" className="btn btn--ghost btn--block" onClick={() => setOpen(false)}>
             Talk to us
           </Link>
         </div>

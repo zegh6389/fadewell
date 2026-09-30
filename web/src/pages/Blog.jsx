@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { PageHero, CtaBand } from '../components/Page.jsx'
 import { learningResources } from '../lib/content.js'
 import NotFound from './NotFound.jsx'
+import { RESOURCE_IMAGES } from '../components/PremiumHero.jsx'
 
 /**
  * Resource centre. Handles both `/blog` and `/blog/:slug`.
@@ -17,11 +18,7 @@ import NotFound from './NotFound.jsx'
  * API reachable.
  */
 
-const COVERS = {
-  'preparing-for-your-evaluation': '/assets/note-preparation.webp',
-  'certification-is-not-a-state-card': '/assets/note-process.webp',
-  'what-changes-when-you-renew': '/assets/note-renewal.webp'
-}
+const COVERS = RESOURCE_IMAGES
 
 export default function Blog() {
   const { slug } = useParams()
@@ -38,7 +35,7 @@ export default function Blog() {
           eyebrow={post.category}
           title={post.title}
           image={COVERS[post.slug]}
-          alt={`Illustration for the article: ${post.title}`}
+          alt={`Editorial image accompanying: ${post.title}`}
         >
           {post.note}
         </PageHero>
@@ -73,6 +70,7 @@ export default function Blog() {
             <div className="grid grid--2 notes-grid">
               {related.map((item) => (
                 <Link className="card card--link" to={`/blog/${item.slug}`} key={item.slug} data-reveal="fade">
+                  <img className="resource-cover" src={COVERS[item.slug]} alt="" width="1000" height="667" loading="lazy" decoding="async" />
                   <span className="tag tag--moss">{item.category}</span>
                   <h3 className="card__title">{item.title}</h3>
                   <p className="card__body">{item.note}</p>
@@ -83,7 +81,6 @@ export default function Blog() {
         </section>
 
         <CtaBand
-          eyebrow="Your next step"
           title="Reading is done."
           accent="Now pick a state."
           body="The fastest way to know what applies to you is to choose your state and see the real requirements."
@@ -100,8 +97,8 @@ export default function Blog() {
         eyebrow="Resource centre"
         title="Good questions."
         accent="Clearer answers."
-        image="/assets/page-blog.webp"
-        alt="Illustration of the MmjGreen resource centre"
+        image="/assets/botanical-leaves.webp"
+        alt="Green plants accompanying the MmjGreen patient resource centre"
       >
         Original, plain-language writing about the parts of this process that people most often get wrong. No
         promises about outcomes, because nobody can honestly make them.
@@ -115,6 +112,7 @@ export default function Blog() {
           <div className="grid grid--3">
             {learningResources.map((item) => (
               <article className="card" key={item.slug} data-reveal="fade">
+                <img className="resource-cover" src={COVERS[item.slug]} alt="" width="1000" height="667" loading="lazy" decoding="async" />
                 <span className="tag tag--moss">{item.category}</span>
                 <h3 className="card__title">
                   <Link to={`/blog/${item.slug}`}>{item.title}</Link>
@@ -132,7 +130,6 @@ export default function Blog() {
       </section>
 
       <CtaBand
-        eyebrow="Your next step"
         title="Enough reading."
         accent="Let’s find your path."
         body="Choose your state and we will show you what actually applies where you live."

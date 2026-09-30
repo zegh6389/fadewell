@@ -18,8 +18,8 @@ export default function Service() {
         eyebrow="How it works"
         title="From your first question to"
         accent="your card in hand."
-        image="/assets/page-service.webp"
-        alt="Illustration of the five MmjGreen evaluation steps"
+        image="/assets/care-conversation.webp"
+        alt="Illustrative stock photograph of a doctor using a phone"
       >
         A guided intake, an independent clinician review, and a registration
         process we track for you. Here is the whole thing, in order, with
@@ -99,7 +99,6 @@ export default function Service() {
       </section>
 
       <CtaBand
-        eyebrow="Your next step"
         title="Start where you"
         accent="actually are."
         body="Choose your state and we will show you the path that applies to you. A clinician, not this website, decides eligibility."

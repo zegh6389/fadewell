@@ -20,8 +20,15 @@ export   type Config = {
   encryptionKey?: string
   intakeEnabled: boolean
   notificationsEnabled: boolean
-  minPasswordLength: number
 }
+
+/**
+ * Minimum accepted password length.
+ *
+ * Deliberately not an environment variable: it is a policy floor, not a
+ * deployment knob, and `loadConfig` is the only thing that reads operator env.
+ */
+export const MIN_PASSWORD_LENGTH = 12
 
 /**
  * Whether the operator has explicitly opted out of TLS verification.
@@ -68,7 +75,6 @@ export function loadConfig(env = process.env, mode: 'api' | 'worker' = 'api'): C
     throw new Error('Notification links require an HTTPS application origin')
   if (env.DATA_ENCRYPTION_KEY && !/^[A-Za-z0-9+/]{43}=$/.test(env.DATA_ENCRYPTION_KEY))
     throw new Error('DATA_ENCRYPTION_KEY must be a base64 encoded 32-byte key')
-  const minPasswordLength = 12
   const databaseUrl = mode === 'worker' ? (env.DATABASE_WORKER_URL ?? env.DATABASE_URL) : env.DATABASE_URL
   if (
     production &&
@@ -91,7 +97,6 @@ export function loadConfig(env = process.env, mode: 'api' | 'worker' = 'api'): C
     workerDatabaseUrl: env.DATABASE_WORKER_URL,
     encryptionKey: env.DATA_ENCRYPTION_KEY,
     intakeEnabled: env.INTAKE_ENABLED === 'true',
-    notificationsEnabled: env.NOTIFICATIONS_ENABLED === 'true',
-    minPasswordLength
+    notificationsEnabled: env.NOTIFICATIONS_ENABLED === 'true'
   }
 }

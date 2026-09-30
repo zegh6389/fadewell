@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { createVideoRoom, mintVideoToken } from './providers.ts'
 import { authenticate, cookieName, hashPassword, revokeSessionTokens, sessionTokens, usernameInput } from './auth.ts'
 import type { Config } from './config.ts'
+import { MIN_PASSWORD_LENGTH } from './config.ts'
 import { audit, requireDb, event as enqueueOutbox } from './db.ts'
 import type { Database, Row, Sql } from './db.ts'
 import {
@@ -1319,7 +1320,7 @@ export function registerRoutes(
     const input = z
       .strictObject({
         username: usernameInput,
-        password: z.string().min(config.minPasswordLength).max(128),
+        password: z.string().min(MIN_PASSWORD_LENGTH).max(128),
         role: z.enum(['ADMIN', 'STAFF', 'DOCTOR'])
       })
       .parse(request.body)
@@ -1391,7 +1392,7 @@ export function registerRoutes(
     const actor = await auth(request, ['ADMIN'])
     const id = idParam(request)
     const input = z
-      .strictObject({ password: z.string().min(config.minPasswordLength).max(128) })
+      .strictObject({ password: z.string().min(MIN_PASSWORD_LENGTH).max(128) })
       .parse(request.body)
     await db().transaction(async (sql) => {
       const credential = (

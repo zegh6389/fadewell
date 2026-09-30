@@ -1,15 +1,16 @@
 /**
- * A fixed help launcher and its dialog.
+ * An anchored chat preview. Messages stay in component state only.
  *
  * Uses a real `<dialog>` with `showModal()` so focus trapping, Escape and the
  * backdrop are handled by the platform rather than reimplemented. The launcher
  * button is kept mounted after the dialog closes so focus returns to it.
  */
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { support } from '../lib/content.js'
+import { BrandMark, IconArrow } from './Icons.jsx'
 
 const LINKS = [
   ['Start my intake', '/care'],
@@ -21,7 +22,28 @@ const LINKS = [
 
 export function PatientHelp() {
   const dialog = useRef(null)
+  const conversation = useRef(null)
+  const input = useRef(null)
   const [open, setOpen] = useState(false)
+  const [draft, setDraft] = useState('')
+  const [messages, setMessages] = useState([])
+
+  useEffect(() => {
+    if (!open) return
+    conversation.current.scrollTop = conversation.current.scrollHeight
+  }, [messages, open])
+
+  function sendMessage(event) {
+    event.preventDefault()
+    const text = draft.trim()
+    if (!text) return
+    setMessages((current) => [...current,
+      { role: 'user', text },
+      { role: 'assistant', text: 'This is a chat preview. Your message stays on this page and has not been sent to our team. Use the links above, or contact our team below for help.' }
+    ])
+    setDraft('')
+    input.current?.focus()
+  }
 
   return (
     <>
@@ -34,6 +56,7 @@ export function PatientHelp() {
         onClick={() => {
           dialog.current?.showModal()
           setOpen(true)
+          input.current?.focus()
         }}
       >
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -48,12 +71,19 @@ export function PatientHelp() {
         id="patient-support"
         className="help"
         aria-labelledby="help-title"
+        aria-describedby="help-preview-note"
         onClose={() => setOpen(false)}
+        onClick={(event) => {
+          if (event.target !== dialog.current) return
+          const box = dialog.current.getBoundingClientRect()
+          if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.current.close()
+        }}
       >
         <header className="help__head">
-          <h2 className="h4" id="help-title">
-            Let’s find your next step.
-          </h2>
+          <div className="help__identity">
+            <BrandMark size={40} />
+            <div><h2 id="help-title">MmjGreen care chat</h2><p id="help-preview-note">UI preview · No messages sent</p></div>
+          </div>
           <button
             type="button"
             className="help__close"
@@ -66,19 +96,36 @@ export function PatientHelp() {
           </button>
         </header>
 
-        <nav className="help__links" aria-label="Help topics">
+        <div className="help__conversation" ref={conversation}>
+          <div className="help__bubble help__bubble--assistant">
+            <strong>Let’s find your next step.</strong>
+            <p>Have a question about your medical card? Type below, or choose a topic to explore.</p>
+          </div>
+          <nav className="help__links" aria-label="Help topics">
           {LINKS.map(([label, to]) => (
             <Link key={to} to={to} onClick={() => dialog.current?.close()}>
               {label}
             </Link>
           ))}
-        </nav>
+          </nav>
+          <div className="help__messages" role="log" aria-label="Chat messages" aria-live="polite" aria-relevant="additions">
+            {messages.map((message, index) => (
+              <div className={`help__bubble help__bubble--${message.role}`} key={index}>
+                <span className="sr-only">{message.role === 'user' ? 'You: ' : 'Chat preview: '}</span>
+                <p>{message.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        <div className="help__direct">
-          <strong>Talk to our team</strong>
-          <a href={support.tel}>{support.phone}</a>
-          <a href={support.mailto}>{support.email}</a>
-          <p className="help__urgent">For a medical emergency, call your local emergency number.</p>
+        <div className="help__footer">
+          <form className="help__composer" onSubmit={sendMessage}>
+            <label className="sr-only" htmlFor="help-message">Your message</label>
+            <input ref={input} id="help-message" name="message" type="text" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Type your message…" maxLength={1000} autoComplete="off" />
+            <button type="submit" className="help__send" aria-label="Send message" disabled={!draft.trim()}><IconArrow size={20} /></button>
+          </form>
+          <div className="help__direct"><a href={support.tel}>Call our team</a><span aria-hidden="true">·</span><a href={support.mailto}>Email us</a></div>
+          <p className="help__urgent">For emergencies, call your local emergency number.</p>
         </div>
       </dialog>
     </>

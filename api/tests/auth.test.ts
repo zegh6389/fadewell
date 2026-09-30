@@ -5,7 +5,7 @@ import test from 'node:test'
 import { generateSecret, generateSync, verifySync } from 'otplib'
 import { seal } from '../src/security.ts'
 import { buildApp } from '../src/app.ts'
-import { loadConfig } from '../src/config.ts'
+import { loadConfig, MIN_PASSWORD_LENGTH } from '../src/config.ts'
 import { hashPassword } from '../src/auth.ts'
 import { migrate } from '../src/migrate.ts'
 import { open, hash, randomToken } from '../src/security.ts'
@@ -198,7 +198,7 @@ test('corrupted MFA challenges and stored secrets fail closed with 401, never 50
 test('local authentication requires backend configuration and retains production password policy', () => {
   const env = { NODE_ENV: 'production', APP_ORIGIN: 'https://care.example.test', DATABASE_URL: 'postgres://example', DATA_ENCRYPTION_KEY: randomBytes(32).toString('base64') }
   assert.equal(loadConfig(env).production, true)
-  assert.equal(loadConfig({ ...env, MIN_PASSWORD_LENGTH: '10' }).minPasswordLength, 12)
+  assert.equal(MIN_PASSWORD_LENGTH, 12)
   assert.throws(() => loadConfig({ ...env, DATA_ENCRYPTION_KEY: '' }))
   assert.throws(() => loadConfig({ ...env, APP_ORIGIN: 'http://insecure.test' }))
 })
@@ -212,8 +212,7 @@ test('admin user creation issues TOTP setup key, and TOTP/password reset rotate 
   const config = {
     ...loadConfig({}),
     origin: 'https://care.example.test',
-    encryptionKey: randomBytes(32).toString('base64'),
-    minPasswordLength: 12
+    encryptionKey: randomBytes(32).toString('base64')
   }
   const adminPassword = 'Synthetic-Admin-2026'
   const adminId = randomUUID()

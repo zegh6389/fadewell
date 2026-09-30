@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { conditions } from '../lib/content.js'
 import { PageHero, SectionHead, CtaBand, Checklist } from '../components/Page.jsx'
-import { IconCheck, IconArrow } from '../components/Icons.jsx'
+import { IconArrow } from '../components/Icons.jsx'
 import { MagneticLink } from '../components/Chrome.jsx'
 import { getJurisdictions } from '../lib/api.js'
 
@@ -40,6 +40,8 @@ export default function Care() {
         eyebrow="What we treat"
         title="Qualifying conditions,"
         accent="in the states we serve."
+        image="/assets/botanical-bud.webp"
+        alt="Close-up photograph of a cannabis flower accompanying qualifying-condition guidance"
         lede="A medical card exists so that cannabis can be used without the legal risk that comes with it. These are the conditions our clinicians most often evaluate — your state decides which of them actually qualify."
       />
 

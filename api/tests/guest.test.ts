@@ -4,7 +4,7 @@ import test from "node:test";
 import { buildApp } from "../src/app.ts";
 import { loadConfig } from "../src/config.ts";
 import { migrate } from "../src/migrate.ts";
-import { testDatabase } from "./database.ts";
+import { testDatabase, testConfig } from "./database.ts";
 import { seal } from "../src/security.ts";
 
 test("guest intake needs no account, retains its session and cannot access another patient or staff", async (t) => {
@@ -14,12 +14,7 @@ test("guest intake needs no account, retains its session and cannot access anoth
   await db.query(
     "UPDATE jurisdictions SET status='AVAILABLE', allowed_visit_types=ARRAY['VIDEO','PHONE']::text[] WHERE code='CA'",
   );
-  const config = {
-    ...loadConfig({}),
-    origin: "https://care.example.test",
-    encryptionKey: randomBytes(32).toString("base64"),
-    intakeEnabled: true,
-  };
+  const config = testConfig();
   const app = await buildApp(config, db, () => {});
   t.after(() => app.close());
   const headers = { origin: config.origin, "content-type": "application/json" };

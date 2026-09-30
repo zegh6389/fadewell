@@ -6,10 +6,8 @@
  * own per-word counter rather than a single IntersectionObserver toggle.
  */
 
-import { useEffect, useRef, useState } from 'react'
-
-const reducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+import { Fragment, useEffect, useRef, useState } from 'react'
+import { prefersReducedMotion as reducedMotion } from '../lib/motion.js'
 
 /**
  * An endlessly scrolling ticker.
@@ -120,9 +118,9 @@ export function WordReveal({ lines, as: Tag = 'p' }) {
               seen += 1
               const on = showAll || index < activeCount
               return (
-                <span className={`word-reveal__word${on ? ' is-active' : ''}`} key={`${word}-${index}`}>
-                  {word}
-                </span>
+                <Fragment key={`${word}-${index}`}>
+                  <span className={`word-reveal__word${on ? ' is-active' : ''}`}>{word}</span>{' '}
+                </Fragment>
               )
             })}
           </span>

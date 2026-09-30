@@ -8,7 +8,8 @@ import {
   reviewIntake,
   verifyContact
 } from '../../lib/api.js'
-import { IconArrow, IconCalendar, IconCheck, IconClock } from '../../components/Icons.jsx'
+import { IconCalendar, IconCheck } from '../../components/Icons.jsx'
+import { formatWhen } from '../../lib/datetime.js'
 
 const QUEUES = [
   { key: 'NEEDS_REVIEW', label: 'Needs attention', tone: 'amber' },
@@ -18,10 +19,6 @@ const QUEUES = [
   { key: 'COMPLETED', label: 'Complete', tone: 'forest' },
   { key: 'DRAFT', label: 'Draft', tone: 'sage' }
 ]
-
-function formatWhen(value) {
-  return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-}
 
 function StaffSurface({ session }) {
   const [state, setState] = useState('loading')

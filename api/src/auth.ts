@@ -3,6 +3,7 @@ import argon2 from 'argon2'
 import { generateSecret, verifySync } from 'otplib'
 import { z } from 'zod'
 import type { Config } from './config.ts'
+import { MIN_PASSWORD_LENGTH } from './config.ts'
 import { audit, requireDb } from './db.ts'
 import type { Database, Sql, Row } from './db.ts'
 import { denied, Fault, unavailable } from './domain.ts'
@@ -258,7 +259,7 @@ export function registerAuth(app: FastifyInstance, database: Database | undefine
 
   app.post('/api/auth/password/change', options, async (request, reply) => {
     const actor = await authenticate(request, database, config, ['ADMIN', 'STAFF', 'DOCTOR'])
-    const input = z.object({ currentPassword: z.string().min(1).max(128), newPassword: z.string().min(config.minPasswordLength).max(128) }).strict().parse(request.body)
+    const input = z.object({ currentPassword: z.string().min(1).max(128), newPassword: z.string().min(MIN_PASSWORD_LENGTH).max(128) }).strict().parse(request.body)
     const result = await db().transaction(async (sql) => {
       const row = (await sql.query(`${credentialQuery} WHERE i.id=$1 FOR UPDATE OF i,c`, [actor.id])).rows[0]
       if (!row?.enabled || !await passwordMatches(row.password_hash, input.currentPassword)) return { error: authFailed() }

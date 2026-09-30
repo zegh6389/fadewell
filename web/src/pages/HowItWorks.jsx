@@ -1,4 +1,4 @@
-import { journey, storySteps, faqs, brand } from '../lib/content.js'
+import { journey, storySteps, brand } from '../lib/content.js'
 import { PageHero, SectionHead, CtaBand, Checklist } from '../components/Page.jsx'
 import { Icon, IconCheck } from '../components/Icons.jsx'
 
@@ -17,6 +17,8 @@ export default function HowItWorks() {
       <PageHero
         eyebrow="How it works"
         title="From a six-minute form to a card in your wallet."
+        image="/assets/card-premium.webp"
+        alt="Illustrative MmjGreen sample patient card with portrait and registration details, not a real credential"
         lede="No waiting rooms, no phone trees, no guessing. Here is the entire process, in the order it actually happens — including the parts most services leave out."
       />
 

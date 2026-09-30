@@ -2,9 +2,8 @@ import assert from 'node:assert/strict'
 import { randomBytes, randomUUID } from 'node:crypto'
 import test from 'node:test'
 import { buildApp } from '../src/app.ts'
-import { loadConfig } from '../src/config.ts'
 import { migrate } from '../src/migrate.ts'
-import { testDatabase } from './database.ts'
+import { testDatabase, testConfig } from './database.ts'
 import { hash as hashToken, seal } from '../src/security.ts'
 import { runDeliveryCycle } from '../src/delivery.ts'
 
@@ -15,8 +14,7 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
   await db.query(
     "UPDATE jurisdictions SET status='AVAILABLE', allowed_visit_types=ARRAY['VIDEO','PHONE']::text[] WHERE code='CA'"
   )
-  const config = { ...loadConfig({}), origin: 'https://care.example.test',
-    encryptionKey: randomBytes(32).toString('base64'), intakeEnabled: true }
+  const config = testConfig()
   const app = await buildApp(config, db, () => {})
   t.after(() => app.close())
   const headers = { origin: config.origin, 'content-type': 'application/json' }

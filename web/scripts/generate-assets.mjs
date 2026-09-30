@@ -150,7 +150,7 @@ function clinicianSvg(initials, seed, palette) {
  * at the right carrying the mark. Type size is fitted to the available column
  * so a long line and a short one both set correctly instead of overflowing.
  */
-function coverSvg({ width, height, title, subtitle, seed, palette }) {
+function coverSvg({ width, height, title, subtitle, palette }) {
   const split = Math.round(width * 0.55)
   const left = Math.round(width * 0.07)
   const col = split - left - Math.round(width * 0.06)

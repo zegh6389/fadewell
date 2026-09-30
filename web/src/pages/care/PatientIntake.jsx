@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Workspace, CareNotice, CareLoader } from './Workspace.jsx'
 import {
   getIntake,
@@ -89,7 +89,6 @@ function IntakeForm({ session, questionnaire, jurisdictions, existing, onSaved, 
   const [error, setError] = useState(null)
   const [saved, setSaved] = useState(false)
   const [summary, setSummary] = useState(null)
-  const firstError = useRef(null)
   // Identity is captured separately from the questionnaire payload: the API
   // owns the document, and the intake only records which one is on file.
   const [idType, setIdType] = useState(data.idType ?? '')

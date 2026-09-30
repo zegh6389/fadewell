@@ -113,7 +113,6 @@ export default function ClinicianProfile() {
       </section>
 
       <CtaBand
-        eyebrow="Your next step"
         title="Ready when"
         accent="you are."
         body="Choose your state and book a consultation. You can pick video or phone, and you can change it."
