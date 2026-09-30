@@ -1026,13 +1026,18 @@ export function registerRoutes(
       // Ownership is checked against every presented session, and all of them are
       // revoked: consuming the join token must not leave a session behind under
       // either the current or the legacy cookie name.
+      //
+      // A browser can present a patient's session and someone else's at the same
+      // time, so the test is "does ANY live session belong to another actor" —
+      // never "does the first row match", which would depend on row order and
+      // would let a join silently revoke an unrelated account's session.
       const previous = sessionTokens(request, config)
       if (previous.length) {
-        const existing = (await sql.query(
-          'SELECT actor_id FROM sessions WHERE token_hash=ANY($1::text[]) AND expires_at>now()',
-          [previous.map(hash)]
+        const foreign = (await sql.query(
+          'SELECT 1 FROM sessions WHERE token_hash=ANY($1::text[]) AND expires_at>now() AND actor_id<>$2 LIMIT 1',
+          [previous.map(hash), row.patient_id]
         )).rows[0]
-        if (existing && existing.actor_id !== row.patient_id) throw denied()
+        if (foreign) throw denied()
         await revokeSessionTokens(sql, previous)
       }
       await sql.query(
