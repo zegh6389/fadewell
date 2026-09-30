@@ -1,18 +1,18 @@
 /**
- * FadeWell — site content.
+ * MmjGreen — site content.
  *
  * Single source of truth for copy used across the public site.
  * Kept separate from components so copy edits never touch layout code.
  */
 
 export const brand = {
-  name: 'FadeWell',
-  domain: 'fadewell.com',
-  origin: 'https://fadewell.com',
+  name: 'MmjGreen',
+  domain: 'mmjgreen.com',
+  origin: 'https://mmjgreen.com',
   tagline: 'Medical card evaluation, made calm.',
   description:
-    'FadeWell guides you from a short online intake to a live consultation with a licensed clinician — with clear next steps at every stage.',
-  email: 'care@fadewell.com',
+    'MmjGreen guides you from a short online intake to a live consultation with a licensed clinician — with clear next steps at every stage.',
+  email: 'care@mmjgreen.com',
   phone: '(888) 555-0142',
   phoneHref: '+18885550142',
   address: '1200 Market Street, Suite 400, Denver, CO 80202',
@@ -99,7 +99,7 @@ export const journey = [
     icon: 'map',
     title: 'We check your state rules',
     body:
-      'Medical card law differs in every state. FadeWell checks your jurisdiction automatically and shows you only options that are actually available to you.',
+      'Medical card law differs in every state. MmjGreen checks your jurisdiction automatically and shows you only options that are actually available to you.',
     detail: 'Rules verified against live jurisdiction data'
   },
   {
@@ -135,7 +135,7 @@ export const storySteps = [
     num: '01',
     title: 'Built around your state, not a generic template',
     body:
-      'Most online card services hand you the same questionnaire everywhere. FadeWell reads your jurisdiction first, so the questions you answer and the options you are offered actually apply where you live.'
+      'Most online card services hand you the same questionnaire everywhere. MmjGreen reads your jurisdiction first, so the questions you answer and the options you are offered actually apply where you live.'
   },
   {
     num: '02',
@@ -231,7 +231,7 @@ export const clinicians = [
     states: 'CO · CA · WA',
     years: 14,
     photo: '/assets/clinician-amara.webp',
-    bio: 'Board-certified in family medicine. Led clinical operations for two multi-state cannabis programs before joining FadeWell.',
+    bio: 'Board-certified in family medicine. Led clinical operations for two multi-state cannabis programs before joining MmjGreen.',
     languages: ['English', 'Twi']
   },
   {
@@ -241,7 +241,7 @@ export const clinicians = [
     states: 'CO · NM · AZ',
     years: 11,
     photo: '/assets/clinician-rafael.webp',
-    bio: 'Osteopathic physician focused on pain medicine and post-surgical recovery. Runs FadeWell’s chronic pain pathway.',
+    bio: 'Osteopathic physician focused on pain medicine and post-surgical recovery. Runs MmjGreen’s chronic pain pathway.',
     languages: ['English', 'Spanish']
   },
   {
@@ -352,7 +352,7 @@ export const testimonials = [
   },
   {
     quote:
-      'I was nervous about the video call and the tech just worked. Booking, reminders, joining — all of it. I have recommended FadeWell to two friends since.',
+      'I was nervous about the video call and the tech just worked. Booking, reminders, joining — all of it. I have recommended MmjGreen to two friends since.',
     name: 'Jordan K.',
     location: 'Reno, NV',
     rating: 5
@@ -376,7 +376,7 @@ export const faqs = [
   },
   {
     q: 'What if I live somewhere you do not serve?',
-    a: 'FadeWell currently operates in 14 states. Enter your state during intake and we will tell you honestly whether we can help. If we cannot, we will say so plainly and point you to the state’s own physician registry rather than sending you through a process that will not work.'
+    a: 'MmjGreen currently operates in 14 states. Enter your state during intake and we will tell you honestly whether we can help. If we cannot, we will say so plainly and point you to the state’s own physician registry rather than sending you through a process that will not work.'
   },
   {
     q: 'Is my information sold or shared?',
@@ -396,7 +396,7 @@ export const faqs = [
   }
 ]
 
-/* ---------- Why FadeWell ----------------------------------- */
+/* ---------- Why MmjGreen ----------------------------------- */
 
 export const pillars = [
   {
@@ -501,7 +501,7 @@ export const legalDocs = {
     title: 'Privacy policy',
     updated: 'September 2026',
     intro:
-      'This policy explains what personal information FadeWell collects, why we collect it, and the choices you have. It is written to be read, not to be skipped.',
+      'This policy explains what personal information MmjGreen collects, why we collect it, and the choices you have. It is written to be read, not to be skipped.',
     sections: [
       {
         h: 'Information we collect',
@@ -550,19 +550,19 @@ export const legalDocs = {
     title: 'Terms of service',
     updated: 'September 2026',
     intro:
-      'These terms describe the agreement between you and FadeWell when you use our site, complete an intake, or receive care through our clinicians.',
+      'These terms describe the agreement between you and MmjGreen when you use our site, complete an intake, or receive care through our clinicians.',
     sections: [
       {
         h: 'Using this service',
         p: [
           'You must be at least 21 years old to open an account or hold a medical card in the states we serve, and at least 18 years old to use this site. You agree to provide accurate information and to keep your secure link confidential.',
-          'You may not use FadeWell to obtain a card through misrepresentation, to impersonate another person, or in a way that interferes with another person’s care or with the operation of the service.'
+          'You may not use MmjGreen to obtain a card through misrepresentation, to impersonate another person, or in a way that interferes with another person’s care or with the operation of the service.'
         ]
       },
       {
         h: 'Clinical services',
         p: [
-          'Evaluations are performed by independently licensed clinicians, not by FadeWell. FadeWell provides the technology, coordination and administrative support around that clinical relationship.',
+          'Evaluations are performed by independently licensed clinicians, not by MmjGreen. MmjGreen provides the technology, coordination and administrative support around that clinical relationship.',
           'Your clinician may decline to complete an evaluation, and we may decline to continue service, where they believe an evaluation is not appropriate or where the law of your state does not permit it. Where we decline before a consultation, we refund the evaluation fee.'
         ]
       },
@@ -577,13 +577,13 @@ export const legalDocs = {
         h: 'Your responsibilities',
         p: [
           'Answer the intake honestly and completely, attend your scheduled consultation, and tell your clinician about anything that could affect your safety or treatment. Tell us promptly if your contact details change so we can reach you.',
-          'Do not use FadeWell for emergencies. If you are in crisis, call 911 or 988.'
+          'Do not use MmjGreen for emergencies. If you are in crisis, call 911 or 988.'
         ]
       },
       {
         h: 'Liability',
         p: [
-          'FadeWell provides clinical evaluations and administrative services but does not provide emergency care and cannot guarantee that a state registry will approve an application. Decisions about whether to issue a card are made by your state, not by us.',
+          'MmjGreen provides clinical evaluations and administrative services but does not provide emergency care and cannot guarantee that a state registry will approve an application. Decisions about whether to issue a card are made by your state, not by us.',
           'To the extent permitted by law, our aggregate liability for claims arising from use of the service is limited to the amount you paid us in the twelve months before the claim arose. Nothing in these terms limits liability that cannot lawfully be limited.'
         ]
       },
@@ -622,7 +622,7 @@ export const legalDocs = {
       {
         h: 'State application fees',
         p: [
-          'Fees charged by your state registry are outside our control and are non-refundable through FadeWell. We will always show you what a state charges before you submit.'
+          'Fees charged by your state registry are outside our control and are non-refundable through MmjGreen. We will always show you what a state charges before you submit.'
         ]
       },
       {
@@ -637,7 +637,7 @@ export const legalDocs = {
     title: 'Telehealth consent',
     updated: 'September 2026',
     intro:
-      'Before your FadeWell consultation begins, we need your informed consent to being evaluated remotely. Please read this fully — you will be asked to confirm it.',
+      'Before your MmjGreen consultation begins, we need your informed consent to being evaluated remotely. Please read this fully — you will be asked to confirm it.',
     sections: [
       {
         h: 'What telehealth means here',
@@ -681,7 +681,7 @@ export const legalDocs = {
     title: 'Medical disclaimer',
     updated: 'September 2026',
     intro:
-      'Please read this carefully. It describes what FadeWell is and is not, and the limits of the information you will find here.',
+      'Please read this carefully. It describes what MmjGreen is and is not, and the limits of the information you will find here.',
     sections: [
       {
         h: 'Not medical advice',
@@ -692,7 +692,7 @@ export const legalDocs = {
       {
         h: 'No guarantee of approval',
         p: [
-          'A card is issued by your state, not by FadeWell. Your clinician evaluates whether you meet the medical criteria in your state; the state registry then makes its own decision. We cannot and do not guarantee that any application will be approved.'
+          'A card is issued by your state, not by MmjGreen. Your clinician evaluates whether you meet the medical criteria in your state; the state registry then makes its own decision. We cannot and do not guarantee that any application will be approved.'
         ]
       },
       {
@@ -704,7 +704,7 @@ export const legalDocs = {
       {
         h: 'Not for emergencies or crisis',
         p: [
-          'FadeWell is not an emergency service and does not provide crisis care. If you are in danger, thinking about harming yourself, or need immediate help, call or text 988, or dial 911.'
+          'MmjGreen is not an emergency service and does not provide crisis care. If you are in danger, thinking about harming yourself, or need immediate help, call or text 988, or dial 911.'
         ]
       },
       {
@@ -721,7 +721,7 @@ export const accessibility = {
   title: 'Accessibility statement',
   updated: 'September 2026',
   intro:
-    'FadeWell wants everyone to be able to use this site and reach our care team, regardless of technology or ability.',
+    'MmjGreen wants everyone to be able to use this site and reach our care team, regardless of technology or ability.',
   sections: [
     {
       h: 'Our commitment',
@@ -738,7 +738,7 @@ export const accessibility = {
     {
       h: 'Need help, or found a barrier?',
       p: [
-        'Email care@fadewell.com or call (888) 555-0142. If something on this site is difficult to use, we want to know — tell us what happened and which page you were on, and we will both fix it and get you care in the meantime.'
+        'Email care@mmjgreen.com or call (888) 555-0142. If something on this site is difficult to use, we want to know — tell us what happened and which page you were on, and we will both fix it and get you care in the meantime.'
       ]
     }
   ]
@@ -797,8 +797,8 @@ export const timeline = [
 export const support = {
   phone: '888-809-3204',
   tel: 'tel:+18888093204',
-  email: 'care@fadewell.com',
-  mailto: 'mailto:care@fadewell.com'
+  email: 'care@mmjgreen.com',
+  mailto: 'mailto:care@mmjgreen.com'
 }
 
 /** States we have not opened yet. Everything else reads as available. */
@@ -891,7 +891,7 @@ export const tagline = [
 export const compliance = {
   eyebrow: 'Compliance and security',
   title: 'Your health information deserves serious protection.',
-  body: 'FadeWell runs a HIPAA-aligned workflow built to protect patient information across the whole evaluation, not just the parts that are convenient to secure.',
+  body: 'MmjGreen runs a HIPAA-aligned workflow built to protect patient information across the whole evaluation, not just the parts that are convenient to secure.',
   points: [
     { icon: 'lock', title: 'Encrypted in transit', note: 'Patient information is protected as it moves through the online workflow.' },
     { icon: 'shield', title: 'Collected narrowly', note: 'We only gather what the evaluation actually needs, and stop there.' },
@@ -918,12 +918,12 @@ export const learningResources = [
     slug: 'certification-is-not-a-state-card',
     category: 'Process',
     title: 'Certification is not the same as a state card',
-    note: 'Understand the roles of the clinician, FadeWell and your state programme.',
+    note: 'Understand the roles of the clinician, MmjGreen and your state programme.',
     body: [
       'This is the single most common misunderstanding in the whole process, and it catches people out at the worst possible moment — after they have already paid for an evaluation.',
       'A clinician certifies you. That is a medical judgement about whether an evaluation is appropriate, and it is entirely theirs to make. We do not make it, and no software does.',
       'Your state programme then issues the card or the registration. That is a separate administrative process, with its own rules, its own forms, its own fee, and often its own waiting period.',
-      'FadeWell sits between the two. We handle the intake, the scheduling, the consultation and the tracking — and we tell you honestly which state steps remain after a clinician certifies you.',
+      'MmjGreen sits between the two. We handle the intake, the scheduling, the consultation and the tracking — and we tell you honestly which state steps remain after a clinician certifies you.',
       'The practical consequence: treat the clinician decision and the state registration as two separate projects with two separate timelines. Planning for one to finish the other is what causes the frustration.'
     ]
   },
@@ -951,7 +951,7 @@ export const serviceStages = [
   {
     num: '02',
     title: 'We check your state rules',
-    body: 'Medical card law differs in every state. FadeWell checks your jurisdiction automatically and shows you only the options that are actually available to you, rather than a generic page that does not apply.'
+    body: 'Medical card law differs in every state. MmjGreen checks your jurisdiction automatically and shows you only the options that are actually available to you, rather than a generic page that does not apply.'
   },
   {
     num: '03',
@@ -1007,7 +1007,7 @@ export const guideSections = [
     title: 'After a clinician certifies you',
     body: [
       'Certification is not a state card. Your state programme runs its own registration, with its own forms, its own fee and often its own waiting period.',
-      'FadeWell submits to your state registry and tracks the application from there. You will see every stage, and you always know whether something is waiting on you or on us.',
+      'MmjGreen submits to your state registry and tracks the application from there. You will see every stage, and you always know whether something is waiting on you or on us.',
       'State fees are separate from ours unless a state-specific offer clearly says otherwise. We itemise them rather than folding them into a single number.'
     ]
   }

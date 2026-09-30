@@ -1,5 +1,5 @@
 /**
- * FadeWell — icon set.
+ * MmjGreen — icon set.
  * Inline SVG so `img-src 'self'` never applies and icons inherit currentColor.
  */
 
@@ -184,35 +184,22 @@ export function Icon({ name, ...rest }) {
   return Component ? <Component {...rest} /> : null
 }
 
-/** FadeWell wordmark — a flat forest tile with a lime recovery curve. */
+/** Botanical mark with a medical cross, shared with the sample card. */
 export function BrandMark({ size = 30, ...rest }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 32 32"
+      viewBox="0 0 64 64"
       fill="none"
       aria-hidden="true"
       focusable="false"
       {...rest}
     >
-      <rect width="32" height="32" rx="9" fill="#174A32" />
-      {/* the "fade": a line that dips, then recovers to a steady level */}
-      <path
-        d="M7 20.5c2.6 0 3.2-6.5 5.6-6.5s2.6 6.5 5 6.5 2.4-3.4 4.4-3.4"
-        stroke="#D6E255"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* settled baseline */}
-      <path
-        d="M7 24.2h18"
-        stroke="#D6E255"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        opacity="0.45"
-      />
+      <rect width="64" height="64" rx="20" fill="#174a32" />
+      <path d="M32 43C16 39 13 25 17 15c12 0 20 9 15 28Z" fill="#d6e255" />
+      <path d="M32 43c-3-16 4-26 17-28 4 13-3 24-17 28Z" fill="#a7cda9" />
+      <path d="M32 47V29M48 39v10m-5-5h10" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   )
 }

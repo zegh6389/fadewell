@@ -1,0 +1,255 @@
+# yaml-language-server: $schema=https://www.coderabbit.ai/integrations/schema.v2.json
+
+language: "en-US"
+
+reviews:
+  # This app handles protected health information and medical-card eligibility
+  # decisions, so a missed detail is a patient-safety and compliance problem,
+  # not just a style nit. Review strictly.
+  profile: assertive
+  request_changes_workflow: false
+
+  high_level_summary: true
+  high_level_summary_in_walkthrough: false
+  review_status: true
+  commit_status: true
+  fail_commit_status: false
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: false
+
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+
+  suggested_labels: true
+  auto_apply_labels: false
+  suggested_reviewers: true
+  auto_assign_reviewers: false
+
+  labeling_instructions:
+    - label: "security"
+      instructions: "Authentication, authorization, session handling, or PHI exposure changes."
+    - label: "database"
+      instructions: "Schema migrations or changes to query/transaction behaviour."
+    - label: "api"
+      instructions: "Route, contract, or request-validation changes in api/."
+    - label: "ui"
+      instructions: "Patient-facing or staff-facing interface changes in web/."
+    - label: "a11y"
+      instructions: "Accessibility semantics, focus management, or contrast changes."
+    - label: "legal-copy"
+      instructions: "Disclaimer, terms, privacy, refund, or medical-claims copy changes."
+    - label: "dependencies"
+      instructions: "Dependency additions, removals, or major version bumps."
+
+  instructions: |
+    MmjGreen is a guided medical-card evaluation and telehealth application.
+    `api/` is Fastify 5 + TypeScript on Node 24 (argon2, otplib TOTP, pg, zod,
+    nodemailer, Telnyx). `web/` is React 19 + Vite 7 + react-router 7 with
+    Playwright and axe-core for tests.
+
+    Apply these expectations everywhere:
+    - The system stores and processes patient identity documents, intake answers,
+      and health information. Treat any change that could expose, log, or
+      over-transmit that data as a blocking issue.
+    - Eligibility, jurisdiction, and prescription-cap logic decides what a
+      patient is told they qualify for. Correctness matters more than brevity.
+    - Patient-facing copy must not promise a specific medical outcome or
+      guarantee a prescription. Flag copy that overstates what the product does.
+    - Flag new `console.log`/debug output in `api/` that could print tokens,
+      session identifiers, or request bodies.
+    - Prefer a small, reviewable change over a large rewrite bundled in a
+      feature commit.
+
+  # Lock files, binaries, and captured screenshots add noise, not signal.
+  path_filters:
+    - "!**/package-lock.json"
+    - "!**/*.woff2"
+    - "!**/*.png"
+    - "!**/*.jpg"
+    - "!**/*.webp"
+    - "!**/*.svg"
+    - "!web/artifacts/**"
+    - "!web/public/assets/**"
+
+  path_instructions:
+    - path: "api/src/auth.ts"
+      instructions: |
+        Authentication core. Review with care:
+        - Session tokens, cookies, and OTLP/TOTP secrets must never be logged.
+        - Password hashing must stay on argon2 with the parameters already in
+          place; flag any weakening of cost factors or a switch to a fast hash.
+        - Any secret comparison must be timing-safe; flag `===` on tokens,
+          codes, or signatures.
+        - New session issuance or rotation paths must expire prior sessions and
+          bind the session to the intended user.
+        - Flag new endpoints that expose user enumeration through differing
+          responses or status codes.
+
+    - path: "api/src/security.ts"
+      instructions: |
+        Security middleware. Flag any removal or bypass of a security control
+        (rate limiting, helmet headers, CSRF, origin checks, bot/human
+        verification). New protections should fail closed by default.
+
+    - path: "api/src/security-headers.ts"
+      instructions: |
+        Header policy changes must keep CSP, frame-ancestors, and
+        referrer-policy at least as strict as before. Justify any relaxation in
+        the PR description, and confirm the site still serves on the LAN
+        origin added for local network access.
+
+    - path: "api/src/config.ts"
+      instructions: |
+        Configuration must validate and fail fast at boot when a required
+        variable is missing. Flag hardcoded secrets, real credentials, and
+        production defaults that would silently apply in production.
+
+    - path: "api/src/routes.ts"
+      instructions: |
+        Request handling. For each new or changed route, confirm:
+        - Input is validated with a zod schema before use; no unvalidated body,
+          query, or path values reach SQL, the filesystem, or templates.
+        - Authentication and authorization are both enforced, and the correct
+          patient's record is scoped to the session owner.
+        - Responses do not return fields the caller has no right to see,
+          especially internal ids, other patients' data, or verification
+          secrets.
+        - Errors return a safe message; internals are not leaked to the client.
+
+    - path: "api/src/db.ts"
+      instructions: |
+        Data access. Flag any SQL built by string interpolation or concatenation
+        of user-controlled values; all values must be parameterized. Confirm
+        transactions are committed or rolled back on every path, including
+        error paths, and that the pool is released.
+
+    - path: "api/migrations/**"
+      instructions: |
+        Schema migrations are applied to live patient data:
+        - Flag destructive changes (DROP, destructive ALTER, narrowing a type)
+          unless the PR description explains the migration and data plan.
+        - Additive-only changes should be safe to apply while the old code is
+          still serving traffic.
+        - Confirm statements that must not fail are wrapped so the migration is
+          re-runnable, and that the file is registered in the expected order.
+
+    - path: "api/src/worker.ts"
+      instructions: |
+        Background worker. Flag unbounded retry loops and missing backoff. Work
+        that can run more than once must be idempotent; a retry must not
+        double-send an SMS, duplicate an intake email, or re-charge a
+        prescription cap.
+
+    - path: "api/src/providers.ts"
+      instructions: |
+        External providers (Telnyx, email). Confirm timeouts are set, failures
+        are handled without crashing the worker, and provider responses are not
+        logged wholesale since they can contain recipient numbers and message
+        content.
+
+    - path: "api/src/domain.ts"
+      instructions: |
+        Eligibility, jurisdiction, and prescription-cap rules. These decide what
+        a patient is told. Flag changes that alter a boundary condition,
+        effective date, or cumulative-cap calculation without a corresponding
+        test, and flag anything that makes a previously invalid state valid.
+
+    - path: "api/tests/**"
+      instructions: |
+        Tests run on `node:test`. Require that a new test fails without its fix
+        and states the behaviour it protects in its name. Flag deleted or
+        weakened assertions, and tests that pass by stubbing the very logic
+        under test.
+
+    - path: "web/src/**"
+      instructions: |
+        Patient and staff interfaces:
+        - Never persist PHI, tokens, or intake answers in localStorage,
+          sessionStorage, or the URL.
+        - Interactive elements need accessible names, keyboard reachability,
+          and visible focus; preserve the axe-clean baseline.
+        - Flag copy that promises a specific medical outcome, a guaranteed
+          prescription, or a guaranteed approval.
+        - Prefer a small, reviewable change over a large rewrite bundled in a
+          feature commit.
+
+    - path: "web/tests/browser/**"
+      instructions: |
+        Playwright specs. Flag tests that assert only on visible text where a
+        role or label selector would be more durable, and any removal of
+        accessibility assertions.
+
+    - path: "**/*.md"
+      instructions: |
+        Flag documentation that contradicts the code it describes. Legal and
+        compliance pages (disclaimer, terms, privacy, refund) need a careful
+        read: any change to obligations, retention, or consent language must be
+        intentional and described in the PR body.
+
+  pre_merge_checks:
+    docstrings:
+      mode: "warning"
+    custom_checks:
+      - name: "PHI and secret exposure"
+        mode: "warning"
+        instructions: |
+          If this pull request touches api/, confirm no PHI, credentials,
+          tokens, or document contents are written to logs, error messages,
+          analytics, or client-side storage.
+      - name: "Contract and schema change documentation"
+        mode: "warning"
+        instructions: |
+          If this pull request changes an environment variable, database
+          schema, public API response, or deployment script, confirm the PR
+          description explains the change and its rollout impact.
+
+  abort_on_close: true
+  disable_cache: false
+
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    auto_pause_after_reviewed_commits: 10
+    drafts: false
+    base_branches:
+      - "main"
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT MERGE"
+      - "[skip review]"
+
+chat:
+  auto_reply: true
+  instructions: |
+    Answer questions about this repository in the context of a
+    medical-card evaluation and telehealth product handling patient data.
+    Prefer pointing at the code path and the test that covers it over
+    restating the implementation back to the author.
+
+code_generation:
+  docstrings:
+    language: "en-US"
+    path_instructions:
+      - path: "api/src/**"
+        instructions: |
+          Document exported functions with a short summary, the parameters and
+          what they may contain (note PHI), the return value, and the errors
+          thrown. Do not document secrets.
+      - path: "web/src/**"
+        instructions: |
+          Add a JSDoc summary for exported components and hooks. Describe
+          props, and note when a component renders patient data.
+  unit_tests:
+    path_instructions:
+      - path: "api/**"
+        instructions: |
+          Use `node:test` with assert. Test behaviour through the public
+          surface, name the test after the behaviour it protects, and include
+          the failure case. Keep the existing style and the one-test-per-file
+          layout.
+      - path: "web/**"
+        instructions: |
+          Use `node:test` for unit tests and Playwright for browser behaviour.
+          Do not weaken existing axe accessibility assertions.

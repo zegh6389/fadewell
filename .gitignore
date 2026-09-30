@@ -33,3 +33,10 @@ Thumbs.db
 .vite/
 .eslintcache
 *.tsbuildinfo
+
+# Transient audit / probe output (tracked review artifacts live in web/artifacts/)
+web/shots/
+web/*-out.txt
+web/e2e-*.txt
+web/scripts/.tmp-*
+!web/scripts/.tmp-*.keep

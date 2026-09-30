@@ -66,7 +66,7 @@ check('guest intake opened on the LAN origin', (await nameField.count()) > 0)
 // If a session cookie was issued it is a real, non-Secure cookie scoped to the
 // LAN host — which is what lets a phone stay signed in across a refresh.
 const cookies = await page.context().cookies(base)
-const session = cookies.find((c) => c.name === 'fadewell-session' || c.name.startsWith('__Host-'))
+const session = cookies.find((c) => c.name === 'mmjgreen-session' || c.name.startsWith('__Host-'))
 check('session cookie issued', Boolean(session), session ? `${session.name} secure=${session.secure}` : 'none')
 check('cookie usable on this origin', Boolean(session) && session?.secure === false)
 

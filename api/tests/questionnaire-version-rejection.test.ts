@@ -49,7 +49,7 @@ async function setupApp(t: test.TestContext) {
       token,
       csrf,
       headers: {
-        cookie: `__Host-fadewell-session=${token}`,
+        cookie: `__Host-mmjgreen-session=${token}`,
         origin: config.origin,
         'x-csrf-token': csrf
       }

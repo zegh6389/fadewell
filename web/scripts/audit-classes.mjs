@@ -1,5 +1,5 @@
 /**
- * FadeWell — design-token / class audit.
+ * MmjGreen — design-token / class audit.
  *
  * Cross-checks three things that a refactor silently breaks:
  *   1. CSS custom properties referenced with var(--x) that are not defined.
@@ -159,6 +159,67 @@ if (badImports.length) {
   for (const msg of badImports) fail(msg)
 } else {
   console.log('  ok    every local named import resolves')
+}
+
+/* ---------- 4. components used in JSX but never imported -------- */
+
+/**
+ * A capitalised JSX tag with no binding is a runtime ReferenceError, and it is
+ * invisible until that one page renders. Check 3 cannot see it: it looks at
+ * what is imported, not at what is used. Removing a component and forgetting
+ * to move one of its call sites to an import passes every other check here and
+ * fails exactly one route — which is what happened when the magnetic button
+ * wrapper was deleted and `Care.jsx` kept its `<Link>`.
+ */
+const GLOBALS = new Set(['React', 'Fragment', 'Suspense', 'StrictMode', 'Profiler'])
+
+const undeclared = []
+for (const file of jsx) {
+  const text = readFileSync(file, 'utf8')
+
+  // Everything this file brings into scope: imports, `const X =`, function
+  // declarations, and the props of a destructured parameter.
+  const bound = new Set(GLOBALS)
+
+  // `import X from` and `import X, { a } from` — the default binding.
+  for (const m of text.matchAll(/import\s+([A-Za-z0-9_$]+)\s*(?:,|from)/g)) bound.add(m[1])
+  for (const m of text.matchAll(/import\s*\*\s*as\s+([A-Za-z0-9_$]+)/g)) bound.add(m[1])
+  for (const m of text.matchAll(/import\s*\{([^}]+)\}\s*from/g)) {
+    for (const part of m[1].split(',')) {
+      const name = part.trim().split(/\s+as\s+/).pop()?.trim()
+      if (name) bound.add(name)
+    }
+  }
+  for (const m of text.matchAll(/(?:const|let|var|function|class)\s+([A-Z][A-Za-z0-9_$]*)/g)) {
+    bound.add(m[1])
+  }
+
+  // A destructured binding, wherever it appears. `const { Tag } = props` and
+  // `function Page({ as: Tag })` both bind `Tag`, and both are written
+  // differently, so normalise to whatever sits after the `:`.
+  const bindPattern = (body) => {
+    for (const part of body.split(',')) {
+      const alias = part.split(':').pop()?.split('=')[0].trim()
+      if (alias && /^[A-Z][A-Za-z0-9_$]*$/.test(alias)) bound.add(alias)
+    }
+  }
+  for (const m of text.matchAll(/(?:const|let|var)\s*\{([^}]*)\}\s*=/g)) bindPattern(m[1])
+  for (const m of text.matchAll(/function\s+[A-Za-z0-9_$]+\s*\(\s*\{([^}]*)\}/g)) bindPattern(m[1])
+  for (const m of text.matchAll(/\(\s*\{([^}]*)\}\s*\)\s*=>/g)) bindPattern(m[1])
+
+  for (const m of text.matchAll(/<([A-Z][A-Za-z0-9_$.]*)/g)) {
+    const name = m[1]
+    if (name.includes('.')) continue // <Foo.Bar /> — the head is what matters
+    if (bound.has(name)) continue
+    undeclared.push(`${relative(ROOT, file)} renders <${name}> but never imports or defines it`)
+  }
+}
+
+console.log('\n4. JSX components with no import or definition')
+if (undeclared.length) {
+  for (const msg of [...new Set(undeclared)]) fail(msg)
+} else {
+  console.log('  ok    every component used in JSX is bound')
 }
 
 console.log(`\n${failures ? `AUDIT FAILED — ${failures} problem(s)` : 'AUDIT PASSED'}\n`)

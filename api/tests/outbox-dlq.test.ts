@@ -9,7 +9,7 @@ import { seal } from '../src/security.ts'
 import type { DeliveryProvider } from '../src/delivery.ts'
 
 /**
- * Outbox DLQ tests. FadeWell's delivery worker already has lease + retry logic (claims with
+ * Outbox DLQ tests. MmjGreen's delivery worker already has lease + retry logic (claims with
  * FOR UPDATE SKIP LOCKED, lease_id + lease_until, exponential backoff, 5-attempt cap). The
  * remaining gap is distinguishing "permanently dead, needs human" (DLQ) from "will retry"
  * (FAILED was overloaded) and capturing the actual provider error on the row. These tests

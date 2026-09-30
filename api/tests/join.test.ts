@@ -21,7 +21,7 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
   t.after(() => app.close())
   const headers = { origin: config.origin, 'content-type': 'application/json' }
   const start = await app.inject({ method: 'POST', url: '/api/auth/guest', payload: {}, headers })
-  const cookie = start.cookies.find(c => c.name === '__Host-fadewell-session')!
+  const cookie = start.cookies.find(c => c.name === '__Host-mmjgreen-session')!
   const sessionHeaders = { ...headers, cookie: `${cookie.name}=${cookie.value}` }
   const session = (await app.inject({ url: '/api/v1/session', headers: sessionHeaders })).json()
   const saved = await app.inject({ method: 'PUT', url: '/api/v1/intake', payload: {
@@ -71,7 +71,7 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
     const token = randomBytes(32).toString('base64url')
     const csrf = randomBytes(32).toString('base64url')
     await db.query("INSERT INTO sessions(token_hash,actor_id,csrf,expires_at,last_seen_at) VALUES ($1,$2,$3,now()+interval '4 hours',now())", [hashToken(token), identity.id, csrf])
-    return { ...headers, cookie: `__Host-fadewell-session=${token}`, 'x-csrf-token': csrf }
+    return { ...headers, cookie: `__Host-mmjgreen-session=${token}`, 'x-csrf-token': csrf }
   }
   const staffHeaders = await headersFor('synthetic', 'staff-join-2')
   const intakeRecord = await app.inject({ url: `/api/v1/intakes/${intakeId}`, headers: staffHeaders })
@@ -102,7 +102,7 @@ test('join tokens are issued, single-use, scoped and refuse mismatched or stale 
   const consumed = exchanges.find(r => r.statusCode === 200)!
   assert.equal(consumed.statusCode, 200)
   assert.equal(consumed.json().consultationId, appointment.id)
-  const exchangedCookie = consumed.cookies.find(c => c.name === '__Host-fadewell-session')!
+  const exchangedCookie = consumed.cookies.find(c => c.name === '__Host-mmjgreen-session')!
   assert.equal(exchangedCookie.httpOnly, true)
   assert.equal(exchangedCookie.secure, true)
   assert.equal((await app.inject({ url: `/api/v1/consultations/${appointment.id}`, headers: {

@@ -24,13 +24,13 @@ export default function Contact() {
         eyebrow="Contact"
         title="Ask us anything"
         accent="before you commit."
-        lede="A real person reads every message. If you are not sure whether FadeWell is right for you, that is exactly the question we would rather you asked."
+        lede="A real person reads every message. If you are not sure whether MmjGreen is right for you, that is exactly the question we would rather you asked."
       />
 
       <section className="section" aria-labelledby="contact-title">
         <div className="shell">
           <h2 className="sr-only" id="contact-title">
-            Contact FadeWell
+            Contact MmjGreen
           </h2>
 
           <div className="split split--flip">

@@ -3,7 +3,7 @@ import type { ServerResponse } from 'node:http'
 import type { FastifyInstance, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { createVideoRoom, mintVideoToken } from './providers.ts'
-import { authenticate, cookieName, hashPassword, usernameInput } from './auth.ts'
+import { authenticate, cookieName, hashPassword, sessionCookie, usernameInput } from './auth.ts'
 import type { Config } from './config.ts'
 import { audit, requireDb, event as enqueueOutbox } from './db.ts'
 import type { Database, Row, Sql } from './db.ts'
@@ -943,7 +943,7 @@ export function registerRoutes(
     }).then(async ({ id, mode, created }) => {
       // ponytail: room attach is best-effort outside the booking transaction; booking never fails on video
       if (!created || mode === 'PHONE') return { id }
-      const roomId = await createVideoRoom(process.env, `fadewell-${id}`)
+      const roomId = await createVideoRoom(process.env, `mmjgreen-${id}`)
       if (roomId) await db().query('UPDATE appointments SET video_room_id=$1 WHERE id=$2', [roomId, id])
       return { id }
     })
@@ -1023,7 +1023,7 @@ export function registerRoutes(
         throw new Fault(425, 'TOO_EARLY', 'This link becomes active 15 minutes before your consultation.')
       if (now > windowEnd)
         throw new Fault(410, 'LINK_EXPIRED', 'This consultation link is no longer valid.')
-      const previous = request.cookies[cookieName(config)]
+      const previous = sessionCookie(request, config)
       if (previous) {
         const existing = (await sql.query('SELECT actor_id FROM sessions WHERE token_hash=$1 AND expires_at>now()', [hash(previous)])).rows[0]
         if (existing && existing.actor_id !== row.patient_id) throw denied()

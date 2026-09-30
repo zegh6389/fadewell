@@ -1,4 +1,5 @@
 import pg from 'pg'
+import { allowInsecureTls } from './config.ts'
 import type { Config } from './config.ts'
 import type { Actor } from './domain.ts'
 import { unavailable } from './domain.ts'
@@ -33,7 +34,7 @@ export function connectDatabase(
     ['sslmode', 'sslcert', 'sslkey', 'sslrootcert'].some((key) => url.searchParams.has(key))
   )
     throw new Error('Configure database TLS through the runtime trust store, not URL overrides')
-  const insecure = process.env.FADEWELL_ALLOW_INSECURE_TLS === 'true'
+  const insecure = allowInsecureTls()
   const ssl = insecure ? { rejectUnauthorized: false } : (config.production ? { rejectUnauthorized: true } : undefined)
   if (insecure) console.warn(JSON.stringify({ event: 'tls.verification_disabled' }))
   const pool = new pg.Pool({

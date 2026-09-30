@@ -1,5 +1,5 @@
 /**
- * FadeWell — motion engine.
+ * MmjGreen — motion engine.
  *
  * Two layers, deliberately:
  *
@@ -21,13 +21,8 @@ import { useEffect, useRef, useState } from 'react'
 /**
  * Shared reveal wiring.
  *
- * The IntersectionObserver deliberately uses a negative bottom margin so
- * elements reveal slightly after they enter rather than snapping the instant
- * a single pixel appears. That margin has a sharp edge case: content inside
- * the excluded band can never intersect. The last block of the page — the
- * footer note — always sits there, and the page cannot be scrolled further,
- * so it would stay at `opacity: 0` forever. A tail sweep releases anything
- * still pending once the reader approaches the end of the document.
+ * Observe the full viewport so short footer blocks also reveal. Rewire on
+ * route changes; client-side navigation must not leave new content hidden.
  */
 function wireReveal(root = document) {
   const pending = () => root.querySelectorAll('[data-reveal]:not(.is-in)')
@@ -35,11 +30,9 @@ function wireReveal(root = document) {
 
   const revealAll = () => {
     for (const n of pending()) n.classList.add('is-in')
-    window.removeEventListener('scroll', onTail)
-    window.removeEventListener('resize', onTail)
   }
 
-  if (!('IntersectionObserver' in window)) {
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     revealAll()
     return () => {}
   }
@@ -52,31 +45,19 @@ function wireReveal(root = document) {
         observer.unobserve(entry.target)
       }
     },
-    { rootMargin: '0px 0px -12% 0px', threshold: 0.08 }
+    { rootMargin: '0px', threshold: 0.01 }
   )
 
   for (const n of pending()) observer.observe(n)
 
-  const onTail = () => {
-    const doc = document.documentElement
-    if (window.scrollY + window.innerHeight >= doc.scrollHeight - window.innerHeight * 1.5) {
-      revealAll()
-    }
-  }
-
-  window.addEventListener('scroll', onTail, { passive: true })
-  window.addEventListener('resize', onTail, { passive: true })
-
   return () => {
     observer.disconnect()
-    window.removeEventListener('scroll', onTail)
-    window.removeEventListener('resize', onTail)
   }
 }
 
 /** Adds `.is-in` to `[data-reveal]` elements as they enter the viewport. */
-export function useRevealRoot() {
-  useEffect(() => wireReveal(document), [])
+export function useRevealRoot(pathname) {
+  useEffect(() => wireReveal(document), [pathname])
 }
 
 /* ---------- Count-up numbers ----------------------------------- */

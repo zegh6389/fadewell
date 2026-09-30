@@ -1,24 +1,24 @@
-# FadeWell
+# MmjGreen
 
 Guided medical-card evaluation and telehealth. A public marketing site and four
 care workspaces, running on a single Fastify + PostgreSQL service.
 
 This repository contains a complete, self-contained product. It is **not a fork**
 — the brand, copy, design system, imagery and interface are original to
-FadeWell.
+MmjGreen.
 
 ---
 
 ## Repository layout
 
 ```
-fadewell/
-├── api/                 FadeWell API — Fastify 5 + TypeScript, PostgreSQL
+mmjgreen/
+├── api/                 MmjGreen API — Fastify 5 + TypeScript, PostgreSQL
 │   ├── src/             server, routes, auth, delivery, migrations runner
 │   ├── migrations/      28 ordered SQL migrations
 │   ├── tests/           163 API tests (node:test + PGlite)
 │   └── deploy/          Heroku packaging, grants, CA bundle
-└── web/                 FadeWell web client — React 19 + Vite
+└── web/                 MmjGreen web client — React 19 + Vite
     ├── src/pages/       public marketing pages
     ├── src/pages/care/  /patient · /portal · /staff · /admin
     ├── src/styles/      design tokens, base, components, pages, care
@@ -329,7 +329,7 @@ The combined app targets a single origin: Heroku or any Node host running
 
 ```sh
 cd api
-powershell -File deploy/heroku.ps1 -App fadewell-api
+powershell -File deploy/heroku.ps1 -App mmjgreen-api
 ```
 
 The packaging script typechecks the API, builds the web client, uploads an
@@ -344,7 +344,7 @@ Supabase grant setup.
 
 ## Privacy and clinical scope
 
-FadeWell is an administrative and clinical-scheduling platform. It does not
+MmjGreen is an administrative and clinical-scheduling platform. It does not
 issue medical cards — state registries do — and it does not guarantee approval
 of any application. Evaluations are performed by independently licensed
 clinicians, not by the platform. Patient information is never sold, and consent

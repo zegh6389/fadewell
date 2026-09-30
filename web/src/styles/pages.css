@@ -1,5 +1,5 @@
 /* ============================================================
-   FadeWell — Page compositions (flat editorial)
+   MmjGreen — Page compositions (flat editorial)
    ============================================================ */
 
 /* ---------- Hero -------------------------------------------- */
@@ -182,7 +182,12 @@
   background: var(--white);
   box-shadow: var(--sh-3);
   padding: 1.15rem;
-  will-change: transform;
+  /* No `will-change: transform` here. Combined with the bob animation below it
+     promotes the card to a composited layer, and Chromium rasters a promoted
+     layer's box-shadow clipped to that layer's bounds — the blur gets cut off
+     and the shadow reads as a hard-edged grey rectangle directly under a
+     rounded card. The animation promotes the layer on its own for as long as
+     it runs, which is the promotion that was actually wanted. */
 }
 
 .float-card--main {
@@ -660,9 +665,15 @@
   color: #fff;
 }
 
+/* The featured card is the one people are meant to choose, so it gets the
+   full-brightness text rather than the muted tone the dark bands use for
+   secondary copy. `--on-dark-2` measured 5.89:1 here and passed AA, but on a
+   card this size and this dark it read as a disabled panel rather than the
+   recommended option. `--on-dark` is 11.6:1 and is what the heading already
+   uses, so the card is now internally consistent. */
 .plan--featured .plan__price small,
 .plan--featured .plan__desc {
-  color: var(--on-dark-2);
+  color: var(--on-dark);
 }
 
 .plan--featured .plan__list {
@@ -670,7 +681,7 @@
 }
 
 .plan--featured .plan__list li {
-  color: var(--on-dark-2);
+  color: var(--on-dark);
 }
 
 .plan--featured .plan__tick {
@@ -729,11 +740,14 @@
   color: var(--ink-2);
 }
 
+/* A real checkmark, not an arrow rotated to look like one. The rotation
+   pointed the arrowhead up-and-right, so the list read as a column of "↗" —
+   which looks like a link or a trend, and says nothing about what is included.
+   That is a worse failure than a dim colour: it changes what the list means. */
 .plan__tick {
   color: var(--moss);
   flex-shrink: 0;
-  margin-top: 0.25rem;
-  transform: rotate(-45deg);
+  margin-top: 0.18rem;
 }
 
 .pricing-notes {

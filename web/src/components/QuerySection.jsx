@@ -44,7 +44,7 @@ export function QuerySection() {
   }
 
   const mailto = sent
-    ? `${support.mailto}?subject=${encodeURIComponent('FadeWell support question')}` +
+    ? `${support.mailto}?subject=${encodeURIComponent('MmjGreen support question')}` +
       `&body=${encodeURIComponent(`${sent.question}\n\nName: ${sent.name || 'Not provided'}\nReply email: ${sent.email}`)}`
     : support.mailto
 

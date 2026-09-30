@@ -1,8 +1,8 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// FadeWell web client.
-// `/api` is proxied to the FadeWell Fastify service during local development.
+// MmjGreen web client.
+// `/api` is proxied to the MmjGreen Fastify service during local development.
 // Production ships `dist/` behind the same Fastify origin (SERVE_WEB=true), so
 // the browser only ever makes same-origin API calls — required by the
 // strict `connect-src 'self'` Content-Security-Policy.

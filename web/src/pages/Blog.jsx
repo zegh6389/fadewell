@@ -101,7 +101,7 @@ export default function Blog() {
         title="Good questions."
         accent="Clearer answers."
         image="/assets/page-blog.webp"
-        alt="Illustration of the FadeWell resource centre"
+        alt="Illustration of the MmjGreen resource centre"
       >
         Original, plain-language writing about the parts of this process that people most often get wrong. No
         promises about outcomes, because nobody can honestly make them.

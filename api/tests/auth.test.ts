@@ -44,7 +44,7 @@ test('local credentials enforce MFA, persist lockouts, revoke access, and work w
     headers: { origin: config.origin, 'content-type': 'application/json', cookie, 'x-csrf-token': csrf }, payload: body as any
   })
   const login = (username: string, value = password) => post('login', { username, password: value })
-  const cookie = (r: Awaited<ReturnType<typeof login>>, name = '__Host-fadewell-login') => {
+  const cookie = (r: Awaited<ReturnType<typeof login>>, name = '__Host-mmjgreen-login') => {
     const c = r.cookies.find((item) => item.name === name)!
     assert.ok(c, `${r.statusCode}: ${r.body}`)
     assert.equal(c.httpOnly, true); assert.equal(c.secure, true); assert.equal(c.path, '/'); assert.equal(c.domain, undefined)
@@ -75,7 +75,7 @@ test('local credentials enforce MFA, persist lockouts, revoke access, and work w
   const first = await login(' adminone ')
   assert.equal(first.statusCode, 200)
   assert.equal(first.json().step, 'mfa')
-  assert.equal(first.cookies.some((c) => c.name === '__Host-fadewell-session'), false, 'Password alone must not grant workforce access')
+  assert.equal(first.cookies.some((c) => c.name === '__Host-mmjgreen-session'), false, 'Password alone must not grant workforce access')
   const firstCookie = cookie(first)
   const firstSecret = first.json().secret
   assert.ok(firstSecret)
@@ -93,7 +93,7 @@ test('local credentials enforce MFA, persist lockouts, revoke access, and work w
   const completed = await post('mfa', { code: generateSync({ secret }) }, cookie(fresh))
   assert.equal(completed.statusCode, 200, completed.body)
   assert.equal(completed.json().home, '/admin')
-  const activeCookie = cookie(completed, '__Host-fadewell-session')
+  const activeCookie = cookie(completed, '__Host-mmjgreen-session')
   const actor = await session(activeCookie)
   assert.equal(actor.role, 'ADMIN')
   const credential = (await db.query('SELECT * FROM local_credentials WHERE identity_id=$1', [adminId])).rows[0]
@@ -116,7 +116,7 @@ test('local credentials enforce MFA, persist lockouts, revoke access, and work w
   const relogin = await login('AdminOne', 'New-Synthetic-2026')
   const renewed = await post('mfa', { code: futureToken() }, cookie(relogin))
   assert.equal(renewed.statusCode, 200, renewed.body)
-  const renewedCookie = cookie(renewed, '__Host-fadewell-session')
+  const renewedCookie = cookie(renewed, '__Host-mmjgreen-session')
   const renewedActor = await session(renewedCookie)
   assert.equal((await post('logout', {}, renewedCookie, renewedActor.csrf)).statusCode, 200)
   assert.equal((await app.inject({ url: '/api/v1/session', headers: { cookie: renewedCookie } })).statusCode, 401)
@@ -129,17 +129,17 @@ test('local credentials enforce MFA, persist lockouts, revoke access, and work w
   const afterLock = await login('LockedDoctor')
   assert.equal(afterLock.statusCode, 200)
   assert.equal(afterLock.json().step, 'mfa')
-  assert.equal(afterLock.cookies.some((c) => c.name === '__Host-fadewell-session'), false)
+  assert.equal(afterLock.cookies.some((c) => c.name === '__Host-mmjgreen-session'), false)
   const doctorLogin = await post('mfa', { code: generateSync({ secret: afterLock.json().secret }) }, cookie(afterLock))
   assert.equal(doctorLogin.statusCode, 200)
-  assert.equal((await session(cookie(doctorLogin, '__Host-fadewell-session'))).role, 'DOCTOR')
+  assert.equal((await session(cookie(doctorLogin, '__Host-mmjgreen-session'))).role, 'DOCTOR')
   assert.equal((await db.query('SELECT failed_login_attempts FROM local_credentials WHERE identity_id=$1', [lockedId])).rows[0].failed_login_attempts, 0)
 
   const disabledId = await account('DisabledStaff', 'STAFF')
   const staffStart = await login('DisabledStaff')
   assert.equal(staffStart.json().step, 'mfa')
   const staffLogin = await post('mfa', { code: generateSync({ secret: staffStart.json().secret }) }, cookie(staffStart))
-  const staffCookie = cookie(staffLogin, '__Host-fadewell-session')
+  const staffCookie = cookie(staffLogin, '__Host-mmjgreen-session')
   await db.query('UPDATE identities SET enabled=false WHERE id=$1', [disabledId])
   assert.equal((await app.inject({ url: '/api/v1/session', headers: { cookie: staffCookie } })).statusCode, 401)
   assert.equal((await login('DisabledStaff')).statusCode, 401)
@@ -170,11 +170,11 @@ test('corrupted MFA challenges and stored secrets fail closed with 401, never 50
     method: 'POST', url: '/api/auth/login', headers, payload: { username: 'CorruptAdmin', password }
   })
   assert.equal(start.statusCode, 200)
-  const pending = start.cookies.find((c) => c.name === '__Host-fadewell-login')!
+  const pending = start.cookies.find((c) => c.name === '__Host-mmjgreen-login')!
   // Tamper with the stored challenge: decryption must fail closed as a bad login.
   await db.query('UPDATE login_states SET encrypted_payload=$1', ['v1.tampered.invalid'])
   const tampered = await app.inject({
-    method: 'POST', url: '/api/auth/mfa', headers: { ...headers, cookie: `__Host-fadewell-login=${pending.value}` },
+    method: 'POST', url: '/api/auth/mfa', headers: { ...headers, cookie: `__Host-mmjgreen-login=${pending.value}` },
     payload: { code: '123456' }
   })
   assert.equal(tampered.statusCode, 401, tampered.body)
@@ -185,13 +185,13 @@ test('corrupted MFA challenges and stored secrets fail closed with 401, never 50
     method: 'POST', url: '/api/auth/login', headers, payload: { username: 'CorruptAdmin', password }
   })
   assert.equal(enrolled.statusCode, 200)
-  const enrolledPending = enrolled.cookies.find((c) => c.name === '__Host-fadewell-login')!
+  const enrolledPending = enrolled.cookies.find((c) => c.name === '__Host-mmjgreen-login')!
   const corruptSecret = await app.inject({
-    method: 'POST', url: '/api/auth/mfa', headers: { ...headers, cookie: `__Host-fadewell-login=${enrolledPending.value}` },
+    method: 'POST', url: '/api/auth/mfa', headers: { ...headers, cookie: `__Host-mmjgreen-login=${enrolledPending.value}` },
     payload: { code: '123456' }
   })
   assert.equal(corruptSecret.statusCode, 401, corruptSecret.body)
-  const unlocked = await app.inject({ url: '/api/auth/pending', headers: { cookie: `__Host-fadewell-login=${enrolledPending.value}` } })
+  const unlocked = await app.inject({ url: '/api/auth/pending', headers: { cookie: `__Host-mmjgreen-login=${enrolledPending.value}` } })
   assert.equal(unlocked.statusCode, 200)
 })
 
@@ -239,11 +239,11 @@ test('admin user creation issues TOTP setup key, and TOTP/password reset rotate 
   })
   const adminStart = await login('AdminOne', adminPassword)
   assert.equal(adminStart.statusCode, 200, adminStart.body)
-  const adminPending = adminStart.cookies.find((item) => item.name === '__Host-fadewell-login')!
+  const adminPending = adminStart.cookies.find((item) => item.name === '__Host-mmjgreen-login')!
   const adminCode = generateSync({ secret: totpSecret })
-  const adminSession = await completeMfa(`__Host-fadewell-login=${adminPending.value}`, adminCode)
+  const adminSession = await completeMfa(`__Host-mmjgreen-login=${adminPending.value}`, adminCode)
   assert.equal(adminSession.statusCode, 200, adminSession.body)
-  const adminCookie = adminSession.cookies.find((item) => item.name === '__Host-fadewell-session')!
+  const adminCookie = adminSession.cookies.find((item) => item.name === '__Host-mmjgreen-session')!
   assert.ok(adminCookie, `no admin session cookie: ${adminSession.body}`)
   const adminCsrf = (await app.inject({
     url: '/api/v1/session', headers: { ...headers, cookie: `${adminCookie.name}=${adminCookie.value}` }
@@ -281,8 +281,8 @@ test('admin user creation issues TOTP setup key, and TOTP/password reset rotate 
   const doctorStart = await login('DoctorOne', 'New-Doctor-2026')
   assert.equal(doctorStart.statusCode, 200, doctorStart.body)
   assert.equal(doctorStart.json().step, 'mfa')
-  assert.equal(doctorStart.cookies.some((c) => c.name === '__Host-fadewell-session'), false)
-  const doctorPendingCookie = doctorStart.cookies.find(c => c.name === '__Host-fadewell-login')!
+  assert.equal(doctorStart.cookies.some((c) => c.name === '__Host-mmjgreen-session'), false)
+  const doctorPendingCookie = doctorStart.cookies.find(c => c.name === '__Host-mmjgreen-login')!
   assert.equal((await completeMfa(`${doctorPendingCookie.name}=${doctorPendingCookie.value}`, generateSync({ secret: doctorStart.json().secret }))).json().home, '/portal')
 
   // Authenticator reset applies to every workforce role.
@@ -311,9 +311,9 @@ test('admin user creation issues TOTP setup key, and TOTP/password reset rotate 
   // Workforce members cannot reach admin endpoints.
   const doctorLogin = await login('DoctorOne', 'Another-Doctor-2026')
   assert.equal(doctorLogin.json().step, 'mfa')
-  const doctorPending = doctorLogin.cookies.find(item => item.name === '__Host-fadewell-login')!
+  const doctorPending = doctorLogin.cookies.find(item => item.name === '__Host-mmjgreen-login')!
   const doctorCompleted = await completeMfa(`${doctorPending.name}=${doctorPending.value}`, generateSync({ secret: doctorLogin.json().secret }))
-  const doctorSessionCookie = doctorCompleted.cookies.find((item) => item.name === '__Host-fadewell-session')!
+  const doctorSessionCookie = doctorCompleted.cookies.find((item) => item.name === '__Host-mmjgreen-session')!
   assert.ok(doctorSessionCookie, doctorCompleted.body)
   const doctorAuth = { ...headers, cookie: `${doctorSessionCookie.name}=${doctorSessionCookie.value}` }
   const doctorPost = await app.inject({

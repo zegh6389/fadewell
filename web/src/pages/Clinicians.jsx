@@ -17,7 +17,7 @@ export default function Clinicians() {
         eyebrow="Our clinicians"
         title="You should know who is"
         accent="going to evaluate you."
-        lede="Every FadeWell evaluation is performed by an independently licensed clinician — never by a chatbot, and never by someone without the authority to certify your application."
+        lede="Every MmjGreen evaluation is performed by an independently licensed clinician — never by a chatbot, and never by someone without the authority to certify your application."
       />
 
       <section className="section" aria-labelledby="team-title">

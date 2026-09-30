@@ -1,5 +1,5 @@
 /* ============================================================
-   FadeWell — Design tokens
+   MmjGreen — Design tokens
    Flat editorial system: ivory paper, forest ink, moss and lime.
    No transparency layers, no blur, no glass. Solid fills only.
    ============================================================ */
@@ -88,10 +88,28 @@
   --r-pill: 999px;
 
   /* --- Elevation (flat: tight, solid, never a glass bloom) ------ */
+  /* Spread is the lever that decides whether a shadow reads as the shape it
+     belongs to or as a rectangle behind it. A negative spread shrinks the
+     shadow's corner radius by exactly that many pixels: the shadow is the
+     border box inset by the spread, so effective radius = radius - |spread|.
+
+     These are all sized against --r-lg (22px), the radius on every raised
+     surface here — float cards, the help dialog, .card on hover. Read the
+     -4px and -6px spreads against that 22 and the corner radius survives.
+     The old --sh-3 spread -20 left 2px, which is why every floating card and
+     every card hover cast a visibly square shadow under a 22px rounded card. */
   --sh-1: 0 1px 2px rgb(17 37 28 / 0.06);
-  --sh-2: 0 4px 14px -6px rgb(17 37 28 / 0.16);
-  --sh-3: 0 18px 44px -20px rgb(17 37 28 / 0.3);
-  --sh-lime: 0 12px 28px -12px rgb(191 209 60 / 0.7);
+  --sh-2: 0 4px 14px -4px rgb(17 37 28 / 0.16);
+  --sh-3: 0 16px 28px -4px rgb(17 37 28 / 0.3);
+  /* Was 0.7 alpha at a 28px spread, which put a saturated lime halo around
+     every primary button. The system's own rule is "never a glass bloom", and a
+     coloured glow is the one shadow in here that read as glow rather than as
+     the button sitting on the page. Grounded, tighter, and the hue kept just
+     enough that it still feels like the same button. */
+  --sh-lime: 0 8px 18px -10px rgb(191 209 60 / 0.34);
+  /* Focus ring. Was a hardcoded rgb in care.css, which meant the one surface
+     in the system whose shadow nobody could retune by editing a token. */
+  --sh-ring: 0 0 0 3px rgb(52 116 88 / 0.18);
 
   /* --- Motion --------------------------------------------------- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

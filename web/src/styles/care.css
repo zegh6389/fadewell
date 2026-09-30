@@ -1,5 +1,5 @@
 /* ============================================================
-   FadeWell — Care workspaces + forms (flat)
+   MmjGreen — Care workspaces + forms (flat)
    Functional surfaces: solid panels, hairline borders.
    ============================================================ */
 
@@ -246,9 +246,13 @@
   font-weight: 400;
 }
 
+/* 0.9rem of block padding, not 0.8rem. At 0.8rem these measured 41px tall,
+   which is under the 44px touch target. Three pixels of padding is a small
+   change on a desktop layout and the difference between a field you can hit
+   reliably on a phone and one you fumble. */
 .field__control {
   width: 100%;
-  padding: 0.8rem 0.95rem;
+  padding: 0.9rem 0.95rem;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-sm);
   background: var(--white);
@@ -270,7 +274,7 @@
 .field__control:focus {
   outline: none;
   border-color: var(--moss);
-  box-shadow: 0 0 0 3px rgb(52 116 88 / 0.18);
+  box-shadow: var(--sh-ring);
 }
 
 .field__control--area {

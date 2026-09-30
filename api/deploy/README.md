@@ -2,12 +2,12 @@
 
 ## Live repair — September 13, 2026
 
-Current deployment: Heroku release **v26**, serving <https://fadewell.com>.
+Current deployment: Heroku release **v26**, serving <https://mmjgreen.com>.
 These observations supersede the historical staging configuration below.
 
-- `fadewell-api` runs one Basic web dyno and one Basic worker dyno.
+- `mmjgreen-api` runs one Basic web dyno and one Basic worker dyno.
   The personal `telnyx-team-dialer-6389` app has a separate Eco web dyno; it is
-  not the FadeWell notification worker.
+  not the MmjGreen notification worker.
 - The complete local frontend/API source was packaged with `deploy/heroku.ps1`.
   Origin readiness and authentication configuration passed after release.
 - Migrations through `005_username_credentials.sql` are applied. The readiness
@@ -21,7 +21,7 @@ These observations supersede the historical staging configuration below.
   now return `Cache-Control: no-store` and `CF-Cache-Status: DYNAMIC`.
 - Alternate-host pages redirect to the canonical HTTPS domain. Direct API
   health checks remain available at the Heroku hostname.
-- Supabase's site URL is now `https://fadewell.com`; its email callback
+- Supabase's site URL is now `https://mmjgreen.com`; its email callback
   allowlist includes the canonical domain.
 - `INTAKE_ENABLED` and `NOTIFICATIONS_ENABLED` are currently true on the live
   deployment. Staging and synthetic-test defaults remain false (see below).
@@ -87,13 +87,13 @@ Browser video runs on Telnyx Video Rooms (`TELNYX_API_KEY`, ~$0.002/participant/
 
 ## Mail
 
-Send-as `no-reply@fadewell.com` and reply-to `care@fadewell.com`. SMTP
+Send-as `no-reply@mmjgreen.com` and reply-to `care@mmjgreen.com`. SMTP
 credentials must be set on Heroku locally:
 
 ```powershell
-heroku config:set EMAIL_FROM="no-reply@fadewell.com" EMAIL_REPLY_TO="care@fadewell.com" SMTP_HOST="mail.privateemail.com" SMTP_PORT=465 SMTP_USER="no-reply@fadewell.com" --app fadewell-api
-heroku config:set SMTP_PASSWORD="<paste dashboard password locally>" --app fadewell-api
-heroku config:set NOTIFICATIONS_ENABLED=true --app fadewell-api
+heroku config:set EMAIL_FROM="no-reply@mmjgreen.com" EMAIL_REPLY_TO="care@mmjgreen.com" SMTP_HOST="mail.privateemail.com" SMTP_PORT=465 SMTP_USER="no-reply@mmjgreen.com" --app mmjgreen-api
+heroku config:set SMTP_PASSWORD="<paste dashboard password locally>" --app mmjgreen-api
+heroku config:set NOTIFICATIONS_ENABLED=true --app mmjgreen-api
 ```
 
 Never type the SMTP password in chat, commit it to the repo, or paste it in
@@ -101,8 +101,8 @@ issue trackers. Password rotation requires a deployment with new credentials.
 
 ## Connected services
 
-- App: <https://fadewell-api.herokuapp.com>
-- Heroku: `fadewell-api`, US region, Cedar `heroku-24`, one Basic web dyno.
+- App: <https://mmjgreen-api.herokuapp.com>
+- Heroku: `mmjgreen-api`, US region, Cedar `heroku-24`, one Basic web dyno.
 - Supabase: `lsetcjhszhaobzsnqziw`, `us-east-1`, PostgreSQL 17.
 - Frontend: the React/Vite production build is served by the same Fastify process. `/api` uses the same origin as the browser, including secure cookies and SSE.
 - The existing Vercel marketing deployment remains separate and retains its unavailable API fallback.
@@ -143,9 +143,9 @@ Heroku uses the Supabase session pooler on port 5432 with username `mca_api.lset
 
 Operator secrets are in Windows Credential Manager, not the repository:
 
-- `supabase/fadewell-api/postgres`
-- `supabase/fadewell-api/runtime`
-- `fadewell-api/encryption`
+- `supabase/mmjgreen-api/postgres`
+- `supabase/mmjgreen-api/runtime`
+- `mmjgreen-api/encryption`
 
 Back up the encryption key securely before retaining any data. Never rotate it without the corresponding data re-encryption procedure.
 
@@ -159,7 +159,7 @@ npm --prefix web test
 npm --prefix web run lint
 $env:PLAYWRIGHT_CHANNEL = 'msedge'
 npm --prefix web run test:e2e
-powershell -File patient-api/deploy/heroku.ps1 -App fadewell-api
+powershell -File patient-api/deploy/heroku.ps1 -App mmjgreen-api
 ```
 
 The deploy script typechecks, builds the frontend, packages an explicit source allowlist, submits a Heroku build, waits for success, then scales to one Basic web dyno. It does not commit or push a Git branch. Heroku bills Basic at its current monthly rate; account-credit coverage must be verified in billing.

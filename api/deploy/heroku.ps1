@@ -5,7 +5,7 @@ $frontend = Join-Path (Split-Path -Parent $api) 'web'
 $temp = [System.IO.Path]::GetTempPath()
 if (-not (Test-Path -LiteralPath $temp)) { throw 'Missing temporary directory' }
 if ($App -notmatch '^[a-z][a-z0-9-]+$') { throw 'Invalid Heroku app name' }
-$archive = Join-Path $temp "fadewell-$([guid]::NewGuid().ToString('N')).tar.gz"
+$archive = Join-Path $temp "mmjgreen-$([guid]::NewGuid().ToString('N')).tar.gz"
 
 npm --prefix $api run typecheck
 if ($LASTEXITCODE -ne 0) { throw 'API typecheck failed' }

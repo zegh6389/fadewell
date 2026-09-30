@@ -10,10 +10,10 @@ import { test, expect } from '@playwright/test'
  */
 
 const COOKIE_NAMES = {
-  patient: 'fadewell-session',
-  doctor: 'fadewell-session',
-  staff: 'fadewell-session',
-  admin: 'fadewell-session'
+  patient: 'mmjgreen-session',
+  doctor: 'mmjgreen-session',
+  staff: 'mmjgreen-session',
+  admin: 'mmjgreen-session'
 }
 
 const TOKENS = {
@@ -60,7 +60,7 @@ test.describe('Care workspaces', () => {
     // Signed out: the guest entry is offered, not a blank screen.
     await expect(page.locator('.care__bar')).toBeVisible()
     await expect(page.getByRole('button', { name: /Start without an account/i })).toBeVisible()
-    await expect(page.locator('body')).toContainText('FadeWell')
+    await expect(page.locator('body')).toContainText('MmjGreen')
 
     await page.getByRole('button', { name: /Start without an account/i }).click()
 

@@ -52,7 +52,7 @@ test("guest intake needs no account, retains its session and cannot access anoth
     headers,
   });
   assert.equal(start.statusCode, 200, start.body);
-  const cookie = start.cookies.find((c) => c.name === "__Host-fadewell-session")!;
+  const cookie = start.cookies.find((c) => c.name === "__Host-mmjgreen-session")!;
   assert.equal(cookie.httpOnly, true);
   assert.equal(cookie.secure, true);
   const sessionHeaders = {
@@ -150,7 +150,7 @@ test("guest intake needs no account, retains its session and cannot access anoth
     headers,
   });
   const otherCookie = other.cookies.find(
-    (c) => c.name === "__Host-fadewell-session",
+    (c) => c.name === "__Host-mmjgreen-session",
   )!;
   assert.equal(
     (

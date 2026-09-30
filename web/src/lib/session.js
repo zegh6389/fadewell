@@ -1,5 +1,5 @@
 /**
- * FadeWell — session layer for the care workspaces.
+ * MmjGreen — session layer for the care workspaces.
  *
  * Workforce sign-in is username + password followed by a TOTP step; patients
  * never authenticate — the service issues a guest intake session so a person
