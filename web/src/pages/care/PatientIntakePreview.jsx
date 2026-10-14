@@ -2,18 +2,19 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { IconArrow, IconCheck, IconShield, IconVideo } from '../../components/Icons.jsx'
+import { SampleCard } from '../../components/PremiumHero.jsx'
 
 /**
  * Frontend-only intake preview.
  *
- * This is the intake questionnaire with every network call removed. It exists
- * so the public marketing deployment can show the real flow without implying
- * it can accept anything: there is no session, no save, and no submit. The
- * banner above the form says so in those words, and the completion screen
- * repeats it for screen readers.
+ * The intake questionnaire with every network call removed. It exists so the
+ * public deployment can show the real flow without implying it can accept
+ * anything: there is no session, no save, and no submit. The banner says so
+ * in those words and the completion screen repeats it for screen readers.
  *
- * It is not a fallback for a real patient. When the API is reachable the live
- * form in `PatientIntake.jsx` takes over and this never renders.
+ * Markup mirrors the production build so `recovered.css` styles it exactly:
+ * `.intake-card` is the tilted sample card in the companion column, not a
+ * form container.
  */
 
 const STEPS = [
@@ -43,7 +44,7 @@ const JURISDICTIONS = [
   ['CO', 'Colorado'],
   ['FL', 'Florida'],
   ['NY', 'New York']
-].map(([code, name]) => ({ code, name, status: 'AVAILABLE', allowedVisitTypes: ['VIDEO', 'PHONE'] }))
+].map(([code, name]) => ({ code, name, allowedVisitTypes: ['VIDEO', 'PHONE'] }))
 
 const MODES = [
   { value: 'VIDEO', label: 'Video call', note: 'Face to face, from wherever you are' },
@@ -55,16 +56,6 @@ const ID_TYPES = [
   ['DRIVERS_LICENSE', 'Driver licence'],
   ['PASSPORT', 'Passport'],
   ['STATE_ID', 'State ID']
-]
-
-const REVIEW_FIELDS = [
-  ['firstName', 'First name'],
-  ['lastName', 'Last name'],
-  ['email', 'Email'],
-  ['phone', 'Phone'],
-  ['state', 'State'],
-  ['mode', 'Consultation format'],
-  ['idType', 'Photo identification']
 ]
 
 const emptyForm = () => ({
@@ -81,13 +72,14 @@ const emptyForm = () => ({
   smsConsent: false
 })
 
-/* ---------- Left-hand companion ------------------------------- */
-
 function Companion() {
   return (
     <aside className="intake-companion" aria-label="Your care journey">
       <div className="intake-companion__intro">
-        <span className="intake-kicker">A little clarity. A fresh start.</span>
+        <span className="intake-kicker">
+          <span />
+          A little clarity. A fresh start.
+        </span>
         <h1>
           Your wellbeing.
           <br />
@@ -102,11 +94,12 @@ function Companion() {
           role="img"
           aria-label="Illustrative image of a patient at home joining a video consultation on a laptop. Not an actual MmjGreen clinician or patient."
         >
-          <img className="intake-scene__photo" src="/assets/telehealth-at-home.webp" alt="" width="1200" height="800" />
+          <img className="intake-scene__photo" src="/assets/telehealth-at-home.webp" alt="" />
           <span className="intake-video__caption">
             <IconVideo size={18} /> Video consultation
           </span>
         </div>
+
         <div className="intake-scene__badge">
           <IconCheck size={17} />
           <div>
@@ -114,12 +107,19 @@ function Companion() {
             <small>Clinician led. State specific.</small>
           </div>
         </div>
+
+        <div className="intake-card">
+          <SampleCard eager />
+        </div>
       </div>
+
+      <p className="intake-companion__disclaimer">
+        Nothing on this page is a promise of approval. A licensed clinician makes the decision independently
+        after reviewing your answers.
+      </p>
     </aside>
   )
 }
-
-/* ---------- Completion ---------------------------------------- */
 
 function PreviewComplete() {
   return (
@@ -141,8 +141,6 @@ function PreviewComplete() {
     </div>
   )
 }
-
-/* ---------- Preview questionnaire ------------------------------ */
 
 export default function PatientIntakePreview() {
   const [step, setStep] = useState(0)
@@ -168,8 +166,7 @@ export default function PatientIntakePreview() {
 
   return (
     <div className="care__stack">
-      {/* Markup mirrors CareNotice, inlined because Workspace.jsx imports this
-          module and importing CareNotice back would close the cycle. */}
+      {/* Mirrors CareNotice, inlined because Workspace.jsx imports this module. */}
       <div className="notice notice--info" role="status">
         <strong>Frontend preview</strong>
         <p>
@@ -181,33 +178,36 @@ export default function PatientIntakePreview() {
       <div className="intake-layout">
         <Companion />
 
-        <section className="intake-card" aria-labelledby="intake-step-title">
-          <header className="intake-card__head">
-            <p className="eyebrow eyebrow--accent">Your personal intake</p>
-            <p className="intake-progress">
-              Step {step + 1} of {STEPS.length}
+        <section className="intake-questionnaire" aria-labelledby="intake-step-title">
+          <div className="intake-progress">
+            <p className="intake-progress__caption">
+              <span>YOUR PERSONAL INTAKE</span>
+              <span>
+                Step {step + 1} of {STEPS.length}
+              </span>
             </p>
-            <ol className="intake-steps">
+            <div className="intake-progress__track" aria-hidden="true">
+              {STEPS.map((_, i) => (
+                <span key={i} className={i <= step ? 'is-complete' : undefined} />
+              ))}
+            </div>
+            <ol className="intake-progress__steps">
               {STEPS.map(([name], i) => (
-                <li
-                  key={name}
-                  className={i === step ? 'is-current' : i < step ? 'is-done' : undefined}
-                  aria-current={i === step ? 'step' : undefined}
-                >
-                  <span className="intake-steps__num">{i + 1}</span>
+                <li key={name} aria-current={i === step ? 'step' : undefined}>
+                  <span>{i + 1}</span>
                   {name}
                 </li>
               ))}
             </ol>
-          </header>
+          </div>
 
-          <div className="intake-card__intro">
-            <p className="intake-card__count">
-              <span className="care__legend-num">{String(step + 1).padStart(2, '0')}</span> {title}
+          <div className="intake-step-head">
+            <p className="intake-step-head__count">
+              <span className="care__legend-num">{String(step + 1).padStart(2, '0')}</span>
+              {title}
             </p>
             <h2 id="intake-step-title">{heading}</h2>
-            <p className="lede">{note}</p>
-            <span className="tag tag--sage">Draft</span>
+            <p>{note}</p>
           </div>
 
           <form
@@ -252,9 +252,7 @@ export default function PatientIntakePreview() {
                   <select className="field__control" value={form.state} onChange={(e) => set('state', e.target.value)}>
                     <option value="">Select your state…</option>
                     {JURISDICTIONS.map((j) => (
-                      <option key={j.code} value={j.code}>
-                        {j.name}
-                      </option>
+                      <option key={j.code} value={j.code}>{j.name}</option>
                     ))}
                   </select>
                 </label>
@@ -289,12 +287,7 @@ export default function PatientIntakePreview() {
                     />
                     <div className="intake-q__chips">
                       {(SUGGESTIONS[question.id] ?? []).map((suggestion) => (
-                        <button
-                          key={suggestion}
-                          type="button"
-                          className="intake-chip"
-                          onClick={() => setAnswer(question.id, suggestion)}
-                        >
+                        <button key={suggestion} type="button" className="intake-chip" onClick={() => setAnswer(question.id, suggestion)}>
                           {suggestion}
                         </button>
                       ))}
@@ -343,20 +336,22 @@ export default function PatientIntakePreview() {
             {step === 4 ? (
               <fieldset className="care__group">
                 <legend className="sr-only">Review</legend>
-                <dl className="intake-review">
-                  {REVIEW_FIELDS.map(([key, label]) => (
-                    <div key={key}>
+                <div className="intake-review">
+                  {[
+                    ['First name', form.firstName || '—'],
+                    ['Last name', form.lastName || '—'],
+                    ['Email', form.email || '—'],
+                    ['Phone', form.phone || '—'],
+                    ['State', JURISDICTIONS.find((j) => j.code === form.state)?.name || '—'],
+                    ['Consultation format', MODES.find((m) => m.value === form.mode)?.label || '—'],
+                    ['Photo identification', ID_TYPES.find(([v]) => v === form.idType)?.[1] || 'Not provided']
+                  ].map(([label, value]) => (
+                    <div className="intake-review__row" key={label}>
                       <dt>{label}</dt>
-                      <dd>
-                        {key === 'mode'
-                          ? MODES.find((m) => m.value === form[key])?.label || '—'
-                          : key === 'idType'
-                            ? ID_TYPES.find(([value]) => value === form[key])?.[1] || 'Not provided'
-                            : form[key] || '—'}
-                      </dd>
+                      <dd>{value}</dd>
                     </div>
                   ))}
-                </dl>
+                </div>
 
                 {QUESTIONS.map((question) => (
                   <div className="intake-review__answer" key={question.id}>
@@ -382,7 +377,7 @@ export default function PatientIntakePreview() {
               </fieldset>
             ) : null}
 
-            <div className="care__actions">
+            <div className="care__actions intake-footer">
               <div className="intake-actions__secondary">
                 {step > 0 ? (
                   <button type="button" className="btn btn--ghost" onClick={() => setStep((s) => s - 1)}>

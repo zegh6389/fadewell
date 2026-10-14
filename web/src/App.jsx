@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 
 import { Ambient, ScrollRail, Masthead, Footer } from './components/Chrome.jsx'
+import CookieConsent from './components/CookieConsent.jsx'
 import { useRevealRoot } from './lib/motion.js'
 import { PRIVATE_ROUTES } from './pages/care/routes.jsx'
 
@@ -29,7 +30,12 @@ import './styles/care.css'
 import './styles/parity-care.css'
 import './styles/premium.css'
 import './styles/resource.css'
-import './styles/intake.css'
+
+/* The stylesheet recovered from the production build. Imported last so its
+   definitions win any tie with the hand-written sheets above — the two agree
+   on 686 of 722 shared rules, and the rest are the components this build is
+   still missing. */
+import './styles/recovered.css'
 
 /** Restores scroll position on navigation, and honours in-page hashes. */
 function ScrollManager() {
@@ -63,6 +69,7 @@ export default function App() {
             <>
               <Ambient />
               <ScrollRail />
+              <CookieConsent />
               <a className="skip-link" href="#main-content">
                 Skip to content
               </a>
