@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { IconArrow, IconCheck, IconShield, IconVideo } from '../../components/Icons.jsx'
+import { IconArrow, IconCheck, IconClock, IconShield, IconVideo } from '../../components/Icons.jsx'
 import { SampleCard } from '../../components/PremiumHero.jsx'
 
 /**
@@ -101,11 +101,11 @@ function Companion() {
         </div>
 
         <div className="intake-scene__badge">
-          <IconCheck size={17} />
-          <div>
-            <strong>Your next step, made clear.</strong>
-            <small>Clinician led. State specific.</small>
-          </div>
+          <IconShield size={18} />
+          <span>
+            Private by design
+            <strong>Made for real people</strong>
+          </span>
         </div>
 
         <div className="intake-card">
@@ -113,9 +113,17 @@ function Companion() {
         </div>
       </div>
 
+      <div className="intake-companion__note">
+        <IconClock size={18} />
+        <p>
+          <strong>A few minutes, at your pace.</strong>
+          <span>No account or password needed. Save your answers when you&rsquo;re ready.</span>
+        </p>
+      </div>
+
       <p className="intake-companion__disclaimer">
-        Nothing on this page is a promise of approval. A licensed clinician makes the decision independently
-        after reviewing your answers.
+        An evaluation is a conversation, not a guarantee of certification. Your clinician makes an
+        independent decision.
       </p>
     </aside>
   )
@@ -186,15 +194,22 @@ export default function PatientIntakePreview() {
                 Step {step + 1} of {STEPS.length}
               </span>
             </p>
-            <div className="intake-progress__track" aria-hidden="true">
-              {STEPS.map((_, i) => (
-                <span key={i} className={i <= step ? 'is-complete' : undefined} />
+            <div
+              className="intake-progress__track"
+              role="progressbar"
+              aria-label="Questionnaire progress"
+              aria-valuemin={0}
+              aria-valuemax={STEPS.length}
+              aria-valuenow={step + 1}
+            >
+              {STEPS.map(([name], i) => (
+                <span key={name} className={i <= step ? 'is-complete' : ''} />
               ))}
             </div>
             <ol className="intake-progress__steps">
               {STEPS.map(([name], i) => (
                 <li key={name} aria-current={i === step ? 'step' : undefined}>
-                  <span>{i + 1}</span>
+                  <span>{i < step ? <IconCheck size={12} /> : i + 1}</span>
                   {name}
                 </li>
               ))}
@@ -202,12 +217,20 @@ export default function PatientIntakePreview() {
           </div>
 
           <div className="intake-step-head">
-            <p className="intake-step-head__count">
-              <span className="care__legend-num">{String(step + 1).padStart(2, '0')}</span>
-              {title}
-            </p>
-            <h2 id="intake-step-title">{heading}</h2>
+            <span className="intake-kicker">
+              {title} <span className="intake-step-head__count">/ 0{step + 1}</span>
+            </span>
+            <h2 id="intake-step-title" tabIndex={-1}>
+              {heading}
+            </h2>
             <p>{note}</p>
+          </div>
+
+          <div className="care__status">
+            <div>
+              <span className="tag tag--sage">Draft</span>
+              <p className="care__status-note">Complete each step, then send it to your care team.</p>
+            </div>
           </div>
 
           <form
@@ -238,7 +261,7 @@ export default function PatientIntakePreview() {
                   </label>
                   <label className="field">
                     <span className="field__label">Phone number</span>
-                    <input className="field__control" type="tel" autoComplete="tel" placeholder="+13035550142" maxLength={50} value={form.phone} onChange={(e) => set('phone', e.target.value)} />
+                    <input className="field__control" type="tel" autoComplete="tel" placeholder="303 555 0142" maxLength={50} value={form.phone} onChange={(e) => set('phone', e.target.value)} />
                   </label>
                 </div>
               </fieldset>
@@ -384,7 +407,9 @@ export default function PatientIntakePreview() {
                     Back
                   </button>
                 ) : null}
-                <span className="intake-save">Keep for this preview</span>
+                <button type="button" className="intake-save">
+                  Keep for this preview
+                </button>
               </div>
               <button type="submit" className="btn btn--primary" disabled={!isLast && !stepValid}>
                 {isLast ? 'Finish preview' : 'Continue'}
