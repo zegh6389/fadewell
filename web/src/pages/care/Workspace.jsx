@@ -10,6 +10,7 @@ import {
   submitMfa
 } from '../../lib/session.js'
 import { careAreas, brand } from '../../lib/content.js'
+import PatientIntakePreview from './PatientIntakePreview.jsx'
 import { BrandMark, IconArrow, IconCheck, IconShield } from '../../components/Icons.jsx'
 /* ---------- Shared chrome ------------------------------------- */
 
@@ -283,6 +284,18 @@ export function Workspace({ area, role, isPatient = false, Surface }) {
 
   if (status === 'loading') return <CareLoader />
   if (serviceState === 'unavailable') {
+    // The public deployment has no care API behind it. Rather than dead-ending
+    // the most likely entry point on an error, patient intake falls back to the
+    // questionnaire with every network call removed. It accepts nothing, says
+    // so on screen, and is never shown once a real service is reachable.
+    if (isPatient) {
+      return (
+        <CareShell area={area} session={session} onSignOut={end}>
+          <PatientIntakePreview />
+        </CareShell>
+      )
+    }
+
     return (
       <CareShell area={area} session={session} onSignOut={end}>
         <Unavailable>

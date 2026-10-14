@@ -1,0 +1,325 @@
+/* ------------------------------------------------------------------
+ * Patient intake preview — the questionnaire shown when no care API is
+ * reachable. Mirrors the markup recovered from the production build:
+ * a companion column on the left, a stepped card on the right.
+ * ------------------------------------------------------------------ */
+
+.intake-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .intake-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Companion column ------------------------------------------------- */
+
+.intake-companion {
+  display: grid;
+  gap: 1.5rem;
+  position: sticky;
+  top: 5rem;
+}
+
+@media (max-width: 900px) {
+  .intake-companion {
+    position: static;
+  }
+}
+
+.intake-companion__intro {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.intake-kicker {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--forest);
+}
+
+.intake-companion__intro h1 {
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.05;
+  color: var(--forest-deep);
+}
+
+.intake-companion__intro p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.intake-scene {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.intake-video {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--sage-dark);
+  background: var(--sage);
+}
+
+.intake-scene__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.intake-video__caption {
+  position: absolute;
+  left: 0.85rem;
+  bottom: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--on-dark);
+  background: rgba(15, 51, 35, 0.82);
+  border-radius: 999px;
+}
+
+.intake-scene__badge {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--sage-dark);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--forest);
+}
+
+.intake-scene__badge strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.intake-scene__badge small {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* Stepped card ------------------------------------------------------ */
+
+.intake-card {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.75rem;
+  border: 1px solid var(--sage-dark);
+  border-radius: 18px;
+  background: var(--white);
+}
+
+.intake-card__head {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.intake-progress {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.intake-steps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--muted-2);
+}
+
+.intake-steps li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.intake-steps__num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 50%;
+  border: 1px solid var(--sage-dark);
+  background: var(--white);
+}
+
+.intake-steps li.is-done .intake-steps__num {
+  background: var(--sage);
+  border-color: var(--sage-dark);
+  color: var(--forest);
+}
+
+.intake-steps li.is-current {
+  color: var(--forest);
+  font-weight: 600;
+}
+
+.intake-steps li.is-current .intake-steps__num {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--on-dark);
+}
+
+.intake-card__intro {
+  display: grid;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--sage-dark);
+}
+
+.intake-card__count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.intake-card__intro h2 {
+  font-size: 1.5rem;
+  color: var(--forest-deep);
+}
+
+/* Questions --------------------------------------------------------- */
+
+.intake-q {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
+}
+
+.intake-q__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.intake-chip {
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--forest);
+  background: var(--sage);
+  border: 1px solid var(--sage-dark);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.intake-chip:hover {
+  background: var(--sage-2);
+}
+
+/* Review ------------------------------------------------------------ */
+
+.intake-review {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 0 1.5rem;
+}
+
+.intake-review > div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--sage-dark);
+}
+
+@media (max-width: 640px) {
+  .intake-review > div {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}
+
+.intake-review dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.intake-review dd {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.intake-review__answer {
+  margin-bottom: 1rem;
+}
+
+.intake-review__answer p {
+  margin: 0.2rem 0 0;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* Actions ----------------------------------------------------------- */
+
+.intake-actions__secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.intake-save {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Completion -------------------------------------------------------- */
+
+.intake-complete {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+}
+
+.intake-complete__content {
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.intake-complete__animation svg {
+  width: 9rem;
+  height: 9rem;
+}
+
+.intake-complete__circle {
+  stroke: var(--sage-dark);
+  stroke-width: 3;
+  fill: none;
+}
+
+.intake-complete__check {
+  stroke: var(--forest);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
