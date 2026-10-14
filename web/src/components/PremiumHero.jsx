@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react'
 import { IconVideo, IconCheck, IconShield } from './Icons.jsx'
 
 export const RESOURCE_IMAGES = {
-  'preparing-for-your-evaluation': '/assets/care-preparation.webp',
-  'certification-is-not-a-state-card': '/assets/card-premium.webp',
-  'what-changes-when-you-renew': '/assets/botanical-leaves.webp'
+  'preparing-for-your-evaluation': '/assets/blog/preparing-evaluation-cover.webp',
+  'certification-is-not-a-state-card': '/assets/blog/certification-card-cover.webp',
+  'what-changes-when-you-renew': '/assets/blog/renewal-changes-cover.webp'
 }
 
 export function SampleCard({ eager = false }) {

@@ -1,0 +1,152 @@
+/* ------------------------------------------------------------------
+ * Resource centre — state guide index, article pages and guide pages.
+ *
+ * Kept separate from pages.css so the recovered feature is reviewable as
+ * one block and deletable as one block. Only genuinely new classes live
+ * here; status colours reuse the existing .tag--* variants.
+ * ------------------------------------------------------------------ */
+
+/* Figures inside article and guide bodies ---------------------------- */
+
+.article__figure {
+  margin: 2.5rem 0;
+}
+
+.article__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid var(--sage-dark);
+  background: var(--sage);
+}
+
+/* Guide header meta --------------------------------------------------- */
+
+.guide-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--sage-dark);
+}
+
+.guide-meta__program {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Callouts ------------------------------------------------------------ */
+
+.guide-callout {
+  padding: 1rem 1.25rem;
+  margin: 0 0 1.75rem;
+  border-left: 3px solid var(--forest);
+  border-radius: 0 10px 10px 0;
+  background: var(--sage);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.guide-callout--muted {
+  border-left-color: var(--sage-dark);
+  background: var(--ivory-2);
+}
+
+.guide-callout strong {
+  color: var(--forest);
+}
+
+/* Sections ------------------------------------------------------------ */
+
+.guide-section {
+  scroll-margin-top: 6rem;
+}
+
+.guide-section h2 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+  color: var(--forest);
+}
+
+/* Sources and review date --------------------------------------------- */
+
+.guide-sources {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.guide-sources a {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--forest);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.guide-sources a:hover {
+  color: var(--forest-deep);
+}
+
+.guide-reviewed {
+  margin-top: 1.5rem;
+  font-size: 0.82rem;
+  color: var(--muted-2);
+}
+
+/* Index search -------------------------------------------------------- */
+
+.guide-count {
+  margin: 1rem 0 1.5rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.guide-empty {
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+}
+
+.guide-search {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 32rem;
+  margin: 1.5rem 0 0;
+}
+
+.guide-search label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.guide-search input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--sage-dark);
+  border-radius: 10px;
+}
+
+.guide-search input::placeholder {
+  color: var(--muted-2);
+}
+
+.guide-search input:focus {
+  outline: 2px solid var(--forest);
+  outline-offset: 1px;
+  border-color: var(--forest);
+}
+
+@media (max-width: 640px) {
+  .guide-search {
+    max-width: none;
+  }
+}

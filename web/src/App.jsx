@@ -28,6 +28,7 @@ import './styles/parity.css'
 import './styles/care.css'
 import './styles/parity-care.css'
 import './styles/premium.css'
+import './styles/resource.css'
 
 /** Restores scroll position on navigation, and honours in-page hashes. */
 function ScrollManager() {
