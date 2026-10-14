@@ -3204,3 +3204,45 @@ export function searchStateGuides(query) {
     (g) => g.state.toLowerCase().includes(q) || g.code.toLowerCase() === q || g.program.toLowerCase().includes(q)
   )
 }
+
+/* ------------------------------------------------------------------
+ * Home page state reference.
+ *
+ * Production joined the fee map (29 documented states) and the notes map
+ * (17 documented states) onto the guide list at runtime, falling back to
+ * status-dependent wording when a state had no documented amount or
+ * step. An absent entry means "not documented", never "free".
+ * ------------------------------------------------------------------ */
+
+const NO_STATEWIDE = 'No statewide MMJ card program'
+const LIMITED = 'Limited program'
+const IN_PROGRESS = 'Implementation in progress'
+
+const FEE_FALLBACK = {
+  [NO_STATEWIDE]: 'No standard statewide MMJ card fee or application.',
+  [LIMITED]: 'No general MMJ card fee; confirm exception-specific requirements.',
+  [IN_PROGRESS]: 'Patient fees and an operational enrollment route were not confirmed.'
+}
+
+const STEP_FALLBACK = {
+  [NO_STATEWIDE]:
+    'No standard statewide medical marijuana card pathway. An out-of-state recommendation does not establish local access.',
+  [LIMITED]:
+    'Only limited, condition- or product-specific exceptions apply. Do not treat them as general medical dispensary access.',
+  [IN_PROGRESS]:
+    'Confirm current enrollment and licensed retail availability directly with the program before relying on an application pathway.'
+}
+
+const FEE_DEFAULT =
+  'Confirm the current patient fee with the official program; this guide does not quote an unverified amount.'
+const STEP_DEFAULT =
+  'Complete the program\u2019s registration and approval requirements. A clinician\u2019s recommendation alone is not proof of active medical purchasing access.'
+
+/** Guides sorted by state name, each with a resolved fee and next step. */
+export const stateReferenceRows = [...stateGuides]
+  .sort((a, b) => a.state.localeCompare(b.state))
+  .map((g) => ({
+    ...g,
+    fee: stateFees[g.code] || FEE_FALLBACK[g.status] || FEE_DEFAULT,
+    nextStep: stateNotes[g.code] || STEP_FALLBACK[g.status] || STEP_DEFAULT
+  }))

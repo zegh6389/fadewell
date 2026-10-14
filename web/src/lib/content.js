@@ -33,7 +33,8 @@ export const footerNav = [
       { label: 'How it works', to: '/how-it-works' },
       { label: 'What we treat', to: '/care' },
       { label: 'Clinicians', to: '/clinicians' },
-      { label: 'Pricing', to: '/pricing' }
+      { label: 'Pricing', to: '/pricing' },
+      { label: 'State fees and access', to: '/#state-reference' }
     ]
   },
   {

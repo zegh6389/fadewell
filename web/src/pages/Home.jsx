@@ -27,6 +27,7 @@ import { StateSelector } from '../components/StateSelector.jsx'
 import { QuerySection } from '../components/QuerySection.jsx'
 import { PatientHelp } from '../components/PatientHelp.jsx'
 import { StatesPanel } from '../components/StatesPanel.jsx'
+import { StateReference } from '../components/StateReference.jsx'
 import { RESOURCE_IMAGES, SampleCard, TelehealthScene } from '../components/PremiumHero.jsx'
 
 /* ---------- Animated stat ------------------------------------- */
@@ -786,6 +787,7 @@ export default function Home() {
       />
       <Prepare />
       <Journey />
+      <StateReference />
       <Story />
       <VisualStory />
       <Pillars />
