@@ -10,7 +10,7 @@ import {
   submitMfa
 } from '../../lib/session.js'
 import { careAreas, brand } from '../../lib/content.js'
-import PatientIntakePreview from './PatientIntakePreview.jsx'
+import PatientIntakePreview, { PreviewComplete } from './PatientIntakePreview.jsx'
 import { BrandMark, IconArrow, IconCheck, IconShield } from '../../components/Icons.jsx'
 /* ---------- Shared chrome ------------------------------------- */
 
@@ -52,7 +52,7 @@ export function CareShell({ area, session, onSignOut, children }) {
           ) : null}
         </div>
       </header>
-      <main className="care__main" id="care-content">
+      <main id="care-content" className="care__main" tabIndex={-1}>
         {children}
       </main>
     </div>
@@ -293,6 +293,7 @@ function PatientEntry({ onStarted }) {
 export function Workspace({ area, role, isPatient = false, Surface }) {
   const { session, status, setSession, end } = useSession(role)
   const { info, state: serviceState } = useServiceStatus()
+  const [intakeComplete, setIntakeComplete] = useState(false)
 
   if (status === 'loading') return <CareLoader />
   if (serviceState === 'unavailable') {
@@ -301,9 +302,12 @@ export function Workspace({ area, role, isPatient = false, Surface }) {
     // questionnaire with every network call removed. It accepts nothing, says
     // so on screen, and is never shown once a real service is reachable.
     if (isPatient) {
+      // Once the questionnaire is finished it takes over the whole surface —
+      // the shell's skip link, header and step chrome have no purpose left.
+      if (intakeComplete) return <PreviewComplete />
       return (
         <CareShell area={area} session={session} onSignOut={end}>
-          <PatientIntakePreview />
+          <PatientIntakePreview onComplete={() => setIntakeComplete(true)} />
         </CareShell>
       )
     }

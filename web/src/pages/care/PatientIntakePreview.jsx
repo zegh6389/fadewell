@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useId, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { IconArrow, IconCheck, IconClock, IconShield, IconVideo } from '../../components/Icons.jsx'
@@ -89,8 +89,7 @@ function Companion() {
     <aside className="intake-companion" aria-label="Your care journey">
       <div className="intake-companion__intro">
         <span className="intake-kicker">
-          <span />
-          A little clarity. A fresh start.
+          <span /> A little clarity. A fresh start.
         </span>
         <h1>
           Your wellbeing.
@@ -142,31 +141,41 @@ function Companion() {
 }
 
 /**
- * One health question: suggested chips plus a free-text escape hatch. The chip
- * and the textarea share one answer — typing over a chip clears it, which is
- * why the chip reads as unchecked once you write your own.
+ * One health question: suggested chips plus, unless `custom` is false, a
+ * free-text escape hatch. The chip and the textarea share one answer — typing
+ * over a chip clears it, which is why the chip reads as unchecked once you
+ * write your own.
+ *
+ * The ids come from `useId` rather than a hand-rolled `intake-${name}` so that
+ * two questions can never collide on a page, and so the label, the radiogroup
+ * and the character counter all point at the same generated id.
+ *
+ * `required` lands on the textarea when there is one, because that is the
+ * control a person can always fill in. Only a question with no free-text field
+ * puts it on the chips instead.
  */
-function Quiz({ name, label, options, value, onChange, index }) {
+function Quiz({ name, label, options, value, onChange, index, hint, custom = true }) {
+  const uid = useId()
   const heading = index === undefined ? label : `${String(index + 1).padStart(2, '0')} · ${label}`
   const chipMatches = options.some((option) => option === value)
   const text = chipMatches ? '' : value
-  const fieldId = `intake-${name}`
 
   return (
     <div className="quiz">
-      <p className="field__label" id={`${fieldId}-label`}>
+      <p className="field__label" id={`${uid}-label`}>
         {heading}
       </p>
-      <p className="field__hint" id={`${fieldId}-hint`}>
-        Tap an answer if one of these fits, or write your own below. You can change it later.
+      <p className="field__hint" id={`${uid}-hint`}>
+        {hint ?? 'Tap an answer if one of these fits, or write your own below. You can change it later.'}
       </p>
-      <div className="quiz__options" role="radiogroup" aria-labelledby={`${fieldId}-label`}>
+      <div className="quiz__options" role="radiogroup" aria-labelledby={`${uid}-label`}>
         {options.map((option) => (
           <label key={option} className="quiz__chip">
             <input
+              required={!custom}
               type="radio"
-              name={name}
               value={option}
+              name={name}
               checked={value === option}
               onChange={() => onChange(option)}
             />
@@ -177,28 +186,41 @@ function Quiz({ name, label, options, value, onChange, index }) {
           </label>
         ))}
       </div>
-      <div className="quiz__custom">
-        <label className="sr-only" htmlFor={`${fieldId}-custom`}>
-          {heading} — your own answer
-        </label>
-        <textarea
-          id={`${fieldId}-custom`}
-          className="field__control field__control--area"
-          rows={3}
-          maxLength={MAX_ANSWER}
-          value={text}
-          placeholder="Or write your own…"
-          onChange={(event) => onChange(event.target.value)}
-        />
-        <p className="field__hint">
-          {text.length.toLocaleString('en-US')} / {MAX_ANSWER.toLocaleString('en-US')} characters
-        </p>
-      </div>
+      {custom ? (
+        <div className="quiz__custom">
+          <label className="sr-only" htmlFor={uid}>
+            {heading} — in your own words
+          </label>
+          <textarea
+            id={uid}
+            name={name}
+            className="field__control field__control--area"
+            rows={3}
+            maxLength={MAX_ANSWER}
+            required
+            aria-describedby={`${uid}-hint ${uid}-count`}
+            placeholder="Add your answer, or anything you want your clinician to know…"
+            value={text}
+            onChange={(event) => onChange(event.target.value)}
+          />
+          <p className="field__hint" id={`${uid}-count`}>
+            {text.length.toLocaleString('en-US')} / {MAX_ANSWER.toLocaleString('en-US')} characters
+          </p>
+        </div>
+      ) : null}
     </div>
   )
 }
 
-function PreviewComplete() {
+/**
+ * The end of the preview.
+ *
+ * This replaces the whole care shell rather than rendering inside it, so the
+ * page drops its skip link, header and step chrome entirely — the questionnaire
+ * is over and there is nothing left to navigate. The shell's owner renders it,
+ * which is why it is exported.
+ */
+export function PreviewComplete() {
   return (
     <div className="care intake-experience intake-complete">
       <title>Preview complete | MmjGreen</title>
@@ -219,10 +241,10 @@ function PreviewComplete() {
   )
 }
 
-export default function PatientIntakePreview() {
+export default function PatientIntakePreview({ onComplete }) {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState(emptyForm)
-  const [done, setDone] = useState(false)
+  const [kept, setKept] = useState(false)
 
   const set = (key, value) => setForm((prev) => ({ ...prev, [key]: value }))
   const setAnswer = (key, value) =>
@@ -270,17 +292,15 @@ export default function PatientIntakePreview() {
     [form, healthAnswered]
   )
 
-  if (done) return <PreviewComplete />
-
   return (
     <div className="care__stack">
       {/* Mirrors CareNotice, inlined because Workspace.jsx imports this module. */}
       <div className="notice notice--info" role="status">
         <strong>Frontend preview</strong>
-        <p>
+        <div>
           Explore the questionnaire with sample details. No account, API connection, or real submission.
           Answers clear when you refresh.
-        </p>
+        </div>
       </div>
 
       <div className="intake-layout">
@@ -322,7 +342,7 @@ export default function PatientIntakePreview() {
             <span className="intake-kicker">
               {title} <span className="intake-step-head__count">/ 0{step + 1}</span>
             </span>
-            <h2 id="intake-step-title" tabIndex={-1}>
+            <h2 tabIndex={-1}>
               {heading}
             </h2>
             <p>{note}</p>
@@ -333,17 +353,45 @@ export default function PatientIntakePreview() {
               <span className="tag tag--sage">Draft</span>
               <p className="care__status-note">Complete each step, then send it to your care team.</p>
             </div>
+            {/* Production shows this after a successful save. There is no
+                service behind this preview, so it appears only when the person
+                explicitly asks to keep their answers. */}
+            {kept ? (
+              <span className="care__saved" role="status">
+                <IconCheck size={14} /> Kept in this preview
+              </span>
+            ) : null}
           </div>
 
           <form
             className="care__form"
+            noValidate
             onSubmit={(event) => {
               event.preventDefault()
-              if (isLast) setDone(true)
+              // Only the step on screen is validated. Every step stays mounted,
+              // so asking the whole form would always fail on the four hidden
+              // ones and the preview could never move past step one.
+              //
+              // The check is per-control rather than on the fieldset itself:
+              // Chromium's HTMLFieldSetElement.reportValidity() only considers
+              // the fieldset's own members and returns true here even with four
+              // empty required inputs, so it would let an empty step through.
+              const group = event.currentTarget.querySelector(`fieldset[data-step="${step}"]`)
+              const controls = group ? [...group.querySelectorAll('input, select, textarea')] : []
+              const invalid = controls.find((control) => !control.checkValidity())
+              if (invalid) {
+                invalid.reportValidity()
+                return
+              }
+              // The phone is stored the way it will be dialled, not the way it
+              // was typed: leaving step one rewrites "303 555 0142" as
+              // "+13035550142", which is what production does on save.
+              if (step === 0 && form.phone) set('phone', normalisePhone(form.phone))
+              if (isLast) onComplete?.()
               else setStep((s) => s + 1)
             }}
           >
-            <fieldset className="care__group" hidden={step !== 0}>
+            <fieldset className="care__group" data-step="0" hidden={step !== 0}>
               <legend className="care__legend">
                 <span className="care__legend-num">01</span> {LEGENDS[0]}
               </legend>
@@ -351,34 +399,78 @@ export default function PatientIntakePreview() {
               <div className="care__row">
                 <label className="field">
                   <span className="field__label">First name</span>
-                  <input className="field__control" autoComplete="given-name" maxLength={100} value={form.firstName} onChange={(e) => set('firstName', e.target.value)} />
+                  <input
+                    className="field__control"
+                    autoComplete="given-name"
+                    maxLength={100}
+                    required
+                    value={form.firstName}
+                    onChange={(e) => set('firstName', e.target.value)}
+                    name="firstName"
+                  />
                 </label>
                 <label className="field">
                   <span className="field__label">Last name</span>
-                  <input className="field__control" autoComplete="family-name" maxLength={100} value={form.lastName} onChange={(e) => set('lastName', e.target.value)} />
+                  <input
+                    className="field__control"
+                    autoComplete="family-name"
+                    maxLength={100}
+                    required
+                    value={form.lastName}
+                    onChange={(e) => set('lastName', e.target.value)}
+                    name="lastName"
+                  />
                 </label>
               </div>
 
               <div className="care__row">
                 <label className="field">
                   <span className="field__label">Email</span>
-                  <input className="field__control" type="email" autoComplete="email" maxLength={254} value={form.email} onChange={(e) => set('email', e.target.value)} />
+                  <input
+                    className="field__control"
+                    autoComplete="email"
+                    maxLength={254}
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => set('email', e.target.value)}
+                    name="email"
+                  />
                 </label>
                 <label className="field">
                   <span className="field__label">Phone number</span>
-                  <input className="field__control" type="tel" autoComplete="tel" placeholder="303 555 0142" maxLength={50} value={form.phone} onChange={(e) => set('phone', e.target.value)} />
+                  <input
+                    className="field__control"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="303 555 0142"
+                    pattern="\+?[0-9][0-9\s().\-]{6,24}"
+                    title="Digits, spaces and dashes. Add a country code if you are outside the US or Canada."
+                    maxLength={50}
+                    required
+                    type="tel"
+                    value={form.phone}
+                    onChange={(e) => set('phone', e.target.value)}
+                    name="phone"
+                  />
                 </label>
               </div>
             </fieldset>
 
-            <fieldset className="care__group" hidden={step !== 1}>
+            <fieldset className="care__group" data-step="1" hidden={step !== 1}>
               <legend className="care__legend">
                 <span className="care__legend-num">02</span> {LEGENDS[1]}
               </legend>
 
               <label className="field">
                 <span className="field__label">State or territory</span>
-                <select className="field__control" value={form.state} onChange={(e) => set('state', e.target.value)}>
+                <select
+                  className="field__control"
+                  name="state"
+                  required
+                  value={form.state}
+                  onChange={(e) => set('state', e.target.value)}
+                >
                   <option value="">Select your state…</option>
                   {JURISDICTIONS.map((j) => (
                     <option key={j.code} value={j.code}>
@@ -393,7 +485,14 @@ export default function PatientIntakePreview() {
                 <div className="care__choices">
                   {MODES.map((mode) => (
                     <label key={mode.value} className={`choice${form.mode === mode.value ? ' is-selected' : ''}`}>
-                      <input type="radio" name="mode" checked={form.mode === mode.value} onChange={() => set('mode', mode.value)} />
+                      <input
+                        required
+                        type="radio"
+                        value={mode.value}
+                        name="mode"
+                        checked={form.mode === mode.value}
+                        onChange={() => set('mode', mode.value)}
+                      />
                       <span className="choice__title">{mode.label}</span>
                       <span className="choice__note">{mode.note}</span>
                     </label>
@@ -402,7 +501,7 @@ export default function PatientIntakePreview() {
               </label>
             </fieldset>
 
-            <fieldset className="care__group" hidden={step !== 2}>
+            <fieldset className="care__group" data-step="2" hidden={step !== 2}>
               <legend className="care__legend">
                 <span className="care__legend-num">03</span> {LEGENDS[2]}
               </legend>
@@ -421,16 +520,18 @@ export default function PatientIntakePreview() {
               ))}
             </fieldset>
 
-            <fieldset className="care__group" hidden={step !== 3}>
+            <fieldset className="care__group" data-step="3" hidden={step !== 3}>
               <legend className="care__legend">
                 <span className="care__legend-num">04</span> {LEGENDS[3]}
               </legend>
 
               <div className="care__verify">
                 <Quiz
-                  name="ageVerified"
+                  name="age_verified"
                   label="Age confirmation"
+                  hint="Choose one of the options below."
                   options={['Yes', 'No']}
+                  custom={false}
                   value={form.ageVerified}
                   onChange={(v) => set('ageVerified', v)}
                 />
@@ -448,7 +549,13 @@ export default function PatientIntakePreview() {
                 <div className="care__choices">
                   {ID_TYPES.map(([value, label]) => (
                     <label key={value} className={`choice choice--inline${form.idType === value ? ' is-selected' : ''}`}>
-                      <input type="radio" name="idType" checked={form.idType === value} onChange={() => set('idType', value)} />
+                      <input
+                        type="radio"
+                        value={value}
+                        name="id_type"
+                        checked={form.idType === value}
+                        onChange={() => set('idType', value)}
+                      />
                       <span className="choice__title">{label}</span>
                     </label>
                   ))}
@@ -468,13 +575,13 @@ export default function PatientIntakePreview() {
                       </span>
                     </button>
                   </div>
-                  <input type="file" accept="image/jpeg,image/png" hidden readOnly aria-label="Upload a photo of your ID" tabIndex={-1} />
+                  <input accept="image/jpeg,image/png" hidden aria-label="Upload a photo of your ID" type="file" />
                   <p className="field__hint">Choose your ID type first.</p>
                 </div>
               </div>
             </fieldset>
 
-            <fieldset className="care__group" hidden={step !== 4}>
+            <fieldset className="care__group" data-step="4" hidden={step !== 4}>
               <legend className="care__legend">
                 <span className="care__legend-num">05</span> {LEGENDS[4]}
               </legend>
@@ -522,11 +629,19 @@ export default function PatientIntakePreview() {
             <div className="care__actions">
               <div className="intake-actions__secondary">
                 {step > 0 ? (
-                  <button type="button" className="intake-save" onClick={() => setStep((s) => s - 1)}>
-                    Back
-                  </button>
+                  <button
+                  type="button"
+                  className="btn btn--ghost"
+                  onClick={() => setStep((s) => s - 1)}
+                >
+                  Back
+                </button>
                 ) : null}
-                <button type="button" className="intake-save">
+                <button
+                  type="button"
+                  className="intake-save"
+                  onClick={() => setKept(true)}
+                >
                   Keep for this preview
                 </button>
               </div>
@@ -538,8 +653,8 @@ export default function PatientIntakePreview() {
 
             <p className="care__fineprint">
               <IconShield size={14} /> Answers are encrypted at rest and are never sold or used for
-              advertising. Read our <Link to="/privacy-policy">privacy policy</Link> and{' '}
-              <Link to="/telehealth-consent">telehealth consent</Link>.
+              advertising. Read our <a href="/privacy-policy">privacy policy</a> and{' '}
+              <a href="/telehealth-consent">telehealth consent</a>.
             </p>
           </form>
         </div>
