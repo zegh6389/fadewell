@@ -161,7 +161,7 @@ export function PatientHelp() {
 
         <div className="help__conversation" ref={conversation}>
           <div className="help__bubble help__bubble--assistant">
-            <strong>Hi, I&rsquo;m Jhon.</strong>
+            <strong>Hi, I'm Jhon.</strong>
             <p>{GREETING}</p>
           </div>
 

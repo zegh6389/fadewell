@@ -68,7 +68,6 @@ export default function App() {
             <>
               <Ambient />
               <ScrollRail />
-              <CookieConsent />
               <a className="skip-link" href="#main-content">
                 Skip to content
               </a>
@@ -100,6 +99,10 @@ export default function App() {
                 </Routes>
               </main>
               <Footer />
+              {/* Rendered after the footer so the overlay is the last thing in
+                  the document: the skip link and the page content must come
+                  first in both the visual and the focus order. */}
+              <CookieConsent />
             </>
           }
         />

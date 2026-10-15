@@ -3124,6 +3124,27 @@ export const stateGuides = [
 ]
 
 /**
+ * Every guide cover carries the same shape of description, derived from the
+ * state rather than hand-written 51 times: a screen reader gets "Alabama
+ * program information…" from the same rule for Alabama as for Wyoming, and the
+ * two cannot drift apart. Production stores the same string as a literal on
+ * each record.
+ */
+function guideImageAlt(guide) {
+  return `${guide.state} program information represented by state-specific application materials`
+}
+
+/**
+ * `category` is what the hero eyebrow shows ("STATE GUIDES") and what the
+ * "Keep reading" block groups on, so a guide without one renders a hero with no
+ * eyebrow at all. Production stamps both fields onto every guide it builds.
+ */
+for (const guide of stateGuides) {
+  guide.category = guide.category ?? 'State guides'
+  guide.imageAlt = guide.imageAlt ?? guideImageAlt(guide)
+}
+
+/**
  * Per-state fee strings. Only states with a specific figure have an entry —
  * absence means "no state fee was documented", not "free".
  */

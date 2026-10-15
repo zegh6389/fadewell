@@ -30,6 +30,7 @@ import { StatesPanel } from '../components/StatesPanel.jsx'
 import { StateReference } from '../components/StateReference.jsx'
 import { pennsylvaniaGuide } from '../lib/resourceCentre.js'
 import { RESOURCE_IMAGES, SampleCard, TelehealthScene } from '../components/PremiumHero.jsx'
+import { HeroArt } from '../components/Page.jsx'
 
 /* ---------- Animated stat ------------------------------------- */
 
@@ -607,7 +608,7 @@ function Caregivers() {
         </div>
         <div data-reveal="fade">
           <p className="lede">{caregiver.body}</p>
-          <Link className="btn btn--ghost" to={caregiver.to}>
+          <Link className="btn btn--ghost caregiver__action" to={caregiver.to}>
             {caregiver.action}
           </Link>
         </div>
@@ -699,7 +700,7 @@ function CardPreview() {
               )
             )}
           </ul>
-          <Link className="btn btn--primary" to="/care">
+          <Link className="btn btn--primary" to="/patient">
             Start an evaluation
           </Link>
         </div>
@@ -740,10 +741,10 @@ function Learning() {
         <div className="grid grid--2">
           {featured.map((item) => (
             <article className="card" key={item.slug} data-reveal="fade">
-              <img
+              <HeroArt
                 className="resource-cover"
                 src={item.image || RESOURCE_IMAGES[item.slug]}
-                alt=""
+                alt={item.imageAlt || ''}
                 width="1500"
                 height="1000"
                 loading="lazy"

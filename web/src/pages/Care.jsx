@@ -89,37 +89,39 @@ export default function Care() {
                 Select your state to see whether MmjGreen currently serves it.
               </p>
 
-              <label className="field">
-                <span className="field__label">State or territory</span>
-                <select
-                  className="field__control"
-                  value={state}
-                  onChange={(event) => setState(event.target.value)}
-                >
-                  <option value="">Select a state…</option>
-                  {jurisdictions.map((j) => (
-                    <option key={j.code} value={j.code}>
-                      {j.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <div className="form">
+                <label className="field">
+                  <span className="field__label">State or territory</span>
+                  <select
+                    className="field__control"
+                    value={state}
+                    onChange={(event) => setState(event.target.value)}
+                  >
+                    <option value="">Select a state…</option>
+                    {jurisdictions.map((j) => (
+                      <option key={j.code} value={j.code}>
+                        {j.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-              {active ? (
-                <div className="notice notice--ok" role="status">
-                  <strong>{active.name}</strong>
-                  <p>
-                    {active.comingSoon
-                      ? 'We are not accepting new patients here yet — join the waitlist and we will contact you.'
-                      : 'We are accepting new patients here. Start an intake and we will apply the rules that apply to you.'}
-                  </p>
-                </div>
-              ) : null}
+                {active ? (
+                  <div className="notice notice--ok" role="status">
+                    <strong>{active.name}</strong>
+                    <p>
+                      {active.comingSoon
+                        ? 'We are not accepting new patients here yet — join the waitlist and we will contact you.'
+                        : 'We are accepting new patients here. Start an intake and we will apply the rules that apply to you.'}
+                    </p>
+                  </div>
+                ) : null}
 
-              <MagneticLink to="/patient" className="btn btn--primary btn--block">
-                Start your intake
-                <IconArrow size={16} />
-              </MagneticLink>
+                <MagneticLink to="/patient" className="btn btn--primary btn--block">
+                  Start your intake
+                  <IconArrow size={16} />
+                </MagneticLink>
+              </div>
             </div>
           </div>
         </div>

@@ -36,7 +36,7 @@ export default function PatientInfo() {
               If you only do one thing from this page, make it the first one. Missing identification is by far the
               most common reason a consultation gets rescheduled.
             </p>
-            <Link className="btn btn--forest" to="/care">
+            <Link className="btn btn--forest" to="/patient">
               Start your intake
             </Link>
           </div>
@@ -103,7 +103,7 @@ export default function PatientInfo() {
         title="You know more"
         accent="than you think."
         body="Sign up with your contact details, complete the questionnaire in about 2 minutes, then speak with a doctor. Your secure link keeps your care accessible without a password."
-        primary={{ to: '/care', label: 'Start an intake' }}
+        primary={{ to: '/patient', label: 'Start an intake' }}
         secondary={{ to: '/service', label: 'See how it works' }}
       />
     </>

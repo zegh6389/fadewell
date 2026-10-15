@@ -152,9 +152,10 @@ export default function CookieConsent() {
         <label className="cookie-category cookie-category--optional">
           <span>
             <strong>Optional cookies</strong>
-            <span>Nothing extra is connected today. This switch exists so the choice stays yours if that changes.</span>
+            <span>Allow optional integrations when they are connected. No analytics or advertising plugin is currently installed.</span>
           </span>
           <input
+            role="switch"
             type="checkbox"
             checked={optional}
             onChange={(event) => setOptional(event.target.checked)}
@@ -162,16 +163,25 @@ export default function CookieConsent() {
           />
         </label>
 
-        {error ? <p className="cookie-dialog__note">{error}</p> : null}
+        {/* The standing note is always present. A storage failure replaces its
+            text rather than adding a second paragraph, so the dialog keeps the
+            same shape it has in the production build. */}
+        <p className="cookie-dialog__note">
+          {error ||
+            'We remember your choice for 180 days. Cookie permission is separate from medical consent and notification preferences.'}
+        </p>
 
         <div className="cookie-actions">
+          <button type="button" className="btn btn--forest" onClick={() => save(false)}>
+            Essential cookies only
+          </button>
           <button type="button" className="btn btn--forest" onClick={() => save(optional)}>
-            Save preferences
+            Save my preferences
           </button>
         </div>
 
         <Link className="cookie-policy-link" to="/privacy-policy">
-          Read the full privacy policy ↗
+          Read our privacy policy ↗
         </Link>
       </dialog>
     </>

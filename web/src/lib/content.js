@@ -1,3 +1,4 @@
+import { articles } from './resourceCentre.js'
 /**
  * MmjGreen — site content.
  *
@@ -495,6 +496,13 @@ export const legalDocs = {
         ]
       },
       {
+        h: 'Cookies and browser preferences',
+        p: [
+          'Essential cookies support secure sessions and core features. We store your cookie preference locally on your device for 180 days, without putting medical answers or identification documents in that preference. You can change your choice using Cookie settings in the website footer.',
+          'No optional analytics or advertising plugin is currently installed. Choosing to allow optional cookies records your preference; it does not give permission to use health information for advertising. Cookie permission is separate from medical consent and notification preferences. If your browser blocks preference storage, your choice applies to the current visit and you may be asked again after reloading.'
+        ]
+      },
+      {
         h: 'How long we keep it',
         p: [
           'We keep clinical records for the period required by the laws of the state where you were evaluated, which is commonly seven years. Marketing preferences are kept until you withdraw them. Technical security logs are kept for up to 24 months.'
@@ -518,7 +526,7 @@ export const legalDocs = {
       {
         h: 'Using this service',
         p: [
-          'You must be at least 21 years old to open an account or hold a medical card in the states we serve, and at least 18 years old to use this site. You agree to provide accurate information and to keep your secure link confidential.',
+          'Medical patient and caregiver age requirements vary by state. Minors require the applicable parent, guardian, or caregiver pathway. You agree to provide accurate information and keep your secure link confidential.',
           'You may not use MmjGreen to obtain a card through misrepresentation, to impersonate another person, or in a way that interferes with another person’s care or with the operation of the service.'
         ]
       },
@@ -701,7 +709,7 @@ export const accessibility = {
     {
       h: 'Need help, or found a barrier?',
       p: [
-        'Email care@mmjgreen.com or call 888-809-3204. If something on this site is difficult to use, we want to know — tell us what happened and which page you were on, and we will both fix it and get you care in the meantime.'
+        'Email care@mmjgreen.com or call 888-809-3204. If something on this site is difficult to use, tell us what happened and which page you were on so we can help.'
       ]
     }
   ]
@@ -862,47 +870,16 @@ export const compliance = {
   ]
 }
 
-/** Learning centre cards on the home page, and the index of the resource centre. */
-export const learningResources = [
-  {
-    slug: 'preparing-for-your-evaluation',
-    category: 'Preparation',
-    title: 'What to prepare for an online evaluation',
-    note: 'A practical checklist for identification, medical history, technology and renewals.',
-    body: [
-      'The evaluations themselves are short. Most of the work happens before the call, and almost all of it is paperwork you probably already have somewhere.',
-      'Have a current government-issued photo ID ready. That is the single most common reason a visit gets rescheduled, because we cannot verify identity without it.',
-      'If your state programme asks for proof of residency, find that document before you start rather than after. A utility bill or a lease agreement is usually enough.',
-      'Write down your current medications and any conditions a clinician should know about. You do not need a diagnosis letter — a clear list of what you take and why is more useful.',
-      'Check your camera and microphone work before the appointment if you are meeting by video. A five-minute test call removes almost all of the technical risk.'
-    ]
-  },
-  {
-    slug: 'certification-is-not-a-state-card',
-    category: 'Process',
-    title: 'Certification is not the same as a state card',
-    note: 'Understand the roles of the clinician, MmjGreen and your state programme.',
-    body: [
-      'This is the single most common misunderstanding in the whole process, and it catches people out at the worst possible moment — after they have already paid for an evaluation.',
-      'A clinician certifies you. That is a medical judgement about whether an evaluation is appropriate, and it is entirely theirs to make. We do not make it, and no software does.',
-      'Your state programme then issues the card or the registration. That is a separate administrative process, with its own rules, its own forms, its own fee, and often its own waiting period.',
-      'MmjGreen sits between the two. We handle the intake, the scheduling, the consultation and the tracking — and we tell you honestly which state steps remain after a clinician certifies you.',
-      'The practical consequence: treat the clinician decision and the state registration as two separate projects with two separate timelines. Planning for one to finish the other is what causes the frustration.'
-    ]
-  },
-  {
-    slug: 'what-changes-when-you-renew',
-    category: 'Renewals',
-    title: 'What changes when you renew',
-    note: 'The rules move, and last year’s process is not a reliable guide.',
-    body: [
-      'Renewal is usually faster and simpler than a first evaluation, but not identical to it. States change their rules more often than patients expect.',
-      'Check the current window before you assume you are eligible. Some states have tightened the qualifying-condition list since your last visit, and others have shortened the renewal period.',
-      'Bring your existing card or certification number. States that have moved to digital registries can usually renew without a new evaluation at all, which is worth knowing before you book anything.',
-      'A renewal still requires a clinician review where your state demands one. We cannot skip that step, and we will tell you plainly if your state does not require it either.'
-    ]
-  }
-]
+/**
+ * Learning centre cards on the home page.
+ *
+ * These are the same records the resource centre indexes. They used to be a
+ * second copy held here, and the copy quietly fell behind: it was missing the
+ * cover `imageAlt` values, so the home page shipped four cards with empty alt
+ * text while the blog had the right descriptions. Deriving the list from the
+ * resource centre means the two screens cannot drift apart again.
+ */
+export const learningResources = articles
 
 /**
  * Interior page: the process explained in full.

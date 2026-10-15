@@ -2,9 +2,29 @@ import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IconArrow, IconCheck, IconSpark } from './Icons.jsx'
 import { MagneticLink } from './Chrome.jsx'
+import { SampleCard } from './PremiumHero.jsx'
 import { brand } from '../lib/content.js'
 
 /* ---------- Interior page hero ------------------------------- */
+
+/**
+ * The hero image, with one special case.
+ *
+ * The sample patient card is not a flat picture: it is a two-sided flip card,
+ * and the hero on `/how-it-works` is the one place it is shown flipping. A bare
+ * `<img>` cannot render the back face, so the card routes through `SampleCard`
+ * instead. Production does the same thing, keyed on the same asset path.
+ */
+export function HeroArt({ src, alt, className = '', ...props }) {
+  if (src === '/assets/card-premium.webp') {
+    return (
+      <div className={`${className} sample-card-display`}>
+        <SampleCard eager={props.loading === 'eager'} />
+      </div>
+    )
+  }
+  return <img className={className} src={src} alt={alt ?? ''} {...props} />
+}
 
 /**
  * The hero every interior page opens with.
@@ -38,7 +58,7 @@ export function PageHero({ eyebrow, title, accent, lede, image, alt, children })
         </div>
         {image ? (
           <div className="page-hero__art" data-reveal="scale">
-            <img src={image} alt={alt ?? ''} width="1200" height="820" loading="eager" decoding="async" />
+            <HeroArt src={image} alt={alt} width="1200" height="820" loading="eager" decoding="async" />
           </div>
         ) : null}
       </div>

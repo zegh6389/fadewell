@@ -167,6 +167,7 @@ export const iconMap = {
   badge: IconBadge,
   clock: IconClock,
   lock: IconLock,
+  check: IconCheck,
   chat: IconChat,
   id: IconId,
   note: IconNote

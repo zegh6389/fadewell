@@ -591,29 +591,12 @@
   flex-shrink: 0;
 }
 
-/* Both the hover pause and the explicit control resolve to the same state, so
-   a pointer user and a keyboard user get identical behaviour. */
+/* The ticker stops for pointer and keyboard alike. Keeping it in CSS rather
+   than in a visible control is what matches the production build; `focus-
+   within` is the part that keeps WCAG 2.2.2 satisfied without the button. */
 .marquee:hover .marquee__track,
-.marquee__track[data-paused='true'] {
+.marquee:focus-within .marquee__track {
   animation-play-state: paused;
-}
-
-.marquee__pause {
-  flex-shrink: 0;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid var(--line-2, var(--line));
-  border-radius: var(--r-pill);
-  background: var(--white);
-  color: var(--muted);
-  font: inherit;
-  font-size: var(--t-xs);
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.marquee__pause:hover {
-  color: var(--forest);
-  border-color: var(--moss);
 }
 
 .marquee__item {
@@ -633,12 +616,6 @@
 
 .band-dark .marquee {
   border-block-color: var(--on-dark-3, rgba(255, 255, 255, 0.18));
-}
-
-.band-dark .marquee__pause {
-  background: transparent;
-  color: var(--on-dark-2, rgba(255, 255, 255, 0.72));
-  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .marquee__item::after {

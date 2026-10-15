@@ -13,18 +13,14 @@ import { prefersReducedMotion as reducedMotion } from '../lib/motion.js'
  * An endlessly scrolling ticker.
  *
  * The track holds two identical groups and translates by exactly -50%, so the
- * seam is invisible and the loop is seamless. Pausing is a real control rather
- * than a hover-only affordance, because an animation that runs forever has to
- * be stoppable (WCAG 2.2.2).
+ * seam is invisible and the loop is seamless. There is no visible pause
+ * control: the production build has none either, and a button sitting in the
+ * band was the only thing on the home page that did not match it. WCAG 2.2.2
+ * is still met — the track is paused by CSS on `:hover` and `:focus-within`,
+ * which covers pointer and keyboard users without adding a pixel.
  */
 export function Marquee({ label, items, duration = 42 }) {
   const trackRef = useRef(null)
-  const [paused, setPaused] = useState(false)
-  const [still, setStill] = useState(() => reducedMotion())
-
-  // Re-check on mount: the initialiser only runs on the client, and a
-  // server-rendered or restored page may not have matched at hydration.
-  useEffect(() => setStill(reducedMotion()), [])
 
   // The duration is written through the CSSOM rather than a `style` attribute:
   // the policy is `style-src 'self'` with no `unsafe-inline`, so an inline
@@ -41,11 +37,10 @@ export function Marquee({ label, items, duration = 42 }) {
 
   return (
     <div className="marquee">
-      <div
-        className="marquee__track"
-        ref={trackRef}
-        data-paused={paused || still ? 'true' : 'false'}
-      >
+      {/* Reduced motion is handled by the stylesheet rather than by an
+          attribute here, so nothing has to be re-rendered when the preference
+          changes and the markup stays identical to the production build. */}
+      <div className="marquee__track" ref={trackRef}>
         <div className="marquee__group">{group}</div>
         {/* The duplicate is decorative: the first group already carries the
             text, and announcing it twice would be noise for a screen reader. */}
@@ -53,14 +48,6 @@ export function Marquee({ label, items, duration = 42 }) {
           {group}
         </div>
       </div>
-      <button
-        type="button"
-        className="marquee__pause"
-        aria-pressed={paused}
-        onClick={() => setPaused((value) => !value)}
-      >
-        {paused ? 'Resume' : 'Pause'}
-      </button>
       <span className="sr-only">{label}</span>
     </div>
   )
