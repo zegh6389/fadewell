@@ -93,6 +93,13 @@ async function request(path, { method = 'GET', body, csrf, timeout = DEFAULT_TIM
 export const getQuestionnaire = (opts) => request('/questionnaire', opts)
 export const getJurisdictions = (opts) => request('/jurisdictions', opts)
 
+/**
+ * One turn with the care guide. The conversation state is echoed back so the
+ * next turn can keep context; the service owns the replies and the safety
+ * flag, the browser never decides what is safe to say.
+ */
+export const postChat = (body, opts) => request('/chat', { ...opts, method: 'POST', body })
+
 /* ---------- Patient ------------------------------------------ */
 
 export const getIntake = (opts) => request('/intake', opts)

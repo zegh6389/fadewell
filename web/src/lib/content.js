@@ -23,6 +23,7 @@ export const primaryNav = [
   { label: 'Clinicians', to: '/clinicians' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'FAQ', to: '/faq' },
+  { label: 'Blog', to: '/blog' },
   { label: 'About', to: '/about' }
 ]
 
