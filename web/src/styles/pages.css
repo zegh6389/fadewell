@@ -376,12 +376,6 @@
   padding-block: var(--s-4);
 }
 
-.journey__viewport:focus-visible {
-  outline: 3px solid var(--moss);
-  outline-offset: 4px;
-  border-radius: var(--r-md);
-}
-
 .journey__track {
   --journey-gap: clamp(1rem, 1.8vw, 1.5rem);
   display: flex;

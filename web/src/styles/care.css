@@ -271,12 +271,6 @@
   border-color: var(--moss);
 }
 
-.field__control:focus {
-  outline: none;
-  border-color: var(--moss);
-  box-shadow: var(--sh-ring);
-}
-
 .field__control--area {
   resize: vertical;
   min-height: 4.5rem;

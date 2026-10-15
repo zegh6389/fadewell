@@ -826,7 +826,6 @@
 .help__messages { display: flex; flex-direction: column; gap: 12px; }
 .help__footer { flex-shrink: 0; padding: 16px; background: white; border-top: 1px solid var(--line-soft); }
 .help__composer { display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--line-strong); border-radius: 16px; background: var(--ivory); }
-.help__composer:focus-within { border-color: var(--moss); box-shadow: var(--sh-ring); }
 .help__composer input { flex: 1; min-width: 0; width: 100%; padding: 8px; border: 0; background: transparent; font-size: 14px; line-height: 20px; }
 .help__composer input:focus-visible { outline: none; }
 .help__send { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: var(--forest); color: white; transition: background-color 180ms var(--ease-out), transform 180ms var(--ease-out); }

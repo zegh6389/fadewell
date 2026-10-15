@@ -50,7 +50,6 @@
 .hero { min-height: 740px; padding-block: 128px 64px; background: var(--ivory); }
 .banner + .hero { min-height: 640px; padding-top: 32px; }
 .hero__content { width: 100%; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; row-gap: 24px; align-items: start; }
-.hero__content > .pill { grid-column: 1; grid-row: 1; font-size: .75rem; background: white; }
 .hero__title { grid-column: 1; grid-row: 2; max-width: 680px; font-size: 3.75rem; line-height: 1; letter-spacing: -.065em; }
 .hero__title .reveal-line { padding-bottom: 12px; }
 .hero__title .grad-text { color: var(--moss); }
@@ -72,7 +71,6 @@
 .scene-orbit { position: absolute; border: 1px solid #dce7d8; border-radius: 50%; pointer-events: none; }
 .scene-orbit--outer { width: 100%; aspect-ratio: 1; top: 24px; right: -16px; background: #eaf1e3; }
 .scene-orbit--inner { width: 82%; aspect-ratio: 1; top: 64px; right: 24px; border-color: #cadac1; }
-.scene-caption { position: absolute; top: 4px; right: 24px; font-size: .75rem; color: var(--muted); }
 .doctor-window { position: absolute; width: 64%; top: 48px; right: 16px; border: 8px solid white; border-radius: 24px; background: white; box-shadow: 0 24px 48px -16px rgb(23 74 50 / .2); transform: translateZ(24px) rotate(5deg); overflow: hidden; }
 .doctor-window__top { display: flex; align-items: center; gap: 8px; padding: 8px 4px 16px; font-size: .75rem; font-weight: 600; color: var(--forest); }
 .doctor-window__top > svg { margin-left: auto; }
@@ -93,8 +91,6 @@
 .scene-assurance strong, .scene-assurance small { display: block; font-size: .75rem; }
 .scene-assurance small { color: var(--muted); margin-top: 4px; }
 .preview__art { perspective: 1200px; overflow: visible; background: transparent; border: 0; }
-.preview__art .medical-card { transform: rotateY(-8deg) rotateZ(-3deg); transition: transform 700ms var(--ease-out), box-shadow 700ms var(--ease-out); }
-.preview__art:hover .medical-card { transform: rotateY(0) rotateZ(0) translateY(-8px); }
 .sample-caption { margin-top: 24px; text-align: center; color: var(--muted); font-size: .75rem; }
 
 /* Shared buttons and surfaces give every public page the same tactile response. */
@@ -104,7 +100,6 @@
 .btn--forest:hover { background: var(--lime); color: var(--forest); border-color: var(--lime); }
 .btn--ghost:hover { background: var(--forest); color: white; border-color: var(--forest); }
 .btn:active { transform: translateY(1px) scale(.98); }
-.nav__link:focus-visible, .text-link:focus-visible, .btn:focus-visible { outline: 3px solid var(--moss); outline-offset: 4px; }
 .card, .spotlight-cell, .clinician, .quote, .path-card, .plan { transition: background-color 320ms var(--ease-out), border-color 320ms var(--ease-out), transform 420ms var(--ease-out), box-shadow 420ms var(--ease-out); }
 @media (hover: hover) {
   .card:hover, .spotlight-cell:hover, .clinician:hover, .quote:hover { background-color: #f0f5eb; border-color: #a9c5a1; transform: translateY(-4px); box-shadow: 0 16px 24px -8px rgb(23 74 50 / .08); }
@@ -112,7 +107,6 @@
   .page-hero__art img, .story-frame__media img, .clinician__photo img { transition: transform 700ms var(--ease-out); }
   .page-hero__art:hover img, .story-frame:hover img, .clinician:hover img { transform: scale(1.035); }
 }
-.card:focus-within, .clinician:focus-within { border-color: var(--moss); }
 .text-link, .footer__links a, .link-arrow { transition: color 220ms var(--ease-out); }
 .page-hero { background: var(--sage); }
 .page-hero .lede { max-width: 680px; }
@@ -186,7 +180,6 @@
 @media (max-width: 480px) {
   .hero__title { font-size: 2.25rem; letter-spacing: -.055em; }
   .telehealth-scene { height: 440px; }
-  .scene-caption { right: 0; font-size: .75rem; }
   .doctor-window { right: 0; width: 72%; top: 40px; }
   .doctor-window > img { height: 176px; }
   .doctor-window__top > svg { display: none; }

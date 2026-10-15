@@ -82,12 +82,6 @@ ol[class] {
   color: var(--ink);
 }
 
-:focus-visible {
-  outline: 3px solid var(--moss);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
 /* ---------- Typography ------------------------------------- */
 
 h1,

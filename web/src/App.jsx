@@ -28,7 +28,6 @@ import './styles/parity.css'
 import './styles/care.css'
 import './styles/parity-care.css'
 import './styles/premium.css'
-import './styles/resource.css'
 
 /* The stylesheet recovered from the production build. Imported last so its
    definitions win any tie with the hand-written sheets above — the two agree

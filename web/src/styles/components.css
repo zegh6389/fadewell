@@ -591,14 +591,6 @@
   flex-shrink: 0;
 }
 
-/* The ticker stops for pointer and keyboard alike. Keeping it in CSS rather
-   than in a visible control is what matches the production build; `focus-
-   within` is the part that keeps WCAG 2.2.2 satisfied without the button. */
-.marquee:hover .marquee__track,
-.marquee:focus-within .marquee__track {
-  animation-play-state: paused;
-}
-
 .marquee__item {
   display: inline-flex;
   align-items: center;
