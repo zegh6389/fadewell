@@ -16,20 +16,20 @@ export default function Service() {
     <>
       <PageHero
         eyebrow="How it works"
-        title="From your first question to"
-        accent="your card in hand."
+        title="A short questionnaire."
+        accent="Then a doctor call."
         image="/assets/care-conversation.webp"
         alt="Illustrative stock photograph of a doctor using a phone"
       >
-        A guided intake, an independent clinician review, and a registration
-        process we track for you. Here is the whole thing, in order, with
-        nothing hidden between the steps.
+        Sign up, complete the questionnaire in about 2 minutes, then speak with a doctor. Typically 10–15
+        minutes in total, or up to 30 minutes for an in-depth conversation. State-required in-person
+        visits, registration, and card issuance are separate.
       </PageHero>
 
       <section className="band-white section" aria-labelledby="stages-title">
         <div className="shell">
           <SectionHead
-            eyebrow="The five stages"
+            eyebrow="Five simple steps"
             title="What actually happens,"
             accent="in what order."
             lede="Every stage is visible to you while it is happening. If something is waiting on you, you will be told exactly what."
@@ -42,6 +42,11 @@ export default function Service() {
                 <div className="stages__body">
                   <h3 className="h4">{stage.title}</h3>
                   <p className="card__body">{stage.body}</p>
+                  {stage.reference && (
+                    <Link className="text-link" to={stage.reference.to}>
+                      {stage.reference.label} ↗
+                    </Link>
+                  )}
                 </div>
               </li>
             ))}
@@ -102,7 +107,7 @@ export default function Service() {
         title="Start where you"
         accent="actually are."
         body="Choose your state and we will show you the path that applies to you. A clinician, not this website, decides eligibility."
-        primary={{ to: '/care', label: 'Start an intake' }}
+        primary={{ to: '/patient', label: 'Start an intake' }}
         secondary={{ to: '/contact', label: 'Ask a question' }}
       />
     </>

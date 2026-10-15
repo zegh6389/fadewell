@@ -102,7 +102,7 @@ export default function PatientInfo() {
       <CtaBand
         title="You know more"
         accent="than you think."
-        body="The intake takes about six minutes and you can stop and come back. No account, no password."
+        body="Sign up with your contact details, complete the questionnaire in about 2 minutes, then speak with a doctor. Your secure link keeps your care accessible without a password."
         primary={{ to: '/care', label: 'Start an intake' }}
         secondary={{ to: '/service', label: 'See how it works' }}
       />

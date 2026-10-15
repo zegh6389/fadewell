@@ -1,4 +1,5 @@
 import { journey, storySteps, brand } from '../lib/content.js'
+import { Link } from 'react-router-dom'
 import { PageHero, SectionHead, CtaBand, Checklist } from '../components/Page.jsx'
 import { Icon, IconCheck } from '../components/Icons.jsx'
 
@@ -16,7 +17,7 @@ export default function HowItWorks() {
     <>
       <PageHero
         eyebrow="How it works"
-        title="From a six-minute form to a card in your wallet."
+        title="Sign up. Answer a few questions. Talk with a doctor."
         image="/assets/card-premium.webp"
         alt="Illustrative MmjGreen sample patient card with portrait and registration details, not a real credential"
         lede="No waiting rooms, no phone trees, no guessing. Here is the entire process, in the order it actually happens — including the parts most services leave out."
@@ -26,7 +27,7 @@ export default function HowItWorks() {
         <div className="shell">
           <SectionHead
             id="steps-title"
-            eyebrow="The five steps"
+            eyebrow="Five simple steps"
             title="Everything that happens,"
             accent="in order."
           />
@@ -49,7 +50,17 @@ export default function HowItWorks() {
                   </span>
                   <h3 className="h4">{item.title}</h3>
                   <p className="card__body">{item.body}</p>
-                  <p className="float-card__meta">{item.detail}</p>
+                  <p className="float-card__meta">
+                    {item.detail}
+                    {item.reference && (
+                      <>
+                        <br />
+                        <Link className="text-link" to={item.reference.to}>
+                          {item.reference.label} ↗
+                        </Link>
+                      </>
+                    )}
+                  </p>
                 </article>
               ))}
             </div>
@@ -75,14 +86,15 @@ export default function HowItWorks() {
 
             <div className="card" data-reveal="right">
               <p className="card__num">TIMELINE</p>
-              <h3 className="card__title">A realistic week</h3>
+              <h3 className="card__title">10–15 minutes, start to conversation</h3>
               <ul className="plan__list">
                 {[
-                  ['Day 0', 'Questionnaire completed, jurisdiction checked'],
-                  ['Day 0–3', 'Clinician reviews your intake and confirms a slot'],
-                  ['Day 4', 'Live consultation, typically 20 minutes'],
-                  ['Day 4–7', 'Application prepared and filed with your registry'],
-                  ['Day 7–21', 'We track the application and keep you posted']
+                  ['Sign up', 'Enter your contact details and choose your state'],
+                  ['About 2 minutes', 'Complete the questionnaire'],
+                  ['Doctor call', 'Review your answers and discuss your questions'],
+                  ['10–15 minutes total', 'Typical signup, questionnaire, and evaluation time'],
+                  ['Up to 30 minutes', 'Room for an in-depth conversation if you want one'],
+                  ['After certification', 'Apply for your state card or use an accepted digital credential']
                 ].map(([when, what]) => (
                   <li key={when}>
                     <IconCheck size={16} />
@@ -93,8 +105,8 @@ export default function HowItWorks() {
                 ))}
               </ul>
               <p className="float-card__meta" data-reveal="fade">
-                State registry processing varies. We report the real position of your application rather
-                than a guess.
+                This timing covers the evaluation, not card delivery. State-required in-person visits,
+                registration, and card issuance follow separate state rules and timelines.
               </p>
             </div>
           </div>
@@ -124,7 +136,7 @@ export default function HowItWorks() {
       <CtaBand
         title="Ready when you are."
         accent="No pressure."
-        body={`The questionnaire takes about six minutes and you can stop at any point. Questions first? Call ${brand.phone}.`}
+        body={`The questionnaire takes about 2 minutes, then you speak with a doctor. Questions first? Call ${brand.phone}.`}
       />
     </>
   )

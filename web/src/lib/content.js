@@ -9,8 +9,8 @@ export const brand = {
   name: 'MmjGreen',
   tagline: 'Medical card evaluation, made calm.',
   email: 'care@mmjgreen.com',
-  phone: '(888) 555-0142',
-  phoneHref: '+18885550142',
+  phone: '888-809-3204',
+  phoneHref: '+18888093204',
   address: '1200 Market Street, Suite 400, Denver, CO 80202',
   hours: 'Mon–Fri, 8am–8pm MT · Sat, 9am–3pm MT'
 }
@@ -223,48 +223,32 @@ export const conditions = [
   }
 ]
 
-/* ---------- Clinicians -------------------------------------- */
+/* ---------- Clinical standards ------------------------------- */
 
-export const clinicians = [
+/**
+ * What a patient can expect from the evaluation.
+ *
+ * Replaces the former clinician directory. The production build stopped
+ * publishing clinician names, portraits, biographies and licences, and says so
+ * on this page and on the home page — so there is deliberately no roster here
+ * to drift out of step with that claim.
+ */
+export const evaluationStandards = [
   {
-    slug: 'dr-amara-osei',
-    name: 'Dr. Amara Osei, MD',
-    role: 'Lead evaluating physician',
-    states: 'CO · CA · WA',
-    years: 14,
-    photo: '/assets/clinician-amara.webp',
-    bio: 'Board-certified in family medicine. Led clinical operations for two multi-state cannabis programs before joining MmjGreen.',
-    languages: ['English', 'Twi']
+    title: 'Licensed for your state',
+    body: 'Your evaluation is handled by a clinician licensed where you receive care. State requirements determine the permitted evaluation format.'
   },
   {
-    slug: 'dr-rafael-duran',
-    name: 'Dr. Rafael Durán, DO',
-    role: 'Evaluating physician',
-    states: 'CO · NM · AZ',
-    years: 11,
-    photo: '/assets/clinician-rafael.webp',
-    bio: 'Osteopathic physician focused on pain medicine and post-surgical recovery. Runs MmjGreen’s chronic pain pathway.',
-    languages: ['English', 'Spanish']
+    title: 'An independent decision',
+    body: 'A clinician reviews your questionnaire and speaks with you before making a decision. Neither MmjGreen nor the care chatbot can promise approval.'
   },
   {
-    slug: 'dr-priya-raghavan',
-    name: 'Dr. Priya Raghavan, MD',
-    role: 'Evaluating physician',
-    states: 'WA · OR · NV',
-    years: 9,
-    photo: '/assets/clinician-priya.webp',
-    bio: 'Psychiatry background with a focus on anxiety and trauma-related conditions. Publishes on harm reduction and access.',
-    languages: ['English', 'Tamil', 'Hindi']
+    title: 'A private clinical conversation',
+    body: 'Discuss your history and questions in your secure care interaction. We do not publish clinician names, portraits, biographies, or personal profiles on this website.'
   },
   {
-    slug: 'dr-marcus-whitfield',
-    name: 'Dr. Marcus Whitfield, NP',
-    role: 'Nurse practitioner',
-    states: 'CO · IL · MI',
-    years: 12,
-    photo: '/assets/clinician-marcus.webp',
-    bio: 'Family nurse practitioner specialising in chronic illness management and patient education across the full intake pathway.',
-    languages: ['English']
+    title: 'Time for your questions',
+    body: 'The signup, 2 minute questionnaire, and doctor conversation typically take 10–15 minutes in total. Allow up to 30 minutes for an in-depth conversation. State registry processing is separate.'
   }
 ]
 
@@ -301,7 +285,7 @@ export const plans = [
       'Dose and product guidance discussion',
       'Renewal paperwork prepared and submitted',
       'Secure messaging between visits',
-      'Same-week availability'
+      'Time to discuss your questions'
     ]
   },
   {
@@ -363,11 +347,11 @@ export const faqs = [
   },
   {
     q: 'Do I need to create an account?',
-    a: 'No. Your intake is tied to a secure link, not a password. You will receive a confirmation by email or text with your secure patient link — keep it, it is how you return to your record, reschedule, and message your care team.'
+    a: 'Sign up with your contact details and state, then complete the questionnaire. You do not need to create a password. Your secure patient link lets you return to your care record.'
   },
   {
     q: 'How long does the whole process take?',
-    a: 'The questionnaire takes about six minutes. Most evaluations are booked within a week, and our median time from consultation to decision is around 2.4 days. State registry processing varies — we track your application and tell you where it is.'
+    a: 'Sign up, complete the questionnaire in about 2 minutes, then speak with a doctor. The evaluation process typically takes 10–15 minutes in total, or up to 30 minutes if you want an in-depth conversation. Any required in-person assessment, state registration, and card issuance are separate and follow your state’s rules.'
   },
   {
     q: 'What if I live somewhere you do not serve?',
@@ -717,7 +701,7 @@ export const accessibility = {
     {
       h: 'Need help, or found a barrier?',
       p: [
-        'Email care@mmjgreen.com or call (888) 555-0142. If something on this site is difficult to use, we want to know — tell us what happened and which page you were on, and we will both fix it and get you care in the meantime.'
+        'Email care@mmjgreen.com or call 888-809-3204. If something on this site is difficult to use, we want to know — tell us what happened and which page you were on, and we will both fix it and get you care in the meantime.'
       ]
     }
   ]
@@ -763,7 +747,7 @@ export const timeline = [
   { year: '2022', title: 'Founded in Denver', body: 'Two clinicians and an operations lead, building intake software for their own practice after watching patients struggle with paper forms.' },
   { year: '2023', title: 'First state programmes', body: 'Colorado, Washington and Oregon go live. Jurisdiction-aware intake becomes the core of the product rather than an afterthought.' },
   { year: '2024', title: 'Ten states', body: 'Care operations, clinician and admin workspaces ship as one system, with a full audit trail from first contact to card issuance.' },
-  { year: '2025', title: 'Twelve thousand evaluations', body: 'Median time from consultation to decision falls below three days as scheduling and registry automation improve.' },
+  { year: '2025', title: 'Twelve thousand evaluations', body: 'The workflow focuses on a short questionnaire and a direct clinician conversation, with state registration tracked separately.' },
   { year: '2026', title: 'Fourteen states', body: 'Rebuilt around a single care record so a patient never has to repeat their history between steps, clinicians or states.' }
 ]
 
@@ -920,37 +904,23 @@ export const learningResources = [
   }
 ]
 
-/** Interior page: the process explained in full. */
-export const serviceStages = [
-  {
-    num: '01',
-    title: 'Tell us what brings you in',
-    body: 'A short, private questionnaire about your goals, history, medications and allergies. No account, no password, about six minutes. You can stop and come back without losing your place.'
-  },
-  {
-    num: '02',
-    title: 'We check your state rules',
-    body: 'Medical card law differs in every state. MmjGreen checks your jurisdiction automatically and shows you only the options that are actually available to you, rather than a generic page that does not apply.'
-  },
-  {
-    num: '03',
-    title: 'Pick a time that works',
-    body: 'Choose a live video or phone consultation from real clinician availability. You get a confirmation with everything you need to join, including what to have ready.'
-  },
-  {
-    num: '04',
-    title: 'Meet your clinician',
-    body: 'A licensed clinician reviews your intake, asks follow-up questions, and completes your evaluation. Bring your photo ID and any records you have — the decision is entirely theirs.'
-  },
-  {
-    num: '05',
-    title: 'Your application, tracked to the finish',
-    body: 'If approved, we submit to your state registry and keep you updated at every stage until your card is issued. You always know exactly where things stand.'
-  }
-]
+/**
+ * Interior page: the process explained in full.
+ *
+ * The same five steps as `journey`, minus the timing detail line — this page
+ * sets them out as one readable column for someone who arrived from search and
+ * wants the whole sequence at once, rather than a horizontal gesture. Derived
+ * rather than copied so the two pages cannot drift apart.
+ */
+export const serviceStages = journey.map(({ step, title, body, reference }) => ({
+  num: step,
+  title,
+  body,
+  reference
+}))
 
 export const servicePromises = [
-  { icon: 'clock', title: 'Video or phone, your choice', note: 'You pick the format when you book, and it is not downgraded afterwards.' },
+  { icon: 'clock', title: 'A short questionnaire, then a call', note: 'About 2 minutes for the questionnaire and typically 10–15 minutes for the whole evaluation. Allow up to 30 minutes for an in-depth discussion; state-required in-person visits and registration are separate.' },
   { icon: 'shield', title: 'Independent clinical decision', note: 'No clinician is steered by a quota, a ranking or an upsell.' },
   { icon: 'card', title: 'Fees shown before you pay', note: 'Evaluation and state fees are itemised separately, every time.' },
   { icon: 'map', title: 'Jurisdiction-aware from step one', note: 'Requirements are checked against live data, not a cached page.' }
@@ -978,7 +948,7 @@ export const guideSections = [
     title: 'How the consultation works',
     body: [
       'You choose video or phone when you book. Either way you get a confirmation with everything needed to join, including a reminder of what to have ready.',
-      'A typical consultation runs twenty to thirty minutes. If you need more, that is fine — the booking is yours to lengthen.',
+      'Signup, the 2 minute questionnaire, and the doctor call typically take 10–15 minutes in total. Allow up to 30 minutes if you want an in-depth discussion. State-required in-person assessment and registration are separate.',
       'Everything stays in the same secure record, so you never have to repeat your history between steps, clinicians or states.'
     ]
   },
@@ -998,5 +968,5 @@ export const guideChecklist = [
   'A list of your current medications',
   'Any relevant medical records you already have',
   'Your existing card, if you are renewing',
-  'A quiet ten minutes and a working camera or phone'
+  'A quiet 10–15 minutes, or up to 30 minutes for an in-depth conversation, and a working camera or phone'
 ]
