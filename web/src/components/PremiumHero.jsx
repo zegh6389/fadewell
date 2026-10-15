@@ -33,39 +33,19 @@ export function SampleCard({ eager = false }) {
   )
 }
 
+/**
+ * The hero scene.
+ *
+ * Pure markup. This used to track the pointer and tilt the whole scene in 3D
+ * via `--scene-x` / `--scene-y`; neither the variables nor a `card-arrive`
+ * animation exist anywhere in the production bundle, so both were additions of
+ * mine rather than things the original build lost. The composition is layered
+ * with `translateZ` in CSS instead, which is how the production scene gets its
+ * depth.
+ */
 export function TelehealthScene() {
-  const ref = useRef(null)
-  useEffect(() => {
-    const node = ref.current
-    const media = window.matchMedia('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)')
-    let frame = 0
-    const reset = () => {
-      cancelAnimationFrame(frame)
-      node.style.setProperty('--scene-x', '0deg')
-      node.style.setProperty('--scene-y', '0deg')
-    }
-    const move = (event) => {
-      if (!media.matches) return
-      const box = node.getBoundingClientRect()
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => {
-        node.style.setProperty('--scene-x', `${(event.clientY - box.top - box.height / 2) / box.height * -7}deg`)
-        node.style.setProperty('--scene-y', `${(event.clientX - box.left - box.width / 2) / box.width * 9}deg`)
-      })
-    }
-    node.addEventListener('pointermove', move)
-    node.addEventListener('pointerleave', reset)
-    media.addEventListener('change', reset)
-    return () => {
-      cancelAnimationFrame(frame)
-      node.removeEventListener('pointermove', move)
-      node.removeEventListener('pointerleave', reset)
-      media.removeEventListener('change', reset)
-    }
-  }, [])
-
   return (
-    <div className="telehealth-scene" ref={ref}>
+    <div className="telehealth-scene">
       <div className="scene-orbit scene-orbit--outer" aria-hidden="true" />
       <div className="scene-orbit scene-orbit--inner" aria-hidden="true" />
       <div className="scene-depth">

@@ -1,12 +1,9 @@
 /* Shared refinement layer: white porcelain, botanical green, restrained depth. */
-@font-face {
-  font-family: Manrope;
-  font-style: normal;
-  font-weight: 200 800;
-  font-display: swap;
-  src: url('/fonts/manrope-latin.woff2') format('woff2');
-}
 
+/* The Manrope @font-face used to be declared here as well as in the recovered
+   production stylesheet. Two identical rules meant two FontFace objects and two
+   requests for the same woff2 — the production build declares it once, in the
+   bundle, so the declaration here is gone. */
 :root {
   --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-sans);
@@ -71,7 +68,7 @@
 @keyframes caret-blink { to { opacity: 0; } }
 
 .telehealth-scene { width: 100%; height: 540px; position: relative; perspective: 1200px; isolation: isolate; }
-.scene-depth { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--scene-x, 0deg)) rotateY(var(--scene-y, 0deg)); transition: transform 500ms var(--ease-out); }
+.scene-depth { position: absolute; inset: 0; transform-style: preserve-3d; }
 .scene-orbit { position: absolute; border: 1px solid #dce7d8; border-radius: 50%; pointer-events: none; }
 .scene-orbit--outer { width: 100%; aspect-ratio: 1; top: 24px; right: -16px; background: #eaf1e3; }
 .scene-orbit--inner { width: 82%; aspect-ratio: 1; top: 64px; right: 24px; border-color: #cadac1; }
@@ -89,13 +86,12 @@
 .botanical-disc { position: absolute; left: 0; top: 112px; width: 40%; aspect-ratio: 1; background: white; border: 8px solid white; border-radius: 50%; transform: translateZ(48px) rotate(-12deg); box-shadow: 0 16px 24px -8px rgb(23 74 50 / .12); }
 .botanical-disc img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .botanical-disc span { position: absolute; bottom: 8px; left: 8px; right: 8px; text-align: center; font-size: .75rem; font-weight: 600; color: var(--forest); padding: 4px; border-radius: 999px; background: white; }
-.scene-card { position: absolute; width: 72%; left: 0; bottom: 32px; transform: translateZ(72px) rotate(-8deg); animation: card-arrive 1.1s var(--ease-out) both; }
+.scene-card { position: absolute; width: 72%; left: 0; bottom: 32px; perspective: 1200px; transform: translateZ(72px) rotate(-8deg); }
 .medical-card { width: 100%; height: auto; border-radius: 24px; box-shadow: 0 24px 40px -12px rgb(23 74 50 / .22); }
 .scene-assurance { position: absolute; bottom: 0; right: 0; display: flex; gap: 12px; align-items: center; padding: 12px 16px; border: 1px solid var(--line-soft); background: white; border-radius: 16px; box-shadow: var(--sh-2); transform: translateZ(90px); }
 .scene-assurance > span { display: grid; place-items: center; background: var(--sage); color: var(--forest); width: 32px; height: 32px; border-radius: 50%; }
 .scene-assurance strong, .scene-assurance small { display: block; font-size: .75rem; }
 .scene-assurance small { color: var(--muted); margin-top: 4px; }
-@keyframes card-arrive { from { opacity: 0; transform: translate3d(-16px, 32px, 0) rotate(-14deg); } to { opacity: 1; transform: translateZ(72px) rotate(-8deg); } }
 .preview__art { perspective: 1200px; overflow: visible; background: transparent; border: 0; }
 .preview__art .medical-card { transform: rotateY(-8deg) rotateZ(-3deg); transition: transform 700ms var(--ease-out), box-shadow 700ms var(--ease-out); }
 .preview__art:hover .medical-card { transform: rotateY(0) rotateZ(0) translateY(-8px); }
@@ -236,7 +232,6 @@
   .nav-sheet__link { animation: none; }
   .scene-depth, .preview__art .medical-card, .preview__art:hover .medical-card { transform: none; }
   .scene-depth, .preview__art .medical-card { transition: none; }
-  .scene-card { animation: none; }
   .word-reveal__word { color: var(--forest); opacity: 1; }
   /* Hover lift and image zoom are the largest remaining motion in this sheet. */
   .card, .spotlight-cell, .clinician, .quote, .path-card, .plan { transition: background-color 320ms var(--ease-out), border-color 320ms var(--ease-out); }
