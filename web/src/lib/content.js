@@ -43,6 +43,11 @@ export const footerNav = [
     links: [
       { label: 'About', to: '/about' },
       { label: 'Contact', to: '/contact' },
+      { label: 'Blog', to: '/blog' },
+      {
+        label: 'Pennsylvania guide',
+        to: '/blog/pennsylvania-medical-cannabis-card-caregiver-rules'
+      },
       { label: 'FAQ', to: '/faq' }
     ]
   },
@@ -76,7 +81,7 @@ export const hero = {
     'A short online intake, a real clinician, and a clear path to your medical card. No waiting rooms, no guesswork — just the next step, made obvious.',
   primaryCta: { label: 'Start your intake', to: '/patient' },
   secondaryCta: { label: 'See how it works', to: '/how-it-works' },
-  notes: ['No account needed', 'Licensed clinicians', 'Same-week appointments']
+  notes: ['2 minute questionnaire', 'Licensed clinicians', '10–15 minute evaluation process']
 }
 
 /* ---------- Journey ----------------------------------------- */
@@ -84,43 +89,44 @@ export const hero = {
 export const journey = [
   {
     step: '01',
-    icon: 'clipboard',
-    title: 'Tell us what brings you in',
+    icon: 'map',
+    title: 'Sign up and choose your state',
     body:
-      'A short, private questionnaire about your goals, history, medications and allergies. No account, no password, about six minutes.',
-    detail: 'Average completion: 6 minutes'
+      'Enter your contact details and choose your state. We check service availability and send you a secure patient link, so there is no password to remember.',
+    detail: 'A secure link keeps your care in one place'
   },
   {
     step: '02',
-    icon: 'map',
-    title: 'We check your state rules',
+    icon: 'clipboard',
+    title: 'Complete a short questionnaire',
     body:
-      'Medical card law differs in every state. MmjGreen checks your jurisdiction automatically and shows you only options that are actually available to you.',
-    detail: 'Rules verified against live jurisdiction data'
+      'Tell us about your medical history, current medications, allergies, and what brings you in. The questionnaire takes about 2 minutes.',
+    detail: 'About 2 minutes'
   },
   {
     step: '03',
-    icon: 'calendar',
-    title: 'Pick a time that works',
+    icon: 'video',
+    title: 'Talk with a doctor',
     body:
-      'Choose a live video or phone consultation from real clinician availability. You get a confirmation with everything you need to join.',
-    detail: 'Same-week slots, evenings included'
+      'A licensed clinician reviews your answers and calls you for the evaluation. Signup, questionnaire, and the doctor conversation typically take 10–15 minutes in total, or up to 30 minutes if you want an in-depth discussion. Where your state requires an in-person visit or other steps, those requirements still apply. State registration and card issuance are separate.',
+    detail: '10–15 minutes total; up to 30 minutes for an in-depth conversation'
   },
   {
     step: '04',
-    icon: 'video',
-    title: 'Meet your clinician',
+    icon: 'card',
+    title: 'Apply for a plastic card or use a digital version',
     body:
-      'A licensed clinician reviews your intake, asks follow-up questions, and completes your evaluation. Bring your photo ID and any records you have.',
-    detail: 'Video or phone — your choice'
+      'If certified, follow your state’s registration requirements. Apply for a physical (plastic) card where available, or use a state-approved digital card or certification where accepted. State fees, processing times, and available formats vary.',
+    detail: 'Card formats and state requirements vary by location'
   },
   {
     step: '05',
-    icon: 'card',
-    title: 'Your card, tracked to the finish',
+    icon: 'map',
+    title: 'Know your state’s next step',
     body:
-      'If approved, we submit to your state registry and keep you updated at every stage until your card is issued.',
-    detail: 'We track your application to issuance'
+      'Before your first purchase, check accepted documents and state fees. California allows adult medicinal purchases with a valid physician recommendation, subject to verification. Pennsylvania requires an active state card and a $50 annual state payment unless waived. Compare all states below.',
+    detail: 'Evaluation fees and state program fees are separate',
+    reference: { to: '/#state-reference', label: 'All-state fees and access guide' }
   }
 ]
 
@@ -137,7 +143,7 @@ export const storySteps = [
     num: '02',
     title: 'A real clinician, on a real schedule',
     body:
-      'Every evaluation is performed by a licensed practitioner with an active credential in your state. You see who you are booking with, their background, and the times they are genuinely available.'
+      'Every evaluation is performed by a licensed practitioner in your state. Your treating clinician introduces themselves during your private care interaction; public doctor profiles are not displayed.'
   },
   {
     num: '03',
@@ -158,7 +164,7 @@ export const storySteps = [
 export const trustMarks = [
   { icon: 'shield', label: 'HIPAA-aligned handling' },
   { icon: 'badge', label: 'State-licensed clinicians' },
-  { icon: 'clock', label: 'Same-week appointments' },
+  { icon: 'clock', label: '10–15 minute evaluation process' },
   { icon: 'lock', label: '256-bit encrypted records' },
   { icon: 'chat', label: 'No patient data sold' }
 ]
@@ -169,7 +175,7 @@ export const stats = [
   { value: 12400, suffix: '+', label: 'Evaluations completed' },
   { value: 14, suffix: '', label: 'States served' },
   { value: 4.9, suffix: '/5', label: 'Average patient rating', decimals: 1 },
-  { value: 2.4, suffix: ' days', label: 'Median time to decision', decimals: 1 }
+  { value: 15, suffix: ' min', label: 'Typical evaluation process: 10–15 minutes' }
 ]
 
 /* ---------- Conditions -------------------------------------- */
@@ -341,13 +347,6 @@ export const testimonials = [
   },
   {
     quote:
-      'Dr. Osei was genuinely thorough. She asked about my history in a way no other provider had. I never felt rushed into an answer.',
-    name: 'Alicia N.',
-    location: 'Phoenix, AZ',
-    rating: 5
-  },
-  {
-    quote:
       'I was nervous about the video call and the tech just worked. Booking, reminders, joining — all of it. I have recommended MmjGreen to two friends since.',
     name: 'Jordan K.',
     location: 'Reno, NV',
@@ -405,7 +404,7 @@ export const pillars = [
     icon: 'badge',
     title: 'Credentialed where you live',
     body:
-      'Each clinician is licensed in the states they evaluate in. We publish who they are and what they treat.'
+      'Each clinician is licensed in the states they evaluate in. We explain our clinical standards without displaying individual doctor profiles.'
   },
   {
     icon: 'clock',
@@ -838,9 +837,9 @@ export const patientPaths = [
     key: 'new',
     eyebrow: 'First-time patient',
     title: 'Starting a new application?',
-    body: 'Begin with your state, have your identification and medical history ready, and follow the instructions shown before your evaluation. Most intakes take about six minutes.',
+    body: 'Sign up with your state and contact details, have your identification ready, and complete the questionnaire in about 2 minutes before the doctor call.',
     action: 'Start a new application',
-    to: '/care'
+    to: '/patient'
   },
   {
     key: 'renew',
@@ -848,7 +847,7 @@ export const patientPaths = [
     title: 'Need to renew?',
     body: 'Renewal windows and registration steps change from year to year. Keep your current card nearby and check today’s requirements rather than assuming last year’s process still holds.',
     action: 'Check renewal availability',
-    to: '/care'
+    to: '/patient'
   }
 ]
 

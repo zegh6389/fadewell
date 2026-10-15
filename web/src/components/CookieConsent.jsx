@@ -30,6 +30,19 @@ export function openCookieSettings() {
   window.dispatchEvent(new Event(OPEN_EVENT))
 }
 
+/**
+ * The reopen trigger. Rendered in the footer beside the legal links so the
+ * choice is revisitable after it has been made — a banner-only control would
+ * make the preference write-once.
+ */
+export function CookieSettingsLink() {
+  return (
+    <button type="button" className="cookie-settings-link" onClick={openCookieSettings}>
+      Cookie settings
+    </button>
+  )
+}
+
 export default function CookieConsent() {
   const [stored, setStored] = useState(read)
   const [optional, setOptional] = useState(stored?.optional ?? false)

@@ -3243,6 +3243,15 @@ export const stateReferenceRows = [...stateGuides]
   .sort((a, b) => a.state.localeCompare(b.state))
   .map((g) => ({
     ...g,
+    category: 'State guides',
     fee: stateFees[g.code] || FEE_FALLBACK[g.status] || FEE_DEFAULT,
     nextStep: stateNotes[g.code] || STEP_FALLBACK[g.status] || STEP_DEFAULT
   }))
+
+/**
+ * The Pennsylvania guide, for the home page feature card.
+ *
+ * Pennsylvania is the state readers ask about most, so production led the
+ * resource grid with it ahead of the three long-form articles.
+ */
+export const pennsylvaniaGuide = stateReferenceRows.find((g) => g.code === 'PA') || null

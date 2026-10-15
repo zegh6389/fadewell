@@ -46,7 +46,6 @@ export function TelehealthScene() {
     <div className="telehealth-scene" ref={ref}>
       <div className="scene-orbit scene-orbit--outer" aria-hidden="true" />
       <div className="scene-orbit scene-orbit--inner" aria-hidden="true" />
-      <span className="scene-caption">A little more human. A lot more clear.</span>
       <div className="scene-depth">
         <div className="botanical-disc">
           <img src="/assets/botanical-bud.webp" alt="Close-up of a medical cannabis flower" width="1000" height="667" decoding="async" />

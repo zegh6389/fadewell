@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { BrandMark, IconArrow } from './Icons.jsx'
 import { primaryNav, footerNav, brand } from '../lib/content.js'
+import { CookieSettingsLink } from './CookieConsent.jsx'
 import { useSticky, useMagnetic, useScrollProgress } from '../lib/motion.js'
 
 /* ---------- Ambient field ------------------------------------ */
@@ -189,6 +190,7 @@ export function Footer() {
             <Link to="/telehealth-consent">Telehealth consent</Link>
             <Link to="/privacy-policy">Privacy</Link>
             <Link to="/accessibility">Accessibility</Link>
+            <CookieSettingsLink />
           </div>
         </div>
 
