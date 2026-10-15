@@ -7,14 +7,16 @@ import { SampleCard } from '../../components/PremiumHero.jsx'
 /**
  * Frontend-only intake preview.
  *
- * The intake questionnaire with every network call removed. It exists so the
- * public deployment can show the real flow without implying it can accept
- * anything: there is no session, no save, and no submit. The banner says so
- * in those words and the completion screen repeats it for screen readers.
+ * The full intake questionnaire with every network call removed. It exists so
+ * the public deployment can show the real flow without implying it can accept
+ * anything: there is no session, no save, and no submit. The banner says so in
+ * those words and the completion screen repeats it for screen readers.
  *
- * Markup mirrors the production build so `recovered.css` styles it exactly:
- * `.intake-card` is the tilted sample card in the companion column, not a
- * form container.
+ * Structure is a transcription of the production build, not a paraphrase. All
+ * five fieldsets stay in the DOM and the inactive ones carry `hidden`, which
+ * is how the original did it — so the cascade in `recovered.css` applies
+ * unchanged. `.intake-card` is the tilted sample card in the companion column,
+ * not a form container.
  */
 
 const STEPS = [
@@ -25,26 +27,24 @@ const STEPS = [
   ['Review', 'Your next chapter starts here.', 'Check your details and choose how we can keep you updated.']
 ]
 
+/** Fieldset legends differ from the progress labels, exactly as production had them. */
+const LEGENDS = ['About you', 'Where you are', 'Your evaluation', 'Your identity', 'Review and permissions']
+
+const REASON_OPTIONS = ['First medical card evaluation', 'Renew my current certification']
+
 const QUESTIONS = [
-  { id: 'goals', label: 'What would you like to discuss with your clinician?' },
-  { id: 'history', label: 'What medical history should your clinician know about?' },
-  { id: 'medications', label: 'Which medications or supplements do you currently take?' },
-  { id: 'allergies', label: 'Do you have any known allergies?' }
+  { id: 'goals', label: 'What would you like to discuss with your clinician?', options: ['Discuss symptom management', 'Discuss a renewal', 'Understand benefits and risks'] },
+  { id: 'history', label: 'What medical history should your clinician know about?', options: ['No medical history to report'] },
+  { id: 'medications', label: 'Which medications or supplements do you currently take?', options: ['None'] },
+  { id: 'allergies', label: 'Do you have any known allergies?', options: ['No known allergies'] }
 ]
 
-const SUGGESTIONS = {
-  goals: ['Discuss symptom management', 'Discuss a renewal', 'Understand benefits and risks'],
-  history: ['No medical history to report'],
-  medications: ['None'],
-  allergies: ['No known allergies']
-}
-
 const JURISDICTIONS = [
-  ['CA', 'California'],
-  ['CO', 'Colorado'],
-  ['FL', 'Florida'],
-  ['NY', 'New York']
-].map(([code, name]) => ({ code, name, allowedVisitTypes: ['VIDEO', 'PHONE'] }))
+  { code: 'CA', name: 'California' },
+  { code: 'CO', name: 'Colorado' },
+  { code: 'FL', name: 'Florida' },
+  { code: 'NY', name: 'New York' }
+]
 
 const MODES = [
   { value: 'VIDEO', label: 'Video call', note: 'Face to face, from wherever you are' },
@@ -58,6 +58,8 @@ const ID_TYPES = [
   ['STATE_ID', 'State ID']
 ]
 
+const MAX_ANSWER = 4000
+
 const emptyForm = () => ({
   firstName: '',
   lastName: '',
@@ -67,10 +69,20 @@ const emptyForm = () => ({
   mode: '',
   idType: '',
   ageVerified: '',
+  reason: '',
   answers: Object.fromEntries(QUESTIONS.map((q) => [q.id, ''])),
   emailConsent: false,
   smsConsent: false
 })
+
+/** Mirrors the production normaliser: NANP becomes +1XXXXXXXXXX. */
+function normalisePhone(raw) {
+  const digits = String(raw ?? '').trim().replace(/[\s().-]/g, '')
+  if (/^\+[1-9]\d{7,14}$/.test(digits)) return digits
+  const np = /^1([2-9]\d{2}[2-9]\d{6})$/.exec(digits)
+  if (np) return `+1${np[1]}`
+  return /^[2-9]\d{2}[2-9]\d{6}$/.test(digits) ? `+1${digits}` : ''
+}
 
 function Companion() {
   return (
@@ -109,7 +121,7 @@ function Companion() {
         </div>
 
         <div className="intake-card">
-          <SampleCard eager />
+          <SampleCard />
         </div>
       </div>
 
@@ -126,6 +138,63 @@ function Companion() {
         independent decision.
       </p>
     </aside>
+  )
+}
+
+/**
+ * One health question: suggested chips plus a free-text escape hatch. The chip
+ * and the textarea share one answer — typing over a chip clears it, which is
+ * why the chip reads as unchecked once you write your own.
+ */
+function Quiz({ name, label, options, value, onChange, index }) {
+  const heading = index === undefined ? label : `${String(index + 1).padStart(2, '0')} · ${label}`
+  const chipMatches = options.some((option) => option === value)
+  const text = chipMatches ? '' : value
+  const fieldId = `intake-${name}`
+
+  return (
+    <div className="quiz">
+      <p className="field__label" id={`${fieldId}-label`}>
+        {heading}
+      </p>
+      <p className="field__hint" id={`${fieldId}-hint`}>
+        Tap an answer if one of these fits, or write your own below. You can change it later.
+      </p>
+      <div className="quiz__options" role="radiogroup" aria-labelledby={`${fieldId}-label`}>
+        {options.map((option) => (
+          <label key={option} className="quiz__chip">
+            <input
+              type="radio"
+              name={name}
+              value={option}
+              checked={value === option}
+              onChange={() => onChange(option)}
+            />
+            <span>{option}</span>
+            <span className="quiz__mark" aria-hidden="true">
+              ↗
+            </span>
+          </label>
+        ))}
+      </div>
+      <div className="quiz__custom">
+        <label className="sr-only" htmlFor={`${fieldId}-custom`}>
+          {heading} — your own answer
+        </label>
+        <textarea
+          id={`${fieldId}-custom`}
+          className="field__control field__control--area"
+          rows={3}
+          maxLength={MAX_ANSWER}
+          value={text}
+          placeholder="Or write your own…"
+          onChange={(event) => onChange(event.target.value)}
+        />
+        <p className="field__hint">
+          {text.length.toLocaleString('en-US')} / {MAX_ANSWER.toLocaleString('en-US')} characters
+        </p>
+      </div>
+    </div>
   )
 }
 
@@ -162,13 +231,44 @@ export default function PatientIntakePreview() {
   const [title, heading, note] = STEPS[step]
   const isLast = step === STEPS.length - 1
 
-  const stepValid = useMemo(() => {
-    if (step === 0) return Boolean(form.firstName && form.lastName && form.email && form.phone)
-    if (step === 1) return Boolean(form.state && form.mode)
-    if (step === 2) return QUESTIONS.every((q) => String(form.answers[q.id] ?? '').trim())
-    if (step === 3) return Boolean(form.ageVerified)
-    return true
-  }, [step, form])
+  const healthAnswered = QUESTIONS.filter((q) => String(form.answers[q.id] ?? '').trim()).length
+
+  const reviewRows = useMemo(
+    () => [
+      {
+        label: 'Your details',
+        value: `${form.firstName} ${form.lastName}`.trim() || ' ',
+        meta: `${form.email} · ${normalisePhone(form.phone)}`,
+        aria: 'Edit your details',
+        step: 0
+      },
+      {
+        label: 'Your visit',
+        value: JURISDICTIONS.find((j) => j.code === form.state)?.name || 'No state selected',
+        meta: MODES.find((m) => m.value === form.mode)?.label || 'No format selected',
+        aria: 'Edit your visit',
+        step: 1
+      },
+      {
+        label: 'Your health',
+        value: form.reason.trim() || 'No reason provided',
+        meta: `${healthAnswered} health answers completed`,
+        aria: 'Edit your health',
+        step: 2
+      },
+      {
+        label: 'Your identity',
+        value:
+          form.ageVerified === 'Yes'
+            ? 'Age 21 or older confirmed'
+            : 'Age requires clinician review',
+        meta: 'ID photo required before submission.',
+        aria: 'Edit your identity',
+        step: 3
+      }
+    ],
+    [form, healthAnswered]
+  )
 
   if (done) return <PreviewComplete />
 
@@ -186,14 +286,16 @@ export default function PatientIntakePreview() {
       <div className="intake-layout">
         <Companion />
 
-        <section className="intake-questionnaire" aria-labelledby="intake-step-title">
+        {/* `intake-questionnaire` is load-bearing: it is the ancestor selector
+            for the dark green primary button and the form field overrides. */}
+        <div className="care__stack intake-questionnaire">
           <div className="intake-progress">
-            <p className="intake-progress__caption">
+            <div className="intake-progress__caption">
               <span>YOUR PERSONAL INTAKE</span>
               <span>
                 Step {step + 1} of {STEPS.length}
               </span>
-            </p>
+            </div>
             <div
               className="intake-progress__track"
               role="progressbar"
@@ -234,176 +336,193 @@ export default function PatientIntakePreview() {
           </div>
 
           <form
+            className="care__form"
             onSubmit={(event) => {
               event.preventDefault()
               if (isLast) setDone(true)
               else setStep((s) => s + 1)
             }}
           >
-            {step === 0 ? (
-              <fieldset className="care__group">
-                <legend className="sr-only">About you</legend>
-                <p className="float-card__meta">Complete each step, then send it to your care team.</p>
-                <div className="care__row">
-                  <label className="field">
-                    <span className="field__label">First name</span>
-                    <input className="field__control" autoComplete="given-name" maxLength={100} value={form.firstName} onChange={(e) => set('firstName', e.target.value)} />
-                  </label>
-                  <label className="field">
-                    <span className="field__label">Last name</span>
-                    <input className="field__control" autoComplete="family-name" maxLength={100} value={form.lastName} onChange={(e) => set('lastName', e.target.value)} />
-                  </label>
-                </div>
-                <div className="care__row">
-                  <label className="field">
-                    <span className="field__label">Email</span>
-                    <input className="field__control" type="email" autoComplete="email" maxLength={254} value={form.email} onChange={(e) => set('email', e.target.value)} />
-                  </label>
-                  <label className="field">
-                    <span className="field__label">Phone number</span>
-                    <input className="field__control" type="tel" autoComplete="tel" placeholder="303 555 0142" maxLength={50} value={form.phone} onChange={(e) => set('phone', e.target.value)} />
-                  </label>
-                </div>
-              </fieldset>
-            ) : null}
+            <fieldset className="care__group" hidden={step !== 0}>
+              <legend className="care__legend">
+                <span className="care__legend-num">01</span> {LEGENDS[0]}
+              </legend>
 
-            {step === 1 ? (
-              <fieldset className="care__group">
-                <legend className="sr-only">Your visit</legend>
+              <div className="care__row">
                 <label className="field">
-                  <span className="field__label">State or territory</span>
-                  <select className="field__control" value={form.state} onChange={(e) => set('state', e.target.value)}>
-                    <option value="">Select your state…</option>
-                    {JURISDICTIONS.map((j) => (
-                      <option key={j.code} value={j.code}>{j.name}</option>
-                    ))}
-                  </select>
+                  <span className="field__label">First name</span>
+                  <input className="field__control" autoComplete="given-name" maxLength={100} value={form.firstName} onChange={(e) => set('firstName', e.target.value)} />
                 </label>
                 <label className="field">
-                  <span className="field__label">How would you like to meet?</span>
-                  <div className="care__choices">
-                    {MODES.map((mode) => (
-                      <label key={mode.value} className={`choice${form.mode === mode.value ? ' is-selected' : ''}`}>
-                        <input type="radio" name="mode" checked={form.mode === mode.value} onChange={() => set('mode', mode.value)} />
-                        <span className="choice__title">{mode.label}</span>
-                        <span className="choice__note">{mode.note}</span>
-                      </label>
-                    ))}
-                  </div>
+                  <span className="field__label">Last name</span>
+                  <input className="field__control" autoComplete="family-name" maxLength={100} value={form.lastName} onChange={(e) => set('lastName', e.target.value)} />
                 </label>
-              </fieldset>
-            ) : null}
+              </div>
 
-            {step === 2 ? (
-              <fieldset className="care__group">
-                <legend className="sr-only">Your health</legend>
-                {QUESTIONS.map((question, index) => (
-                  <div className="intake-q" key={question.id}>
-                    <span className="field__label">
-                      {String(index + 1).padStart(2, '0')} · {question.label}
-                    </span>
-                    <textarea
-                      className="field__control field__control--area"
-                      rows={3}
-                      value={form.answers[question.id] ?? ''}
-                      onChange={(e) => setAnswer(question.id, e.target.value)}
-                    />
-                    <div className="intake-q__chips">
-                      {(SUGGESTIONS[question.id] ?? []).map((suggestion) => (
-                        <button key={suggestion} type="button" className="intake-chip" onClick={() => setAnswer(question.id, suggestion)}>
-                          {suggestion}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </fieldset>
-            ) : null}
+              <div className="care__row">
+                <label className="field">
+                  <span className="field__label">Email</span>
+                  <input className="field__control" type="email" autoComplete="email" maxLength={254} value={form.email} onChange={(e) => set('email', e.target.value)} />
+                </label>
+                <label className="field">
+                  <span className="field__label">Phone number</span>
+                  <input className="field__control" type="tel" autoComplete="tel" placeholder="303 555 0142" maxLength={50} value={form.phone} onChange={(e) => set('phone', e.target.value)} />
+                </label>
+              </div>
+            </fieldset>
 
-            {step === 3 ? (
-              <fieldset className="care__group">
-                <legend className="sr-only">Your identity</legend>
-                <div className="care__verify">
-                  <span className="field__label">Age confirmation</span>
-                  <div className="care__choices">
-                    {['Yes', 'No'].map((option) => (
-                      <label key={option} className={`choice choice--inline${form.ageVerified === option ? ' is-selected' : ''}`}>
-                        <input type="radio" name="age" checked={form.ageVerified === option} onChange={() => set('ageVerified', option)} />
-                        <span className="choice__title">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                  <p className="float-card__meta">
-                    You must be 21 or older to hold a medical card in the states we serve. Answer honestly —
-                    if you are not, we will point you to the right process instead of wasting your time.
-                  </p>
-                </div>
+            <fieldset className="care__group" hidden={step !== 1}>
+              <legend className="care__legend">
+                <span className="care__legend-num">02</span> {LEGENDS[1]}
+              </legend>
 
-                <div className="care__verify">
-                  <span className="field__label">Photo identification</span>
-                  <p className="field__hint">
-                    Optional in frontend preview. Photos stay in this browser and are not uploaded.
-                  </p>
-                  <div className="care__choices">
-                    {ID_TYPES.map(([value, label]) => (
-                      <label key={value} className={`choice choice--inline${form.idType === value ? ' is-selected' : ''}`}>
-                        <input type="radio" name="id_type" checked={form.idType === value} onChange={() => set('idType', value)} />
-                        <span className="choice__title">{label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </fieldset>
-            ) : null}
+              <label className="field">
+                <span className="field__label">State or territory</span>
+                <select className="field__control" value={form.state} onChange={(e) => set('state', e.target.value)}>
+                  <option value="">Select your state…</option>
+                  {JURISDICTIONS.map((j) => (
+                    <option key={j.code} value={j.code}>
+                      {j.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-            {step === 4 ? (
-              <fieldset className="care__group">
-                <legend className="sr-only">Review</legend>
-                <div className="intake-review">
-                  {[
-                    ['First name', form.firstName || '—'],
-                    ['Last name', form.lastName || '—'],
-                    ['Email', form.email || '—'],
-                    ['Phone', form.phone || '—'],
-                    ['State', JURISDICTIONS.find((j) => j.code === form.state)?.name || '—'],
-                    ['Consultation format', MODES.find((m) => m.value === form.mode)?.label || '—'],
-                    ['Photo identification', ID_TYPES.find(([v]) => v === form.idType)?.[1] || 'Not provided']
-                  ].map(([label, value]) => (
-                    <div className="intake-review__row" key={label}>
-                      <dt>{label}</dt>
-                      <dd>{value}</dd>
-                    </div>
+              <label className="field">
+                <span className="field__label">How would you like to meet?</span>
+                <div className="care__choices">
+                  {MODES.map((mode) => (
+                    <label key={mode.value} className={`choice${form.mode === mode.value ? ' is-selected' : ''}`}>
+                      <input type="radio" name="mode" checked={form.mode === mode.value} onChange={() => set('mode', mode.value)} />
+                      <span className="choice__title">{mode.label}</span>
+                      <span className="choice__note">{mode.note}</span>
+                    </label>
                   ))}
                 </div>
+              </label>
+            </fieldset>
 
-                {QUESTIONS.map((question) => (
-                  <div className="intake-review__answer" key={question.id}>
-                    <span className="field__label">{question.label}</span>
-                    <p>{form.answers[question.id]}</p>
+            <fieldset className="care__group" hidden={step !== 2}>
+              <legend className="care__legend">
+                <span className="care__legend-num">03</span> {LEGENDS[2]}
+              </legend>
+
+              <Quiz name="reason" label="What brings you in?" options={REASON_OPTIONS} value={form.reason} onChange={(v) => set('reason', v)} />
+              {QUESTIONS.map((question, i) => (
+                <Quiz
+                  key={question.id}
+                  name={question.id}
+                  index={i}
+                  label={question.label}
+                  options={question.options}
+                  value={form.answers[question.id]}
+                  onChange={(v) => setAnswer(question.id, v)}
+                />
+              ))}
+            </fieldset>
+
+            <fieldset className="care__group" hidden={step !== 3}>
+              <legend className="care__legend">
+                <span className="care__legend-num">04</span> {LEGENDS[3]}
+              </legend>
+
+              <div className="care__verify">
+                <Quiz
+                  name="ageVerified"
+                  label="Age confirmation"
+                  options={['Yes', 'No']}
+                  value={form.ageVerified}
+                  onChange={(v) => set('ageVerified', v)}
+                />
+                <p className="float-card__meta">
+                  You must be 21 or older to hold a medical card in the states we serve. Answer honestly —
+                  if you are not, we will point you to the right process instead of wasting your time.
+                </p>
+              </div>
+
+              <div className="care__verify">
+                <span className="field__label">Photo identification</span>
+                <p className="field__hint">
+                  Optional in frontend preview. Photos stay in this browser and are not uploaded.
+                </p>
+                <div className="care__choices">
+                  {ID_TYPES.map(([value, label]) => (
+                    <label key={value} className={`choice choice--inline${form.idType === value ? ' is-selected' : ''}`}>
+                      <input type="radio" name="idType" checked={form.idType === value} onChange={() => set('idType', value)} />
+                      <span className="choice__title">{label}</span>
+                    </label>
+                  ))}
+                </div>
+                <div className="idc">
+                  <div className="quiz__options">
+                    <button type="button" className="quiz__chip" disabled>
+                      <span>Upload photo</span>
+                      <span className="quiz__mark" aria-hidden="true">
+                        ↗
+                      </span>
+                    </button>
+                    <button type="button" className="quiz__chip" disabled>
+                      <span>Use camera</span>
+                      <span className="quiz__mark" aria-hidden="true">
+                        ↗
+                      </span>
+                    </button>
+                  </div>
+                  <input type="file" accept="image/jpeg,image/png" hidden readOnly aria-label="Upload a photo of your ID" tabIndex={-1} />
+                  <p className="field__hint">Choose your ID type first.</p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset className="care__group" hidden={step !== 4}>
+              <legend className="care__legend">
+                <span className="care__legend-num">05</span> {LEGENDS[4]}
+              </legend>
+
+              <div className="intake-review">
+                {reviewRows.map((row) => (
+                  <div className="intake-review__row" key={row.label}>
+                    <div>
+                      <span>{row.label}</span>
+                      <strong>{row.value}</strong>
+                      <p>{row.meta}</p>
+                    </div>
+                    <button type="button" aria-label={row.aria} onClick={() => setStep(row.step)}>
+                      Edit{' '}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" />
+                      </svg>
+                    </button>
                   </div>
                 ))}
+              </div>
 
-                <label className="check">
-                  <input type="checkbox" checked={form.emailConsent} onChange={(e) => set('emailConsent', e.target.checked)} />
-                  <span>
-                    <strong>Email me about my care.</strong> Appointment confirmations, requests for missing
-                    information, and application updates.
-                  </span>
-                </label>
-                <label className="check">
-                  <input type="checkbox" checked={form.smsConsent} onChange={(e) => set('smsConsent', e.target.checked)} />
-                  <span>
-                    <strong>Text me about my care.</strong> Reminders and short status updates. Message rates
-                    may apply.
-                  </span>
-                </label>
-              </fieldset>
-            ) : null}
+              <p className="float-card__meta">
+                These are separate from your consent to treatment. You can change your mind about either one
+                at any time, and declining will not affect your care.
+              </p>
 
-            <div className="care__actions intake-footer">
+              <label className="check">
+                <input type="checkbox" name="emailConsent" checked={form.emailConsent} onChange={(e) => set('emailConsent', e.target.checked)} />
+                <span>
+                  <strong>Email me about my care.</strong> Appointment confirmations, requests for missing
+                  information, and application updates.
+                </span>
+              </label>
+
+              <label className="check">
+                <input type="checkbox" name="smsConsent" checked={form.smsConsent} onChange={(e) => set('smsConsent', e.target.checked)} />
+                <span>
+                  <strong>Text me about my care.</strong> Reminders and short status updates. Message rates
+                  may apply.
+                </span>
+              </label>
+            </fieldset>
+
+            <div className="care__actions">
               <div className="intake-actions__secondary">
                 {step > 0 ? (
-                  <button type="button" className="btn btn--ghost" onClick={() => setStep((s) => s - 1)}>
+                  <button type="button" className="intake-save" onClick={() => setStep((s) => s - 1)}>
                     Back
                   </button>
                 ) : null}
@@ -411,7 +530,7 @@ export default function PatientIntakePreview() {
                   Keep for this preview
                 </button>
               </div>
-              <button type="submit" className="btn btn--primary" disabled={!isLast && !stepValid}>
+              <button type="submit" className="btn btn--primary">
                 {isLast ? 'Finish preview' : 'Continue'}
                 <IconArrow size={16} />
               </button>
@@ -419,11 +538,11 @@ export default function PatientIntakePreview() {
 
             <p className="care__fineprint">
               <IconShield size={14} /> Answers are encrypted at rest and are never sold or used for
-              advertising. Read our <a href="/privacy-policy">privacy policy</a> and{' '}
-              <a href="/telehealth-consent">telehealth consent</a>.
+              advertising. Read our <Link to="/privacy-policy">privacy policy</Link> and{' '}
+              <Link to="/telehealth-consent">telehealth consent</Link>.
             </p>
           </form>
-        </section>
+        </div>
       </div>
     </div>
   )

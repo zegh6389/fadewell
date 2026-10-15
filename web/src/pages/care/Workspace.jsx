@@ -16,25 +16,35 @@ import { BrandMark, IconArrow, IconCheck, IconShield } from '../../components/Ic
 
 export function CareShell({ area, session, onSignOut, children }) {
   const meta = careAreas.find((a) => a.key === area)
+  // The patient surface is the only one styled by `.care.intake-experience`,
+  // which is where `--intake-green` is declared. Without it the primary button
+  // resolves to an undefined variable and renders with no background at all.
+  const isIntake = area === 'patient'
   return (
-    <div className="care">
+    <div className={`care${isIntake ? ' intake-experience' : ''}`}>
       {/* React 19 hoists this into <head>. Paired with the service's
           X-Robots-Tag header so the surface stays unindexed even if the
           bundle is served without the API in front of it. */}
       <meta name="robots" content="noindex, nofollow, noarchive" />
+      <title>{isIntake ? 'Patient intake | MmjGreen' : `${meta?.label ?? 'Care'} | MmjGreen`}</title>
+      {isIntake ? <a className="skip-link" href="#care-content">Skip to questionnaire</a> : null}
       <header className="care__bar">
         <Link to="/" className="brand" aria-label={`${brand.name} home`}>
           <BrandMark className="brand__mark" size={26} />
           <span>{brand.name}</span>
         </Link>
         <div className="care__bar-mid">
-          <span className="tag tag--forest">{meta?.label ?? 'Workspace'}</span>
+          {isIntake ? null : (
+            <span className="tag tag--forest">{meta?.label ?? 'Workspace'}</span>
+          )}
           {session ? <span className="care__who">{session.role.toLowerCase()}</span> : null}
         </div>
         <div className="care__bar-actions">
-          <Link to="/" className="btn btn--quiet btn--sm">
-            Site
-          </Link>
+          {isIntake ? null : (
+            <Link to="/" className="btn btn--quiet btn--sm">
+              Site
+            </Link>
+          )}
           {session ? (
             <button type="button" className="btn btn--ghost btn--sm" onClick={onSignOut}>
               Sign out
@@ -42,7 +52,9 @@ export function CareShell({ area, session, onSignOut, children }) {
           ) : null}
         </div>
       </header>
-      <main className="care__main">{children}</main>
+      <main className="care__main" id="care-content">
+        {children}
+      </main>
     </div>
   )
 }

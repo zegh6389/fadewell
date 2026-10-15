@@ -8,7 +8,29 @@ export const RESOURCE_IMAGES = {
 }
 
 export function SampleCard({ eager = false }) {
-  return <img className="medical-card" src="/assets/card-premium.webp" alt="Demo medical cannabis card for Avery Morgan, with sample portrait, patient ID, birth date, issue date, expiry date and state. Not a real credential." width="1000" height="630" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  return (
+    <div className="medical-card-stage">
+      <div className="medical-card medical-card--flip">
+        <img
+          className="medical-card__face"
+          src="/assets/card-premium.webp"
+          alt="Demo medical cannabis card for Avery Morgan, with sample portrait, patient ID, birth date, issue date, expiry date and state. Not a real credential."
+          width="1000"
+          height="630"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+        <img
+          className="medical-card__face medical-card__face--back"
+          src="/assets/card-premium-back.svg"
+          alt="MmjGreen sample card back with cannabis safety notes, state requirements reminder, and decorative barcode. Demo only, not a valid credential."
+          width="1000"
+          height="630"
+          decoding="async"
+        />
+      </div>
+    </div>
+  )
 }
 
 export function TelehealthScene() {
