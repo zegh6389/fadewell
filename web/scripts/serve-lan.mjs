@@ -1,5 +1,5 @@
 /**
- * Serve MmjGreen on the local network, so a phone or another laptop can open it.
+ * Serve MyFloraMD on the local network, so a phone or another laptop can open it.
  *
  * Two processes, deliberately split:
  *

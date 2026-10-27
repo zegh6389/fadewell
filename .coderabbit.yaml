@@ -44,7 +44,7 @@ reviews:
       instructions: "Dependency additions, removals, or major version bumps."
 
   instructions: |
-    MmjGreen is a guided medical-card evaluation and telehealth application.
+    MyFloraMD is a guided medical-card evaluation and telehealth application.
     `api/` is Fastify 5 + TypeScript on Node 24 (argon2, otplib TOTP, pg, zod,
     nodemailer, Telnyx). `web/` is React 19 + Vite 7 + react-router 7 with
     Playwright and axe-core for tests.

@@ -87,11 +87,11 @@ Browser video runs on Telnyx Video Rooms (`TELNYX_API_KEY`, ~$0.002/participant/
 
 ## Mail
 
-Send-as `no-reply@mmjgreen.com` and reply-to `care@mmjgreen.com`. SMTP
+Send-as `no-reply@myfloramd.com` and reply-to `care@myfloramd.com`. SMTP
 credentials must be set on Heroku locally:
 
 ```powershell
-heroku config:set EMAIL_FROM="no-reply@mmjgreen.com" EMAIL_REPLY_TO="care@mmjgreen.com" SMTP_HOST="mail.privateemail.com" SMTP_PORT=465 SMTP_USER="no-reply@mmjgreen.com" --app mmjgreen-api
+heroku config:set EMAIL_FROM="no-reply@myfloramd.com" EMAIL_REPLY_TO="care@myfloramd.com" SMTP_HOST="mail.privateemail.com" SMTP_PORT=465 SMTP_USER="no-reply@myfloramd.com" --app mmjgreen-api
 heroku config:set SMTP_PASSWORD="<paste dashboard password locally>" --app mmjgreen-api
 heroku config:set NOTIFICATIONS_ENABLED=true --app mmjgreen-api
 ```

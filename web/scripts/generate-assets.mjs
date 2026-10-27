@@ -1,5 +1,5 @@
 /**
- * MmjGreen — brand asset generator.
+ * MyFloraMD — brand asset generator.
  *
  * Renders every brand image from SVG source so the output is deterministic and
  * reproducible. Three deliberate decisions:
@@ -77,7 +77,7 @@ function flatGround({ width, height, seed, paper, band, disc, rings }) {
     ${rule(Math.round(r * 0.72), 0.34)}`
 }
 
-/** The MmjGreen mark at an arbitrary scale — a rising curve over a flat rule. */
+/** The MyFloraMD mark at an arbitrary scale — a rising curve over a flat rule. */
 function mark(cx, cy, size, ink = LIME, opacity = 1) {
   const s = size / 32
   return `<g transform="translate(${cx - size / 2} ${cy - size / 2}) scale(${s})" opacity="${opacity}">
@@ -137,7 +137,7 @@ function clinicianSvg(initials, seed, palette) {
           letter-spacing="-4" fill="${IVORY}">${initials}</text>
     <text x="${w / 2}" y="${h * 0.4 + 84}" text-anchor="middle"
           font-family="JetBrains Mono, Consolas, monospace" font-size="19" letter-spacing="4"
-          fill="${LIME}">MMJGREEN CLINICIAN</text>
+          fill="${LIME}">MYFLORAMD CLINICIAN</text>
     <rect x="0" y="${h - 10}" width="${w}" height="10" fill="${LIME_DEEP}"/>
     ${grain(w, h, 0.03)}`
   )
@@ -194,7 +194,7 @@ function coverSvg({ width, height, title, subtitle, palette }) {
     <rect x="${left + Math.round(width * 0.11)}" y="${Math.round(height * 0.78)}" width="${Math.round(width * 0.06)}" height="6" rx="3" fill="${LIME_DEEP}"/>
     <text x="${left}" y="${Math.round(height * 0.88)}"
           font-family="JetBrains Mono, Consolas, monospace" font-size="${Math.round(width * 0.014)}"
-          letter-spacing="6" fill="${MOSS}">MMJGREEN.COM</text>
+          letter-spacing="6" fill="${MOSS}">MYFLORAMD.COM</text>
     ${grain(width, height, 0.03)}`
   )
 }
@@ -324,7 +324,7 @@ function sampleCardSvg() {
     <rect x="${pad}" y="${h - 84}" width="${w - pad * 2}" height="2" fill="${IVORY}" fill-opacity="0.22"/>
     <text x="${pad}" y="${h - 46}"
           font-family="JetBrains Mono, Consolas, monospace" font-size="16" letter-spacing="4"
-          fill="${IVORY}" fill-opacity="0.72">MMJGREEN.COM</text>
+          fill="${IVORY}" fill-opacity="0.72">MYFLORAMD.COM</text>
     <text x="${w - pad}" y="${h - 46}" text-anchor="end"
           font-family="JetBrains Mono, Consolas, monospace" font-size="16" letter-spacing="4"
           fill="${LIME}" fill-opacity="0.9">NOT A REAL CREDENTIAL</text>
@@ -369,7 +369,7 @@ async function writePng(name, markup) {
 async function main() {
   await mkdir(assets, { recursive: true })
 
-  console.log('Generating MmjGreen brand assets…')
+  console.log('Generating MyFloraMD brand assets…')
 
   const clinicians = [
     ['clinician-amara.webp', 'AO', 20260111, PALETTES.amara],
@@ -398,7 +398,7 @@ async function main() {
     coverSvg({
       width: 1600,
       height: 900,
-      title: 'MmjGreen',
+      title: 'MyFloraMD',
       subtitle: 'Medical card evaluation, made calm.',
       seed: 424242,
       palette: PALETTES.brand
@@ -409,7 +409,7 @@ async function main() {
   const ogMarkup = coverSvg({
     width: 1200,
     height: 630,
-    title: 'MmjGreen',
+    title: 'MyFloraMD',
     subtitle: 'Medical card evaluation, made calm.',
     seed: 424242,
     palette: PALETTES.brand

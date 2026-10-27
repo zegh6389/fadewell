@@ -17,4 +17,4 @@ for (const [name, id] of Object.entries(photos)) {
   await writeFile(new URL(`${name}.webp`, root), image)
   console.log(`${name}.webp: ${Math.round(image.length / 1024)} KB`)
 }
-await writeFile(new URL('editorial-sources.txt', root), Object.entries(photos).map(([name, id]) => `${name}: https://images.unsplash.com/${id}\nEditorial stock photography; not an actual MmjGreen clinician, patient, or office.\n`).join('\n'))
+await writeFile(new URL('editorial-sources.txt', root), Object.entries(photos).map(([name, id]) => `${name}: https://images.unsplash.com/${id}\nEditorial stock photography; not an actual MyFloraMD clinician, patient, or office.\n`).join('\n'))

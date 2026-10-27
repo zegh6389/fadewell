@@ -1,24 +1,24 @@
-# MmjGreen
+# MyFloraMD
 
 Guided medical-card evaluation and telehealth. A public marketing site and four
 care workspaces, running on a single Fastify + PostgreSQL service.
 
 This repository contains a complete, self-contained product. It is **not a fork**
 — the brand, copy, design system, imagery and interface are original to
-MmjGreen.
+MyFloraMD.
 
 ---
 
 ## Repository layout
 
 ```
-mmjgreen/
-├── api/                 MmjGreen API — Fastify 5 + TypeScript, PostgreSQL
+myfloramd/
+├── api/                 MyFloraMD API — Fastify 5 + TypeScript, PostgreSQL
 │   ├── src/             server, routes, auth, delivery, migrations runner
 │   ├── migrations/      28 ordered SQL migrations
 │   ├── tests/           163 API tests (node:test + PGlite)
 │   └── deploy/          Heroku packaging, grants, CA bundle
-└── web/                 MmjGreen web client — React 19 + Vite
+└── web/                 MyFloraMD web client — React 19 + Vite
     ├── src/pages/       public marketing pages
     ├── src/pages/care/  /patient · /portal · /staff · /admin
     ├── src/styles/      design tokens, base, components, pages, care
@@ -344,7 +344,7 @@ Supabase grant setup.
 
 ## Privacy and clinical scope
 
-MmjGreen is an administrative and clinical-scheduling platform. It does not
+MyFloraMD is an administrative and clinical-scheduling platform. It does not
 issue medical cards — state registries do — and it does not guarantee approval
 of any application. Evaluations are performed by independently licensed
 clinicians, not by the platform. Patient information is never sold, and consent
