@@ -41,7 +41,7 @@ export const articles = [
     "slug": "certification-is-not-a-state-card",
     "category": "Process",
     "title": "Certification is not the same as a state card",
-    "note": "Understand the roles of the clinician, MmjGreen and your state programme.",
+    "note": "Understand the roles of the clinician, MyFloraMD and your state programme.",
     "image": "/assets/blog/certification-card-cover.webp",
     "imageAlt": "A remote clinical consultation and a separate state application folder",
     "inlineImages": [
@@ -58,7 +58,7 @@ export const articles = [
       "This is the single most common misunderstanding in the whole process, and it catches people out at the worst possible moment — after they have already paid for an evaluation.",
       "A clinician certifies you. That is a medical judgement about whether an evaluation is appropriate, and it is entirely theirs to make. We do not make it, and no software does.",
       "Your state programme then issues the card or the registration. That is a separate administrative process, with its own rules, its own forms, its own fee, and often its own waiting period.",
-      "MmjGreen sits between the two. We handle the intake, the scheduling, the consultation and the tracking — and we tell you honestly which state steps remain after a clinician certifies you.",
+      "MyFloraMD sits between the two. We handle the intake, the scheduling, the consultation and the tracking — and we tell you honestly which state steps remain after a clinician certifies you.",
       "The practical consequence: treat the clinician decision and the state registration as two separate projects with two separate timelines. Planning for one to finish the other is what causes the frustration."
     ]
   },

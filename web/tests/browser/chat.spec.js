@@ -4,7 +4,7 @@ test('chat stays beside launcher and supports local messages, keyboard close, an
   await page.goto('/')
   const launcher = page.getByRole('button', { name: 'Need help?' })
   await launcher.click()
-  const dialog = page.getByRole('dialog', { name: 'MmjGreen care chat' })
+  const dialog = page.getByRole('dialog', { name: 'MyFloraMD care chat' })
   await expect(dialog).toBeVisible()
   const bounds = await dialog.boundingBox()
   const buttonBounds = await launcher.boundingBox()

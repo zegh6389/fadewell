@@ -32,7 +32,7 @@ const TOPICS = [
 ]
 
 const GREETING =
-  "Hey, I'm Jhon, MmjGreen's AI care guide. Ask me about costs, state coverage, or getting ready for your visit. We can take it one step at a time."
+  "Hey, I'm Jhon, MyFloraMD's AI care guide. Ask me about costs, state coverage, or getting ready for your visit. We can take it one step at a time."
 
 const SUGGESTIONS = [
   'What does the consultation cost?',
@@ -143,7 +143,7 @@ export function PatientHelp() {
           <div className="help__identity">
             <BrandMark size={40} />
             <div>
-              <h2 id="help-title">MmjGreen care chat</h2>
+              <h2 id="help-title">MyFloraMD care chat</h2>
               <p id="help-preview-note">Jhon · AI care guide</p>
             </div>
           </div>

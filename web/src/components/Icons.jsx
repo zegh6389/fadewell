@@ -1,5 +1,5 @@
 /**
- * MmjGreen — icon set.
+ * MyFloraMD — icon set.
  * Inline SVG so `img-src 'self'` never applies and icons inherit currentColor.
  */
 

@@ -35,7 +35,7 @@ function BlogIndex() {
         title="Good questions."
         accent="Clearer answers."
         image="/assets/blog/telehealth-cover.webp"
-        alt="Illustrative image of a patient at a desk in a video consultation with a clinician on a laptop. Not an actual MmjGreen clinician or patient."
+        alt="Illustrative image of a patient at a desk in a video consultation with a clinician on a laptop. Not an actual MyFloraMD clinician or patient."
       >
         Practical preparation guides and sourced medical cannabis card and caregiver rules for all 50 states and
         Washington DC.
@@ -82,7 +82,7 @@ function BlogIndex() {
           </h2>
           <p className="lede">
             Medical programs, limited access, and states without a statewide MMJ card program are clearly
-            distinguished. Each guide links to its sources. These guides do not indicate where MmjGreen offers
+            distinguished. Each guide links to its sources. These guides do not indicate where MyFloraMD offers
             evaluations.
           </p>
 
@@ -188,7 +188,7 @@ function ArticlePage({ post }) {
                 </p>
                 <p>
                   Source review: <time dateTime={post.reviewed}>September 30, 2026</time>. State law and program
-                  availability are separate from MmjGreen service coverage. Check current official requirements before
+                  availability are separate from MyFloraMD service coverage. Check current official requirements before
                   applying.
                 </p>
               </>

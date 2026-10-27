@@ -1,5 +1,5 @@
 /**
- * MmjGreen — shared date formatting.
+ * MyFloraMD — shared date formatting.
  *
  * The care surfaces all render appointment and audit timestamps the same way;
  * this keeps that one definition instead of three copies that drift.

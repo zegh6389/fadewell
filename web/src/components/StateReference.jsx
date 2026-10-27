@@ -52,7 +52,7 @@ export function StateReference() {
             </select>
             <p className="state-reference__scope">
               Standard patient pathways, not a quote for every caregiver, visitor, minor, or hardship
-              application. State program status is separate from MmjGreen service availability.
+              application. State program status is separate from MyFloraMD service availability.
             </p>
           </div>
 

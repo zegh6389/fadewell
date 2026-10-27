@@ -23,7 +23,7 @@ export function SampleCard({ eager = false }) {
         <img
           className="medical-card__face medical-card__face--back"
           src="/assets/card-premium-back.svg"
-          alt="MmjGreen sample card back with cannabis safety notes, state requirements reminder, and decorative barcode. Demo only, not a valid credential."
+          alt="MyFloraMD sample card back with cannabis safety notes, state requirements reminder, and decorative barcode. Demo only, not a valid credential."
           width="1000"
           height="630"
           decoding="async"

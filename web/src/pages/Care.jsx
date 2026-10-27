@@ -76,7 +76,7 @@ export default function Care() {
               </h2>
               <p className="lede">
                 Two people with the same condition can have completely different legal options depending
-                on where they live. That is why MmjGreen checks your jurisdiction before you answer a
+                on where they live. That is why MyFloraMD checks your jurisdiction before you answer a
                 single question.
               </p>
               <Checklist items={disclaimers} />
@@ -86,7 +86,7 @@ export default function Care() {
               <p className="card__num">JURISDICTION</p>
               <h3 className="card__title">Check your state</h3>
               <p className="card__body">
-                Select your state to see whether MmjGreen currently serves it.
+                Select your state to see whether MyFloraMD currently serves it.
               </p>
 
               <div className="form">

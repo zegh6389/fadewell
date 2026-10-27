@@ -19,7 +19,7 @@ export default function HowItWorks() {
         eyebrow="How it works"
         title="Sign up. Answer a few questions. Talk with a doctor."
         image="/assets/card-premium.webp"
-        alt="Illustrative MmjGreen sample patient card with portrait and registration details, not a real credential"
+        alt="Illustrative MyFloraMD sample patient card with portrait and registration details, not a real credential"
         lede="No waiting rooms, no phone trees, no guessing. Here is the entire process, in the order it actually happens — including the parts most services leave out."
       />
 

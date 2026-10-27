@@ -14,8 +14,8 @@ import { IconShield } from '../components/Icons.jsx'
  * state.
  */
 
-const STORAGE_KEY = 'mmjgreen.cookie-consent'
-const OPEN_EVENT = 'mmjgreen:cookie-settings'
+const STORAGE_KEY = 'myfloramd.cookie-consent'
+const OPEN_EVENT = 'myfloramd:cookie-settings'
 
 function read() {
   try {
@@ -135,7 +135,7 @@ export default function CookieConsent() {
           </button>
         </div>
 
-        <span className="cookie-kicker">MmjGreen · Privacy preferences</span>
+        <span className="cookie-kicker">MyFloraMD · Privacy preferences</span>
         <h2 id="cookie-settings-title">Keep the choice yours.</h2>
         <p id="cookie-settings-description">
           Choose what this browser may remember. You can revisit these settings from the footer at any time.

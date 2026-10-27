@@ -26,7 +26,7 @@ export function CareShell({ area, session, onSignOut, children }) {
           X-Robots-Tag header so the surface stays unindexed even if the
           bundle is served without the API in front of it. */}
       <meta name="robots" content="noindex, nofollow, noarchive" />
-      <title>{isIntake ? 'Patient intake | MmjGreen' : `${meta?.label ?? 'Care'} | MmjGreen`}</title>
+      <title>{isIntake ? 'Patient intake | MyFloraMD' : `${meta?.label ?? 'Care'} | MyFloraMD`}</title>
       {isIntake ? <a className="skip-link" href="#care-content">Skip to questionnaire</a> : null}
       <header className="care__bar">
         <Link to="/" className="brand" aria-label={`${brand.name} home`}>

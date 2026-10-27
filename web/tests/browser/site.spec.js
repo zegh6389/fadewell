@@ -10,7 +10,7 @@ import AxeBuilder from '@axe-core/playwright'
  */
 
 const ROUTES = [
-  { path: '/', name: 'home', expect: 'MmjGreen' },
+  { path: '/', name: 'home', expect: 'MyFloraMD' },
   { path: '/how-it-works', name: 'how-it-works', expect: 'Five steps' },
   { path: '/service', name: 'service', expect: 'your card in hand' },
   { path: '/care', name: 'care', expect: 'Qualifying conditions' },
@@ -21,7 +21,7 @@ const ROUTES = [
   { path: '/blog/certification-is-not-a-state-card', name: 'article', expect: 'Certification is not' },
   { path: '/pricing', name: 'pricing', expect: 'Published prices' },
   { path: '/faq', name: 'faq', expect: 'Answered properly' },
-  { path: '/about', name: 'about', expect: 'About MmjGreen' },
+  { path: '/about', name: 'about', expect: 'About MyFloraMD' },
   { path: '/contact', name: 'contact', expect: 'Ask us anything' },
   { path: '/privacy-policy', name: 'privacy', expect: 'Privacy policy' },
   { path: '/terms-conditions', name: 'terms', expect: 'Terms of service' },
@@ -53,7 +53,7 @@ function watchErrors(page) {
   return errors
 }
 
-test.describe('MmjGreen marketing site', () => {
+test.describe('MyFloraMD marketing site', () => {
   for (const route of ROUTES) {
     test(`${route.path} renders without errors`, async ({ page }, testInfo) => {
       const errors = watchErrors(page)
@@ -72,10 +72,10 @@ test.describe('MmjGreen marketing site', () => {
         route.expect.toLowerCase()
       )
 
-      // MmjGreen branding only — no legacy brand may survive anywhere. FadeWell
+      // MyFloraMD branding only — no legacy brand may survive anywhere. MmjGreen
       // is the previous name, so it is asserted here too: a rename that misses
       // a page would otherwise pass silently.
-      expect(body).not.toMatch(/medcardaccess|medefy|medaccess|fadewell/i)
+      expect(body).not.toMatch(/medcardaccess|medefy|medaccess|fadewell|mmjgreen/i)
 
       await page.waitForTimeout(400)
       await page.screenshot({
@@ -92,7 +92,7 @@ test.describe('MmjGreen marketing site', () => {
     await page.goto('/', { waitUntil: 'networkidle' })
 
     // Wordmark + primary navigation.
-    await expect(page.locator('.brand').first()).toContainText('MmjGreen')
+    await expect(page.locator('.brand').first()).toContainText('MyFloraMD')
     await expect(page.locator('nav.nav .nav__link')).toHaveCount(6)
 
     // Reveal elements start hidden and animate in as they enter the viewport.

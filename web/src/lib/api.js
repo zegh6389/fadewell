@@ -1,7 +1,7 @@
 /**
- * MmjGreen — API client.
+ * MyFloraMD — API client.
  *
- * Binds to the MmjGreen Fastify service (api/). The browser only ever calls
+ * Binds to the MyFloraMD Fastify service (api/). The browser only ever calls
  * same-origin `/api` — the service serves this bundle and the API from the
  * same origin, which the strict `connect-src 'self'` CSP requires.
  *

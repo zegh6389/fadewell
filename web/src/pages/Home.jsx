@@ -220,7 +220,7 @@ function Story() {
     <section className="section" aria-labelledby="story-title">
       <div className="shell story">
         <div className="story__rail">
-          <p className="eyebrow eyebrow--accent">Why MmjGreen</p>
+          <p className="eyebrow eyebrow--accent">Why MyFloraMD</p>
           <h2 className="h2" id="story-title" data-reveal>
             Built to remove the friction, not the rigour.
           </h2>
@@ -250,7 +250,7 @@ function Story() {
 
 function Stats() {
   return (
-    <section className="section--tight" aria-label="MmjGreen by the numbers">
+    <section className="section--tight" aria-label="MyFloraMD by the numbers">
       <div className="shell">
         <div className="stats" data-reveal="scale">
           {stats.map((stat) => (
@@ -474,7 +474,7 @@ function VisualStory() {
   const panels = [
     {
       src: '/assets/telehealth-consultation.webp',
-      alt: 'Illustrative stock photograph of a physician with a stethoscope, not an actual MmjGreen clinician',
+      alt: 'Illustrative stock photograph of a physician with a stethoscope, not an actual MyFloraMD clinician',
       index: '01 / Your evaluation',
       title: 'Clarity, from the start.',
       body: 'Understand what to prepare, meet with a licensed clinician where your state allows it, and keep the state process separate from the medical decision.',

@@ -70,7 +70,7 @@ export default function Pricing() {
             We do not pay for your card.
               </h2>
               <p className="lede">
-                Plenty of card services are funded by dispensaries who then want your business. MmjGreen
+                Plenty of card services are funded by dispensaries who then want your business. MyFloraMD
                 is not affiliated with any dispensary, and we do not take a cut of what you spend
                 anywhere. The clinician evaluates you; nothing else is being sold.
               </p>

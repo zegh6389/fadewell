@@ -1,15 +1,15 @@
 import { articles } from './resourceCentre.js'
 /**
- * MmjGreen — site content.
+ * MyFloraMD — site content.
  *
  * Single source of truth for copy used across the public site.
  * Kept separate from components so copy edits never touch layout code.
  */
 
 export const brand = {
-  name: 'MmjGreen',
+  name: 'MyFloraMD',
   tagline: 'Medical card evaluation, made calm.',
-  email: 'care@mmjgreen.com',
+  email: 'care@myfloramd.com',
   phone: '888-809-3204',
   phoneHref: '+18888093204',
   address: '1200 Market Street, Suite 400, Denver, CO 80202',
@@ -138,7 +138,7 @@ export const storySteps = [
     num: '01',
     title: 'Built around your state, not a generic template',
     body:
-      'Most online card services hand you the same questionnaire everywhere. MmjGreen reads your jurisdiction first, so the questions you answer and the options you are offered actually apply where you live.'
+      'Most online card services hand you the same questionnaire everywhere. MyFloraMD reads your jurisdiction first, so the questions you answer and the options you are offered actually apply where you live.'
   },
   {
     num: '02',
@@ -241,7 +241,7 @@ export const evaluationStandards = [
   },
   {
     title: 'An independent decision',
-    body: 'A clinician reviews your questionnaire and speaks with you before making a decision. Neither MmjGreen nor the care chatbot can promise approval.'
+    body: 'A clinician reviews your questionnaire and speaks with you before making a decision. Neither MyFloraMD nor the care chatbot can promise approval.'
   },
   {
     title: 'A private clinical conversation',
@@ -332,7 +332,7 @@ export const testimonials = [
   },
   {
     quote:
-      'I was nervous about the video call and the tech just worked. Booking, reminders, joining — all of it. I have recommended MmjGreen to two friends since.',
+      'I was nervous about the video call and the tech just worked. Booking, reminders, joining — all of it. I have recommended MyFloraMD to two friends since.',
     name: 'Jordan K.',
     location: 'Reno, NV',
     rating: 5
@@ -356,7 +356,7 @@ export const faqs = [
   },
   {
     q: 'What if I live somewhere you do not serve?',
-    a: 'MmjGreen currently operates in 14 states. Enter your state during intake and we will tell you honestly whether we can help. If we cannot, we will say so plainly and point you to the state’s own physician registry rather than sending you through a process that will not work.'
+    a: 'MyFloraMD currently operates in 14 states. Enter your state during intake and we will tell you honestly whether we can help. If we cannot, we will say so plainly and point you to the state’s own physician registry rather than sending you through a process that will not work.'
   },
   {
     q: 'Is my information sold or shared?',
@@ -376,7 +376,7 @@ export const faqs = [
   }
 ]
 
-/* ---------- Why MmjGreen ----------------------------------- */
+/* ---------- Why MyFloraMD ----------------------------------- */
 
 export const pillars = [
   {
@@ -465,7 +465,7 @@ export const legalDocs = {
     title: 'Privacy policy',
     updated: 'September 2026',
     intro:
-      'This policy explains what personal information MmjGreen collects, why we collect it, and the choices you have. It is written to be read, not to be skipped.',
+      'This policy explains what personal information MyFloraMD collects, why we collect it, and the choices you have. It is written to be read, not to be skipped.',
     sections: [
       {
         h: 'Information we collect',
@@ -521,19 +521,19 @@ export const legalDocs = {
     title: 'Terms of service',
     updated: 'September 2026',
     intro:
-      'These terms describe the agreement between you and MmjGreen when you use our site, complete an intake, or receive care through our clinicians.',
+      'These terms describe the agreement between you and MyFloraMD when you use our site, complete an intake, or receive care through our clinicians.',
     sections: [
       {
         h: 'Using this service',
         p: [
           'Medical patient and caregiver age requirements vary by state. Minors require the applicable parent, guardian, or caregiver pathway. You agree to provide accurate information and keep your secure link confidential.',
-          'You may not use MmjGreen to obtain a card through misrepresentation, to impersonate another person, or in a way that interferes with another person’s care or with the operation of the service.'
+          'You may not use MyFloraMD to obtain a card through misrepresentation, to impersonate another person, or in a way that interferes with another person’s care or with the operation of the service.'
         ]
       },
       {
         h: 'Clinical services',
         p: [
-          'Evaluations are performed by independently licensed clinicians, not by MmjGreen. MmjGreen provides the technology, coordination and administrative support around that clinical relationship.',
+          'Evaluations are performed by independently licensed clinicians, not by MyFloraMD. MyFloraMD provides the technology, coordination and administrative support around that clinical relationship.',
           'Your clinician may decline to complete an evaluation, and we may decline to continue service, where they believe an evaluation is not appropriate or where the law of your state does not permit it. Where we decline before a consultation, we refund the evaluation fee.'
         ]
       },
@@ -548,13 +548,13 @@ export const legalDocs = {
         h: 'Your responsibilities',
         p: [
           'Answer the intake honestly and completely, attend your scheduled consultation, and tell your clinician about anything that could affect your safety or treatment. Tell us promptly if your contact details change so we can reach you.',
-          'Do not use MmjGreen for emergencies. If you are in crisis, call 911 or 988.'
+          'Do not use MyFloraMD for emergencies. If you are in crisis, call 911 or 988.'
         ]
       },
       {
         h: 'Liability',
         p: [
-          'MmjGreen provides clinical evaluations and administrative services but does not provide emergency care and cannot guarantee that a state registry will approve an application. Decisions about whether to issue a card are made by your state, not by us.',
+          'MyFloraMD provides clinical evaluations and administrative services but does not provide emergency care and cannot guarantee that a state registry will approve an application. Decisions about whether to issue a card are made by your state, not by us.',
           'To the extent permitted by law, our aggregate liability for claims arising from use of the service is limited to the amount you paid us in the twelve months before the claim arose. Nothing in these terms limits liability that cannot lawfully be limited.'
         ]
       },
@@ -593,7 +593,7 @@ export const legalDocs = {
       {
         h: 'State application fees',
         p: [
-          'Fees charged by your state registry are outside our control and are non-refundable through MmjGreen. We will always show you what a state charges before you submit.'
+          'Fees charged by your state registry are outside our control and are non-refundable through MyFloraMD. We will always show you what a state charges before you submit.'
         ]
       },
       {
@@ -608,7 +608,7 @@ export const legalDocs = {
     title: 'Telehealth consent',
     updated: 'September 2026',
     intro:
-      'Before your MmjGreen consultation begins, we need your informed consent to being evaluated remotely. Please read this fully — you will be asked to confirm it.',
+      'Before your MyFloraMD consultation begins, we need your informed consent to being evaluated remotely. Please read this fully — you will be asked to confirm it.',
     sections: [
       {
         h: 'What telehealth means here',
@@ -652,7 +652,7 @@ export const legalDocs = {
     title: 'Medical disclaimer',
     updated: 'September 2026',
     intro:
-      'Please read this carefully. It describes what MmjGreen is and is not, and the limits of the information you will find here.',
+      'Please read this carefully. It describes what MyFloraMD is and is not, and the limits of the information you will find here.',
     sections: [
       {
         h: 'Not medical advice',
@@ -663,7 +663,7 @@ export const legalDocs = {
       {
         h: 'No guarantee of approval',
         p: [
-          'A card is issued by your state, not by MmjGreen. Your clinician evaluates whether you meet the medical criteria in your state; the state registry then makes its own decision. We cannot and do not guarantee that any application will be approved.'
+          'A card is issued by your state, not by MyFloraMD. Your clinician evaluates whether you meet the medical criteria in your state; the state registry then makes its own decision. We cannot and do not guarantee that any application will be approved.'
         ]
       },
       {
@@ -675,7 +675,7 @@ export const legalDocs = {
       {
         h: 'Not for emergencies or crisis',
         p: [
-          'MmjGreen is not an emergency service and does not provide crisis care. If you are in danger, thinking about harming yourself, or need immediate help, call or text 988, or dial 911.'
+          'MyFloraMD is not an emergency service and does not provide crisis care. If you are in danger, thinking about harming yourself, or need immediate help, call or text 988, or dial 911.'
         ]
       },
       {
@@ -692,7 +692,7 @@ export const accessibility = {
   title: 'Accessibility statement',
   updated: 'September 2026',
   intro:
-    'MmjGreen wants everyone to be able to use this site and reach our care team, regardless of technology or ability.',
+    'MyFloraMD wants everyone to be able to use this site and reach our care team, regardless of technology or ability.',
   sections: [
     {
       h: 'Our commitment',
@@ -709,7 +709,7 @@ export const accessibility = {
     {
       h: 'Need help, or found a barrier?',
       p: [
-        'Email care@mmjgreen.com or call 888-809-3204. If something on this site is difficult to use, tell us what happened and which page you were on so we can help.'
+        'Email care@myfloramd.com or call 888-809-3204. If something on this site is difficult to use, tell us what happened and which page you were on so we can help.'
       ]
     }
   ]
@@ -768,8 +768,8 @@ export const timeline = [
 export const support = {
   phone: '888-809-3204',
   tel: 'tel:+18888093204',
-  email: 'care@mmjgreen.com',
-  mailto: 'mailto:care@mmjgreen.com'
+  email: 'care@myfloramd.com',
+  mailto: 'mailto:care@myfloramd.com'
 }
 
 /** States we have not opened yet. Everything else reads as available. */
@@ -862,7 +862,7 @@ export const tagline = [
 export const compliance = {
   eyebrow: 'Compliance and security',
   title: 'Your health information deserves serious protection.',
-  body: 'MmjGreen runs a HIPAA-aligned workflow built to protect patient information across the whole evaluation, not just the parts that are convenient to secure.',
+  body: 'MyFloraMD runs a HIPAA-aligned workflow built to protect patient information across the whole evaluation, not just the parts that are convenient to secure.',
   points: [
     { icon: 'lock', title: 'Encrypted in transit', note: 'Patient information is protected as it moves through the online workflow.' },
     { icon: 'shield', title: 'Collected narrowly', note: 'We only gather what the evaluation actually needs, and stop there.' },
@@ -933,7 +933,7 @@ export const guideSections = [
     title: 'After a clinician certifies you',
     body: [
       'Certification is not a state card. Your state programme runs its own registration, with its own forms, its own fee and often its own waiting period.',
-      'MmjGreen submits to your state registry and tracks the application from there. You will see every stage, and you always know whether something is waiting on you or on us.',
+      'MyFloraMD submits to your state registry and tracks the application from there. You will see every stage, and you always know whether something is waiting on you or on us.',
       'State fees are separate from ours unless a state-specific offer clearly says otherwise. We itemise them rather than folding them into a single number.'
     ]
   }

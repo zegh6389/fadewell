@@ -103,7 +103,7 @@ function Companion() {
         <div
           className="intake-video"
           role="img"
-          aria-label="Illustrative image of a patient at home joining a video consultation on a laptop. Not an actual MmjGreen clinician or patient."
+          aria-label="Illustrative image of a patient at home joining a video consultation on a laptop. Not an actual MyFloraMD clinician or patient."
         >
           <img className="intake-scene__photo" src="/assets/telehealth-at-home.webp" alt="" />
           <span className="intake-video__caption">
@@ -223,7 +223,7 @@ function Quiz({ name, label, options, value, onChange, index, hint, custom = tru
 export function PreviewComplete() {
   return (
     <div className="care intake-experience intake-complete">
-      <title>Preview complete | MmjGreen</title>
+      <title>Preview complete | MyFloraMD</title>
       <meta name="robots" content="noindex, nofollow, noarchive" />
       <main className="intake-complete__content" aria-label="Questionnaire completion">
         <div className="intake-complete__animation" role="status">

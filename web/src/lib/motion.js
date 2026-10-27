@@ -1,5 +1,5 @@
 /**
- * MmjGreen — motion engine.
+ * MyFloraMD — motion engine.
  *
  * Two layers, deliberately:
  *

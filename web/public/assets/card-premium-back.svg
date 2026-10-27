@@ -13,7 +13,7 @@
     <path d="M88 89C67 86 69 67 72 61c17 0 21 11 16 28" fill="#d3e65c"/>
     <path d="M88 89c-5-17 0-26 17-28 4 17-3 26-17 28" fill="#aecbae"/>
     <path d="M88 76v19m11-6h10m-5-5v10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-    <text x="141" y="78" font-size="32" font-weight="700">MmjGreen.</text>
+    <text x="141" y="78" font-size="32" font-weight="700">MyFloraMD.</text>
     <text x="141" y="104" font-size="12" letter-spacing="3">CARE, ON YOUR TERMS</text>
     <rect x="756" y="56" width="188" height="36" rx="18" fill="#eaf3e7"/>
     <text x="850" y="80" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="2">SAMPLE CARD</text>
@@ -34,7 +34,7 @@
     <text x="56" y="548" font-size="12" letter-spacing="2" fill="#718176">DEMO · 0248 · 6193</text>
     <text x="944" y="548" text-anchor="end" font-size="12" letter-spacing="2" fill="#718176">DECORATIVE BARCODE · NOT SCANNABLE</text>
     <path fill="#174a35" d="M0 560h1000v70H0z"/>
-    <text x="56" y="603" fill="#fff" font-size="16" letter-spacing="2">MMJGREEN.COM</text>
+    <text x="56" y="603" fill="#fff" font-size="16" letter-spacing="2">MYFLORAMD.COM</text>
     <text x="944" y="603" text-anchor="end" fill="#d3e65c" font-size="12" letter-spacing="2">DEMO ONLY · NOT A VALID CREDENTIAL</text>
   </g>
   <rect x="2" y="2" width="996" height="626" rx="36" fill="none" stroke="#dce7d8" stroke-width="4"/>
