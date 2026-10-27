@@ -111,6 +111,9 @@ test('PUT /api/v1/intake rejects a state marked NOT_SUPPORTED with 422 JURISDICT
   })
   assert.equal(response.statusCode, 422, response.body)
   assert.equal(response.json().error?.code, 'JURISDICTION_NOT_SUPPORTED')
+  // The brand in the user-facing message must not drift back to the old name.
+  assert.match(response.json().error?.message ?? '', /MyFloraMD/)
+  assert.doesNotMatch(response.json().error?.message ?? '', /MmjGreen/i)
 })
 
 test('PUT /api/v1/intake rejects a state marked COMING_SOON with 422 JURISDICTION_COMING_SOON', async (t) => {
