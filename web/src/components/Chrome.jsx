@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { BrandMark, IconArrow } from './Icons.jsx'
 import { primaryNav, footerNav, brand } from '../lib/content.js'
+import { CookieSettingsLink } from './CookieConsent.jsx'
 import { useSticky, useMagnetic, useScrollProgress } from '../lib/motion.js'
 
 /* ---------- Ambient field ------------------------------------ */
@@ -57,6 +58,13 @@ export function Masthead() {
   useEffect(() => {
     setOpen(false)
   }, [location.pathname])
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 901px)')
+    const closeOnDesktop = (event) => { if (event.matches) setOpen(false) }
+    desktop.addEventListener('change', closeOnDesktop)
+    return () => desktop.removeEventListener('change', closeOnDesktop)
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -117,15 +125,15 @@ export function Masthead() {
 
       <div id="nav-sheet" className={`nav-sheet${open ? ' is-open' : ''}`} hidden={!open}>
         {primaryNav.map((item) => (
-          <Link key={item.to} to={item.to} className="nav-sheet__link">
+          <NavLink key={item.to} to={item.to} className="nav-sheet__link" onClick={() => setOpen(false)}>
             {item.label}
-          </Link>
+          </NavLink>
         ))}
         <div className="nav-sheet__actions">
-          <Link to="/patient" className="btn btn--primary btn--block">
+          <Link to="/patient" className="btn btn--primary btn--block" onClick={() => setOpen(false)}>
             Start your intake
           </Link>
-          <Link to="/contact" className="btn btn--ghost btn--block">
+          <Link to="/contact" className="btn btn--ghost btn--block" onClick={() => setOpen(false)}>
             Talk to us
           </Link>
         </div>
@@ -182,6 +190,7 @@ export function Footer() {
             <Link to="/telehealth-consent">Telehealth consent</Link>
             <Link to="/privacy-policy">Privacy</Link>
             <Link to="/accessibility">Accessibility</Link>
+            <CookieSettingsLink />
           </div>
         </div>
 

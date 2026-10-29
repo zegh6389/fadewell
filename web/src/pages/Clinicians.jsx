@@ -1,116 +1,80 @@
-import { clinicians, brand } from '../lib/content.js'
-import { PageHero, SectionHead, CtaBand } from '../components/Page.jsx'
-import { IconBadge, IconCheck } from '../components/Icons.jsx'
+/**
+ * Clinical standards.
+ *
+ * Rebuilt from the production bundle that shipped to Vercel on 2026-10-14. The
+ * production build removed public clinician profiles entirely — this page used
+ * to name four practitioners, portraits and licences, and the rest of the site
+ * now states plainly that no clinician names, portraits or biographies are
+ * published. Keep them in step: if a name reappears anywhere, the home page and
+ * this page start contradicting each other.
+ */
 
-const standards = [
-  'Active, unrestricted licence in every state listed for each clinician',
-  'Prescribing authority verified directly against the state board registry',
-  'Annual re-credentialing and continuous licensure monitoring',
-  'Malpractice cover and a documented scope of practice',
-  'Ongoing clinical governance and adverse-event review'
-]
+import { brand, evaluationStandards } from '../lib/content.js'
+import { PageHero, SectionHead, CtaBand } from '../components/Page.jsx'
+import { IconCheck } from '../components/Icons.jsx'
 
 export default function Clinicians() {
   return (
     <>
       <PageHero
-        eyebrow="Our clinicians"
-        title="You should know who is"
-        accent="going to evaluate you."
-        lede="Every MmjGreen evaluation is performed by an independently licensed clinician — never by a chatbot, and never by someone without the authority to certify your application."
+        eyebrow="Clinical standards"
+        title="Real clinical care."
+        accent="A private conversation."
+        image="/assets/care-preparation.webp"
+        alt="Preparing documents for a private medical evaluation"
+        lede="A licensed clinician reviews your questionnaire and talks with you. Here is what to expect from that evaluation."
       />
 
-      <section className="section" aria-labelledby="team-title">
+      <section className="section" aria-labelledby="standards-title">
         <div className="shell">
           <SectionHead
-            id="team-title"
-            eyebrow="The team"
-            title="Practitioners with"
-            accent="actual authority."
+            id="standards-title"
+            eyebrow="Your evaluation"
+            title="Clear standards,"
+            accent="without public profiles."
           />
 
-          <div className="grid grid--4">
-            {clinicians.map((person) => (
-              <article className="clinician" key={person.slug} data-reveal>
-                <div className="clinician__photo">
-                  <img src={person.photo} alt={`Portrait of ${person.name}`} loading="lazy" width="480" height="600" />
-                  <span className="clinician__badge">{person.years} yrs</span>
-                </div>
-                <div>
-                  <p className="clinician__name">{person.name}</p>
-                  <p className="clinician__role">{person.role}</p>
-                </div>
-                <p className="clinician__bio">{person.bio}</p>
-                <div className="card__foot clinician__foot">
-                  <p className="float-card__meta">Licensed in</p>
-                  <p className="float-card__title">{person.states}</p>
-                  <p className="float-card__meta clinician__langs">
-                    Languages: {person.languages.join(', ')}
-                  </p>
-                </div>
+          <div className="grid grid--2">
+            {evaluationStandards.map((standard) => (
+              <article className="card" key={standard.title} data-reveal>
+                <IconCheck size={24} />
+                <h3 className="card__title">{standard.title}</h3>
+                <p className="card__body">{standard.body}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="band-sage section" aria-labelledby="standards-title">
-        <div className="shell">
-          <div className="split">
-            <div className="split__body" data-reveal="left">
-              <p className="eyebrow eyebrow--accent">Credentialing</p>
-              <h2 className="h2" id="standards-title">
-                Licence means nothing
-                <span className="serif"> unless we check it.</span>
-              </h2>
-              <p className="lede">
-                Telehealth made it easy to practise somewhere you have never set foot. We verify every
-                clinician against the board registry in each state they evaluate in, and we re-check
-                continuously rather than once at onboarding.
-              </p>
-            </div>
-
-            <ul className="plan__list" data-reveal="right">
-              {standards.map((item) => (
-                <li key={item}>
-                  <IconCheck size={16} />
-                  {item}
-                </li>
-              ))}
-            </ul>
+      <section className="band-sage section">
+        <div className="shell split">
+          <div data-reveal>
+            <p className="eyebrow eyebrow--accent">The clinician decides</p>
+            <h2 className="h2">
+              Your health deserves <span className="serif">individual attention.</span>
+            </h2>
+            <p className="lede">
+              Your answers support a conversation, not an automatic approval. Your clinician explains the
+              decision and any state requirements that apply. If approved, state registration or card
+              issuance may still be required.
+            </p>
           </div>
-        </div>
-      </section>
 
-      <section className="section--tight" aria-label="Governance">
-        <div className="shell">
-          <div className="stats" data-reveal="scale">
-            <div className="stat">
-              <span className="stat__value">
-                <IconBadge size={40} />
-              </span>
-              <span className="stat__label">Board-verified credentials in 14 states</span>
-            </div>
-            <div className="stat">
-              <span className="stat__value">4.9/5</span>
-              <span className="stat__label">Average patient rating</span>
-            </div>
-            <div className="stat">
-              <span className="stat__value">20 min</span>
-              <span className="stat__label">Typical consultation length</span>
-            </div>
-            <div className="stat">
-              <span className="stat__value">24 hrs</span>
-              <span className="stat__label">Median time to a booked slot</span>
-            </div>
+          <div className="card" data-reveal>
+            <h3 className="card__title">Before the call</h3>
+            <p className="card__body">
+              Have your photo ID, relevant medical history, and questions ready. Your clinician
+              identifies themselves during your care interaction. For help arranging the visit or
+              checking state availability, contact our care team.
+            </p>
           </div>
         </div>
       </section>
 
       <CtaBand
-        title="Pick a time,"
-        accent="or ask us first."
-        body={`We will match you with a clinician licensed where you live. Questions before you start? Call ${brand.phone}.`}
+        title="A short questionnaire."
+        accent="Then a real conversation."
+        body={`Start with your state and contact details. Questions first? Call ${brand.phone}.`}
       />
     </>
   )

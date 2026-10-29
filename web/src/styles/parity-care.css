@@ -65,11 +65,6 @@
   cursor: not-allowed;
 }
 
-.quiz__chip:has(input:focus-visible) {
-  outline: 2px solid var(--moss);
-  outline-offset: 2px;
-}
-
 .quiz__mark {
   color: var(--moss);
   font-size: 0.85em;

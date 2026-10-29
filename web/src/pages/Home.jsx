@@ -27,7 +27,10 @@ import { StateSelector } from '../components/StateSelector.jsx'
 import { QuerySection } from '../components/QuerySection.jsx'
 import { PatientHelp } from '../components/PatientHelp.jsx'
 import { StatesPanel } from '../components/StatesPanel.jsx'
-import { SampleCard, TelehealthScene } from '../components/PremiumHero.jsx'
+import { StateReference } from '../components/StateReference.jsx'
+import { pennsylvaniaGuide } from '../lib/resourceCentre.js'
+import { RESOURCE_IMAGES, SampleCard, TelehealthScene } from '../components/PremiumHero.jsx'
+import { HeroArt } from '../components/Page.jsx'
 
 /* ---------- Animated stat ------------------------------------- */
 
@@ -52,10 +55,15 @@ function Hero() {
     <section className="hero">
       <div className="shell hero__grid">
         <div className="hero__content">
-          <span className="pill" data-reveal="fade">
-            <span className="pill__dot" />
-            {hero.pill}
-          </span>
+          <div className="hero__top" data-reveal="fade">
+            <span className="pill">
+              <span className="pill__dot" />
+              {hero.pill}
+            </span>
+            <div className="hero__state">
+              <StateSelector />
+            </div>
+          </div>
 
           <h1 className="hero__title">
             <span className="reveal-line">
@@ -141,7 +149,7 @@ function Journey() {
           <div className="section-head" data-reveal>
             <p className="eyebrow eyebrow--accent">The path</p>
             <h2 className="h2" id="journey-title">
-              Five steps. <span className="serif grad-text">No dead ends.</span>
+              Five steps. <span className="serif grad-text">One clear path.</span>
             </h2>
           </div>
           <p className="lede journey__head-note" data-reveal>
@@ -159,7 +167,7 @@ function Journey() {
           className="journey__viewport"
           ref={viewportRef}
           role="group"
-          aria-label="The five steps of your evaluation, side by side"
+          aria-label="The five steps from intake to your state credential, side by side"
           tabIndex={0}
         >
           <div className="journey__track pin-track" ref={trackRef}>
@@ -175,7 +183,17 @@ function Journey() {
                   <h3 className="h4">{item.title}</h3>
                   <p className="card__body">{item.body}</p>
                 </div>
-                <p className="float-card__meta">{item.detail}</p>
+                <p className="float-card__meta">
+                  {item.detail}
+                  {item.reference && (
+                    <>
+                      <br />
+                      <Link className="text-link" to={item.reference.to}>
+                        {item.reference.label} ↗
+                      </Link>
+                    </>
+                  )}
+                </p>
               </article>
             ))}
             {/* Trailing gutter, as a real element rather than trailing padding:
@@ -202,7 +220,7 @@ function Story() {
     <section className="section" aria-labelledby="story-title">
       <div className="shell story">
         <div className="story__rail">
-          <p className="eyebrow eyebrow--accent">Why MmjGreen</p>
+          <p className="eyebrow eyebrow--accent">Why MyFloraMD</p>
           <h2 className="h2" id="story-title" data-reveal>
             Built to remove the friction, not the rigour.
           </h2>
@@ -232,7 +250,7 @@ function Story() {
 
 function Stats() {
   return (
-    <section className="section--tight" aria-label="MmjGreen by the numbers">
+    <section className="section--tight" aria-label="MyFloraMD by the numbers">
       <div className="shell">
         <div className="stats" data-reveal="scale">
           {stats.map((stat) => (
@@ -456,7 +474,7 @@ function VisualStory() {
   const panels = [
     {
       src: '/assets/telehealth-consultation.webp',
-      alt: 'Illustrative stock photograph of a physician with a stethoscope, not an actual MmjGreen clinician',
+      alt: 'Illustrative stock photograph of a physician with a stethoscope, not an actual MyFloraMD clinician',
       index: '01 / Your evaluation',
       title: 'Clarity, from the start.',
       body: 'Understand what to prepare, meet with a licensed clinician where your state allows it, and keep the state process separate from the medical decision.',
@@ -590,7 +608,7 @@ function Caregivers() {
         </div>
         <div data-reveal="fade">
           <p className="lede">{caregiver.body}</p>
-          <Link className="btn btn--ghost" to={caregiver.to}>
+          <Link className="btn btn--ghost caregiver__action" to={caregiver.to}>
             {caregiver.action}
           </Link>
         </div>
@@ -682,7 +700,7 @@ function CardPreview() {
               )
             )}
           </ul>
-          <Link className="btn btn--primary" to="/care">
+          <Link className="btn btn--primary" to="/patient">
             Start an evaluation
           </Link>
         </div>
@@ -699,12 +717,16 @@ function CardPreview() {
 /* ---------- Learning centre ------------------------------------ */
 
 function Learning() {
+  // Production led with the Pennsylvania guide, then the three articles, because
+  // it is the state readers ask about most.
+  const featured = [pennsylvaniaGuide, ...learningResources].filter(Boolean)
+
   return (
     <section className="band-white section" aria-labelledby="learn-title">
       <div className="shell">
         <div className="section-head" data-reveal="fade">
           <div>
-            <p className="eyebrow eyebrow--accent">Resource centre</p>
+            <p className="eyebrow eyebrow--accent">Patient blog</p>
             <h2 className="h2" id="learn-title">
               The answers people
               <span className="serif grad-text"> ask for most.</span>
@@ -716,15 +738,24 @@ function Learning() {
           </p>
         </div>
 
-        <div className="grid grid--3">
-          {learningResources.map((item) => (
+        <div className="grid grid--2">
+          {featured.map((item) => (
             <article className="card" key={item.slug} data-reveal="fade">
+              <HeroArt
+                className="resource-cover"
+                src={item.image || RESOURCE_IMAGES[item.slug]}
+                alt={item.imageAlt || ''}
+                width="1500"
+                height="1000"
+                loading="lazy"
+                decoding="async"
+              />
               <span className="tag tag--moss">{item.category}</span>
               <h3 className="card__title">{item.title}</h3>
               <p className="card__body">{item.note}</p>
               <span className="card__foot">
                 <Link className="text-link" to={`/blog/${item.slug}`}>
-                  Read the piece
+                  {item.code === 'PA' ? 'Read Pennsylvania rules' : 'Read the piece'}
                 </Link>
               </span>
             </article>
@@ -733,7 +764,7 @@ function Learning() {
 
         <div className="learn__all" data-reveal="fade">
           <Link className="btn btn--forest" to="/blog">
-            Explore all resources
+            Explore the blog
           </Link>
         </div>
       </div>
@@ -785,6 +816,7 @@ export default function Home() {
       />
       <Prepare />
       <Journey />
+      <StateReference />
       <Story />
       <VisualStory />
       <Pillars />

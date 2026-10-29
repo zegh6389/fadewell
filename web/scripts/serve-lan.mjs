@@ -1,5 +1,5 @@
 /**
- * Serve MmjGreen on the local network, so a phone or another laptop can open it.
+ * Serve MyFloraMD on the local network, so a phone or another laptop can open it.
  *
  * Two processes, deliberately split:
  *
@@ -27,7 +27,6 @@ import { fileURLToPath } from 'node:url'
 const HERE = dirname(fileURLToPath(import.meta.url))
 const WEB = resolve(HERE, '..')
 const PORT = Number(process.env.PORT ?? 4173)
-const API_PORT = 3001
 
 /**
  * The address other devices will use.

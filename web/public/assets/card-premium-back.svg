@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="630" viewBox="0 0 1000 630">
+  <defs>
+    <clipPath id="card"><rect x="2" y="2" width="996" height="626" rx="36"/></clipPath>
+    <pattern id="barcode" width="47" height="100" patternUnits="userSpaceOnUse">
+      <path fill="#174a35" d="M0 0h3v100H0zM6 0h1v100H6zM11 0h5v100h-5zM20 0h2v100h-2zM26 0h4v100h-4zM34 0h1v100h-1zM39 0h3v100h-3z"/>
+    </pattern>
+  </defs>
+  <g clip-path="url(#card)" font-family="Manrope, sans-serif" fill="#174a35">
+    <path fill="#fff" d="M0 0h1000v630H0z"/>
+    <circle cx="974" cy="45" r="245" fill="#f0f5ef"/>
+    <circle cx="974" cy="45" r="190" fill="none" stroke="#dfe9dc" stroke-width="2"/>
+    <rect x="56" y="46" width="64" height="64" rx="20" fill="#174a35"/>
+    <path d="M88 89C67 86 69 67 72 61c17 0 21 11 16 28" fill="#d3e65c"/>
+    <path d="M88 89c-5-17 0-26 17-28 4 17-3 26-17 28" fill="#aecbae"/>
+    <path d="M88 76v19m11-6h10m-5-5v10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    <text x="141" y="78" font-size="32" font-weight="700">MyFloraMD.</text>
+    <text x="141" y="104" font-size="12" letter-spacing="3">CARE, ON YOUR TERMS</text>
+    <rect x="756" y="56" width="188" height="36" rx="18" fill="#eaf3e7"/>
+    <text x="850" y="80" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="2">SAMPLE CARD</text>
+    <text x="56" y="164" font-size="17" font-weight="700" letter-spacing="3">PATIENT INFORMATION</text>
+    <text x="56" y="211" font-size="19" font-weight="700">Safety first.</text>
+    <g font-size="17">
+      <text x="56" y="241">Cannabis may impair attention and coordination. Do not drive or operate</text>
+      <text x="56" y="266">machinery while impaired. Keep securely stored, away from children and pets.</text>
+    </g>
+    <text x="56" y="310" font-size="19" font-weight="700">Know your state requirements.</text>
+    <g font-size="17">
+      <text x="56" y="340">Possession limits, approved products, and patient rules vary by state.</text>
+      <text x="56" y="365">Follow your clinician’s guidance and your state medical cannabis program.</text>
+    </g>
+    <rect x="56" y="396" width="888" height="44" rx="12" fill="#f0f5ef"/>
+    <text x="80" y="424" font-size="16" font-weight="600">Illustrative sample only. This card does not authorize possession or purchase.</text>
+    <rect x="56" y="463" width="888" height="64" fill="url(#barcode)"/>
+    <text x="56" y="548" font-size="12" letter-spacing="2" fill="#718176">DEMO · 0248 · 6193</text>
+    <text x="944" y="548" text-anchor="end" font-size="12" letter-spacing="2" fill="#718176">DECORATIVE BARCODE · NOT SCANNABLE</text>
+    <path fill="#174a35" d="M0 560h1000v70H0z"/>
+    <text x="56" y="603" fill="#fff" font-size="16" letter-spacing="2">MYFLORAMD.COM</text>
+    <text x="944" y="603" text-anchor="end" fill="#d3e65c" font-size="12" letter-spacing="2">DEMO ONLY · NOT A VALID CREDENTIAL</text>
+  </g>
+  <rect x="2" y="2" width="996" height="626" rx="36" fill="none" stroke="#dce7d8" stroke-width="4"/>
+</svg>

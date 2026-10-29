@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "MmjGreen — guided medical-card evaluation and telehealth. Public site + care workspaces.",
+  "description": "MyFloraMD — guided medical-card evaluation and telehealth. Public site + care workspaces.",
   "engines": {
     "node": ">=20"
   },

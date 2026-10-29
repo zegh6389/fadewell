@@ -1,13 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Workspace, CareNotice, CareLoader } from './Workspace.jsx'
 import { getAuditLog, getDeliveryQueue, listUsers, updateUser } from '../../lib/api.js'
-import { IconArrow, IconCheck, IconShield } from '../../components/Icons.jsx'
-
-const ROLES = ['PATIENT', 'DOCTOR', 'STAFF', 'ADMIN']
-
-function formatWhen(value) {
-  return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-}
+import { IconShield } from '../../components/Icons.jsx'
+import { formatWhen } from '../../lib/datetime.js'
 
 function AdminSurface() {
   const [state, setState] = useState('loading')

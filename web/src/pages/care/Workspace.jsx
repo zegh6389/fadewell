@@ -10,30 +10,41 @@ import {
   submitMfa
 } from '../../lib/session.js'
 import { careAreas, brand } from '../../lib/content.js'
+import PatientIntakePreview, { PreviewComplete } from './PatientIntakePreview.jsx'
 import { BrandMark, IconArrow, IconCheck, IconShield } from '../../components/Icons.jsx'
 /* ---------- Shared chrome ------------------------------------- */
 
 export function CareShell({ area, session, onSignOut, children }) {
   const meta = careAreas.find((a) => a.key === area)
+  // The patient surface is the only one styled by `.care.intake-experience`,
+  // which is where `--intake-green` is declared. Without it the primary button
+  // resolves to an undefined variable and renders with no background at all.
+  const isIntake = area === 'patient'
   return (
-    <div className="care">
+    <div className={`care${isIntake ? ' intake-experience' : ''}`}>
       {/* React 19 hoists this into <head>. Paired with the service's
           X-Robots-Tag header so the surface stays unindexed even if the
           bundle is served without the API in front of it. */}
       <meta name="robots" content="noindex, nofollow, noarchive" />
+      <title>{isIntake ? 'Patient intake | MyFloraMD' : `${meta?.label ?? 'Care'} | MyFloraMD`}</title>
+      {isIntake ? <a className="skip-link" href="#care-content">Skip to questionnaire</a> : null}
       <header className="care__bar">
         <Link to="/" className="brand" aria-label={`${brand.name} home`}>
           <BrandMark className="brand__mark" size={26} />
           <span>{brand.name}</span>
         </Link>
         <div className="care__bar-mid">
-          <span className="tag tag--forest">{meta?.label ?? 'Workspace'}</span>
+          {isIntake ? null : (
+            <span className="tag tag--forest">{meta?.label ?? 'Workspace'}</span>
+          )}
           {session ? <span className="care__who">{session.role.toLowerCase()}</span> : null}
         </div>
         <div className="care__bar-actions">
-          <Link to="/" className="btn btn--quiet btn--sm">
-            Site
-          </Link>
+          {isIntake ? null : (
+            <Link to="/" className="btn btn--quiet btn--sm">
+              Site
+            </Link>
+          )}
           {session ? (
             <button type="button" className="btn btn--ghost btn--sm" onClick={onSignOut}>
               Sign out
@@ -41,7 +52,9 @@ export function CareShell({ area, session, onSignOut, children }) {
           ) : null}
         </div>
       </header>
-      <main className="care__main">{children}</main>
+      <main id="care-content" className="care__main" tabIndex={-1}>
+        {children}
+      </main>
     </div>
   )
 }
@@ -280,9 +293,25 @@ function PatientEntry({ onStarted }) {
 export function Workspace({ area, role, isPatient = false, Surface }) {
   const { session, status, setSession, end } = useSession(role)
   const { info, state: serviceState } = useServiceStatus()
+  const [intakeComplete, setIntakeComplete] = useState(false)
 
   if (status === 'loading') return <CareLoader />
   if (serviceState === 'unavailable') {
+    // The public deployment has no care API behind it. Rather than dead-ending
+    // the most likely entry point on an error, patient intake falls back to the
+    // questionnaire with every network call removed. It accepts nothing, says
+    // so on screen, and is never shown once a real service is reachable.
+    if (isPatient) {
+      // Once the questionnaire is finished it takes over the whole surface —
+      // the shell's skip link, header and step chrome have no purpose left.
+      if (intakeComplete) return <PreviewComplete />
+      return (
+        <CareShell area={area} session={session} onSignOut={end}>
+          <PatientIntakePreview onComplete={() => setIntakeComplete(true)} />
+        </CareShell>
+      )
+    }
+
     return (
       <CareShell area={area} session={session} onSignOut={end}>
         <Unavailable>

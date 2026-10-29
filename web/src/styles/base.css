@@ -1,5 +1,5 @@
 /* ============================================================
-   MmjGreen — Base: reset, typography, flat motion primitives
+   MyFloraMD — Base: reset, typography, flat motion primitives
    ============================================================ */
 
 *,
@@ -80,12 +80,6 @@ ol[class] {
 ::selection {
   background: var(--lime);
   color: var(--ink);
-}
-
-:focus-visible {
-  outline: 3px solid var(--moss);
-  outline-offset: 3px;
-  border-radius: 4px;
 }
 
 /* ---------- Typography ------------------------------------- */

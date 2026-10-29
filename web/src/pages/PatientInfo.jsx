@@ -17,8 +17,8 @@ export default function PatientInfo() {
         eyebrow="Patient guide"
         title="Feel prepared."
         accent="One step at a time."
-        image="/assets/page-patient-info.webp"
-        alt="Illustration summarising what to bring to a MmjGreen evaluation"
+        image="/assets/care-preparation.webp"
+        alt="Illustrative stock photograph of a laptop and stethoscope used for care preparation"
       >
         Know what to bring, what your clinician will review, and what happens after your visit. Written for
         people doing this for the first time, and for people renewing who want to know what has changed.
@@ -36,7 +36,7 @@ export default function PatientInfo() {
               If you only do one thing from this page, make it the first one. Missing identification is by far the
               most common reason a consultation gets rescheduled.
             </p>
-            <Link className="btn btn--forest" to="/care">
+            <Link className="btn btn--forest" to="/patient">
               Start your intake
             </Link>
           </div>
@@ -100,11 +100,10 @@ export default function PatientInfo() {
       </section>
 
       <CtaBand
-        eyebrow="Ready when you are"
         title="You know more"
         accent="than you think."
-        body="The intake takes about six minutes and you can stop and come back. No account, no password."
-        primary={{ to: '/care', label: 'Start an intake' }}
+        body="Sign up with your contact details, complete the questionnaire in about 2 minutes, then speak with a doctor. Your secure link keeps your care accessible without a password."
+        primary={{ to: '/patient', label: 'Start an intake' }}
         secondary={{ to: '/service', label: 'See how it works' }}
       />
     </>

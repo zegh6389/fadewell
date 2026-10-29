@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { conditions } from '../lib/content.js'
 import { PageHero, SectionHead, CtaBand, Checklist } from '../components/Page.jsx'
-import { IconCheck, IconArrow } from '../components/Icons.jsx'
+import { IconArrow } from '../components/Icons.jsx'
 import { MagneticLink } from '../components/Chrome.jsx'
 import { getJurisdictions } from '../lib/api.js'
 
@@ -40,6 +40,8 @@ export default function Care() {
         eyebrow="What we treat"
         title="Qualifying conditions,"
         accent="in the states we serve."
+        image="/assets/botanical-bud.webp"
+        alt="Close-up photograph of a cannabis flower accompanying qualifying-condition guidance"
         lede="A medical card exists so that cannabis can be used without the legal risk that comes with it. These are the conditions our clinicians most often evaluate — your state decides which of them actually qualify."
       />
 
@@ -74,7 +76,7 @@ export default function Care() {
               </h2>
               <p className="lede">
                 Two people with the same condition can have completely different legal options depending
-                on where they live. That is why MmjGreen checks your jurisdiction before you answer a
+                on where they live. That is why MyFloraMD checks your jurisdiction before you answer a
                 single question.
               </p>
               <Checklist items={disclaimers} />
@@ -84,40 +86,42 @@ export default function Care() {
               <p className="card__num">JURISDICTION</p>
               <h3 className="card__title">Check your state</h3>
               <p className="card__body">
-                Select your state to see whether MmjGreen currently serves it.
+                Select your state to see whether MyFloraMD currently serves it.
               </p>
 
-              <label className="field">
-                <span className="field__label">State or territory</span>
-                <select
-                  className="field__control"
-                  value={state}
-                  onChange={(event) => setState(event.target.value)}
-                >
-                  <option value="">Select a state…</option>
-                  {jurisdictions.map((j) => (
-                    <option key={j.code} value={j.code}>
-                      {j.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <div className="form">
+                <label className="field">
+                  <span className="field__label">State or territory</span>
+                  <select
+                    className="field__control"
+                    value={state}
+                    onChange={(event) => setState(event.target.value)}
+                  >
+                    <option value="">Select a state…</option>
+                    {jurisdictions.map((j) => (
+                      <option key={j.code} value={j.code}>
+                        {j.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-              {active ? (
-                <div className="notice notice--ok" role="status">
-                  <strong>{active.name}</strong>
-                  <p>
-                    {active.comingSoon
-                      ? 'We are not accepting new patients here yet — join the waitlist and we will contact you.'
-                      : 'We are accepting new patients here. Start an intake and we will apply the rules that apply to you.'}
-                  </p>
-                </div>
-              ) : null}
+                {active ? (
+                  <div className="notice notice--ok" role="status">
+                    <strong>{active.name}</strong>
+                    <p>
+                      {active.comingSoon
+                        ? 'We are not accepting new patients here yet — join the waitlist and we will contact you.'
+                        : 'We are accepting new patients here. Start an intake and we will apply the rules that apply to you.'}
+                    </p>
+                  </div>
+                ) : null}
 
-              <MagneticLink to="/patient" className="btn btn--primary btn--block">
-                Start your intake
-                <IconArrow size={16} />
-              </MagneticLink>
+                <MagneticLink to="/patient" className="btn btn--primary btn--block">
+                  Start your intake
+                  <IconArrow size={16} />
+                </MagneticLink>
+              </div>
             </div>
           </div>
         </div>

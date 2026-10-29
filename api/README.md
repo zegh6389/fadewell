@@ -1,4 +1,4 @@
-# MmjGreen patient journey API
+# MyFloraMD patient journey API
 
 TypeScript on Node 24, Fastify and PostgreSQL. Extends the existing React/Vite site on `codex/backend`.
 

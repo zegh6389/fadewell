@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 
 import { Ambient, ScrollRail, Masthead, Footer } from './components/Chrome.jsx'
+import CookieConsent from './components/CookieConsent.jsx'
 import { useRevealRoot } from './lib/motion.js'
 import { PRIVATE_ROUTES } from './pages/care/routes.jsx'
 
@@ -11,7 +12,6 @@ import Service from './pages/Service.jsx'
 import Care from './pages/Care.jsx'
 import PatientInfo from './pages/PatientInfo.jsx'
 import Clinicians from './pages/Clinicians.jsx'
-import ClinicianProfile from './pages/ClinicianProfile.jsx'
 import Blog from './pages/Blog.jsx'
 import Pricing from './pages/Pricing.jsx'
 import Faq from './pages/Faq.jsx'
@@ -28,6 +28,12 @@ import './styles/parity.css'
 import './styles/care.css'
 import './styles/parity-care.css'
 import './styles/premium.css'
+
+/* The stylesheet recovered from the production build. Imported last so its
+   definitions win any tie with the hand-written sheets above — the two agree
+   on 686 of 722 shared rules, and the rest are the components this build is
+   still missing. */
+import './styles/recovered.css'
 
 /** Restores scroll position on navigation, and honours in-page hashes. */
 function ScrollManager() {
@@ -73,7 +79,9 @@ export default function App() {
                   <Route path="/care" element={<Care />} />
                   <Route path="/patient-info" element={<PatientInfo />} />
                   <Route path="/clinicians" element={<Clinicians />} />
-                  <Route path="/clinicians/:slug" element={<ClinicianProfile />} />
+                  {/* Individual clinician profiles were removed from the public
+                      site; these URLs redirect to the standards page. */}
+                  <Route path="/clinicians/:slug" element={<Navigate to="/clinicians" replace />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<Blog />} />
                   <Route path="/pricing" element={<Pricing />} />
@@ -90,6 +98,10 @@ export default function App() {
                 </Routes>
               </main>
               <Footer />
+              {/* Rendered after the footer so the overlay is the last thing in
+                  the document: the skip link and the page content must come
+                  first in both the visual and the focus order. */}
+              <CookieConsent />
             </>
           }
         />

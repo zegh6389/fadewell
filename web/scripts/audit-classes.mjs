@@ -1,5 +1,5 @@
 /**
- * MmjGreen — design-token / class audit.
+ * MyFloraMD — design-token / class audit.
  *
  * Cross-checks three things that a refactor silently breaks:
  *   1. CSS custom properties referenced with var(--x) that are not defined.

@@ -1,46 +1,53 @@
 import { useEffect, useRef } from 'react'
 import { IconVideo, IconCheck, IconShield } from './Icons.jsx'
 
-export function SampleCard({ eager = false }) {
-  return <img className="medical-card" src="/assets/card-premium.webp" alt="Demo medical cannabis card for Avery Morgan, with sample portrait, patient ID, birth date, issue date, expiry date and state. Not a real credential." width="1000" height="630" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+export const RESOURCE_IMAGES = {
+  'preparing-for-your-evaluation': '/assets/blog/preparing-evaluation-cover.webp',
+  'certification-is-not-a-state-card': '/assets/blog/certification-card-cover.webp',
+  'what-changes-when-you-renew': '/assets/blog/renewal-changes-cover.webp'
 }
 
-export function TelehealthScene() {
-  const ref = useRef(null)
-  useEffect(() => {
-    const node = ref.current
-    const media = window.matchMedia('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)')
-    let frame = 0
-    const reset = () => {
-      cancelAnimationFrame(frame)
-      node.style.setProperty('--scene-x', '0deg')
-      node.style.setProperty('--scene-y', '0deg')
-    }
-    const move = (event) => {
-      if (!media.matches) return
-      const box = node.getBoundingClientRect()
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => {
-        node.style.setProperty('--scene-x', `${(event.clientY - box.top - box.height / 2) / box.height * -7}deg`)
-        node.style.setProperty('--scene-y', `${(event.clientX - box.left - box.width / 2) / box.width * 9}deg`)
-      })
-    }
-    node.addEventListener('pointermove', move)
-    node.addEventListener('pointerleave', reset)
-    media.addEventListener('change', reset)
-    return () => {
-      cancelAnimationFrame(frame)
-      node.removeEventListener('pointermove', move)
-      node.removeEventListener('pointerleave', reset)
-      media.removeEventListener('change', reset)
-    }
-  }, [])
-
+export function SampleCard({ eager = false }) {
   return (
-    <div className="telehealth-scene" ref={ref}>
+    <div className="medical-card-stage">
+      <div className="medical-card medical-card--flip">
+        <img
+          className="medical-card__face"
+          src="/assets/card-premium.webp"
+          alt="Demo medical cannabis card for Avery Morgan, with sample portrait, patient ID, birth date, issue date, expiry date and state. Not a real credential."
+          width="1000"
+          height="630"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+        <img
+          className="medical-card__face medical-card__face--back"
+          src="/assets/card-premium-back.svg"
+          alt="MyFloraMD sample card back with cannabis safety notes, state requirements reminder, and decorative barcode. Demo only, not a valid credential."
+          width="1000"
+          height="630"
+          decoding="async"
+        />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * The hero scene.
+ *
+ * Pure markup. This used to track the pointer and tilt the whole scene in 3D
+ * via `--scene-x` / `--scene-y`; neither the variables nor a `card-arrive`
+ * animation exist anywhere in the production bundle, so both were additions of
+ * mine rather than things the original build lost. The composition is layered
+ * with `translateZ` in CSS instead, which is how the production scene gets its
+ * depth.
+ */
+export function TelehealthScene() {
+  return (
+    <div className="telehealth-scene">
       <div className="scene-orbit scene-orbit--outer" aria-hidden="true" />
       <div className="scene-orbit scene-orbit--inner" aria-hidden="true" />
-      <span className="scene-caption">A little more human. A lot more clear.</span>
       <div className="scene-depth">
         <div className="botanical-disc">
           <img src="/assets/botanical-bud.webp" alt="Close-up of a medical cannabis flower" width="1000" height="667" decoding="async" />

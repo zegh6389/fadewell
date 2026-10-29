@@ -2,7 +2,7 @@
   "name": "mmjgreen",
   "version": "1.0.0",
   "private": true,
-  "description": "MmjGreen — guided medical-card evaluation and telehealth.",
+  "description": "MyFloraMD — guided medical-card evaluation and telehealth.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=20"

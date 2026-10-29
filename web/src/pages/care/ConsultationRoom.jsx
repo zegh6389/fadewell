@@ -200,9 +200,10 @@ export function ConsultationRoom({ id, appointment, isDoctor, csrf, onBack }) {
     : 0
 
   const audioOnly = appointment.mode === 'WEB_AUDIO'
-  const when = new Intl.DateTimeFormat(undefined, { dateStyle: 'full', timeStyle: 'short' }).format(
-    new Date(appointment.starts_at)
-  )
+  const when = new Date(appointment.starts_at).toLocaleString(undefined, {
+    dateStyle: 'full',
+    timeStyle: 'short'
+  })
 
   return (
     <div className="room">

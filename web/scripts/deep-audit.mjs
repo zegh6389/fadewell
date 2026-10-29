@@ -1,5 +1,5 @@
 /**
- * MmjGreen — deep browser audit.
+ * MyFloraMD — deep browser audit.
  *
  * Deliberately goes beyond the Playwright suite. That suite proves routes
  * render without errors; this one proves the *design* is what it claims to

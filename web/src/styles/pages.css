@@ -1,5 +1,5 @@
 /* ============================================================
-   MmjGreen — Page compositions (flat editorial)
+   MyFloraMD — Page compositions (flat editorial)
    ============================================================ */
 
 /* ---------- Hero -------------------------------------------- */
@@ -374,12 +374,6 @@
 .journey__viewport {
   overflow: hidden;
   padding-block: var(--s-4);
-}
-
-.journey__viewport:focus-visible {
-  outline: 3px solid var(--moss);
-  outline-offset: 4px;
-  border-radius: var(--r-md);
 }
 
 .journey__track {

@@ -1,5 +1,5 @@
 /* ============================================================
-   MmjGreen — Care workspaces + forms (flat)
+   MyFloraMD — Care workspaces + forms (flat)
    Functional surfaces: solid panels, hairline borders.
    ============================================================ */
 
@@ -269,12 +269,6 @@
 
 .field__control:hover {
   border-color: var(--moss);
-}
-
-.field__control:focus {
-  outline: none;
-  border-color: var(--moss);
-  box-shadow: var(--sh-ring);
 }
 
 .field__control--area {

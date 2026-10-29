@@ -6,4 +6,4 @@ Disallow: /staff
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://mmjgreen.com/sitemap.xml
+Sitemap: https://mmjgreen.space.minimax.io/sitemap.xml

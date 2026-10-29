@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { Workspace, CareNotice, CareLoader } from './Workspace.jsx'
 import {
   addNote,
-  controlTimer,
   createAvailability,
   deleteAvailability,
   getIntakeById,
@@ -10,16 +9,7 @@ import {
 } from '../../lib/api.js'
 import { ConsultationRoom } from './ConsultationRoom.jsx'
 import { DateTimePicker } from './DateTimePicker.jsx'
-import { IconArrow, IconCheck, IconClock, IconVideo } from '../../components/Icons.jsx'
-
-const INTAKE_STATES = ['DRAFT', 'SUBMITTED', 'NEEDS_REVIEW', 'REVIEWED', 'SCHEDULED', 'COMPLETED']
-
-function formatWhen(value) {
-  return new Date(value).toLocaleString(undefined, {
-    dateStyle: 'medium',
-    timeStyle: 'short'
-  })
-}
+import { formatWhen } from '../../lib/datetime.js'
 
 /* ---------- Clinician surface ---------------------------------- */
 

@@ -1,20 +1,17 @@
+import { articles } from './resourceCentre.js'
 /**
- * MmjGreen — site content.
+ * MyFloraMD — site content.
  *
  * Single source of truth for copy used across the public site.
  * Kept separate from components so copy edits never touch layout code.
  */
 
 export const brand = {
-  name: 'MmjGreen',
-  domain: 'mmjgreen.com',
-  origin: 'https://mmjgreen.com',
+  name: 'MyFloraMD',
   tagline: 'Medical card evaluation, made calm.',
-  description:
-    'MmjGreen guides you from a short online intake to a live consultation with a licensed clinician — with clear next steps at every stage.',
-  email: 'care@mmjgreen.com',
-  phone: '(888) 555-0142',
-  phoneHref: '+18885550142',
+  email: 'care@myfloramd.com',
+  phone: '888-809-3204',
+  phoneHref: '+18888093204',
   address: '1200 Market Street, Suite 400, Denver, CO 80202',
   hours: 'Mon–Fri, 8am–8pm MT · Sat, 9am–3pm MT'
 }
@@ -27,6 +24,7 @@ export const primaryNav = [
   { label: 'Clinicians', to: '/clinicians' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'FAQ', to: '/faq' },
+  { label: 'Blog', to: '/blog' },
   { label: 'About', to: '/about' }
 ]
 
@@ -37,7 +35,8 @@ export const footerNav = [
       { label: 'How it works', to: '/how-it-works' },
       { label: 'What we treat', to: '/care' },
       { label: 'Clinicians', to: '/clinicians' },
-      { label: 'Pricing', to: '/pricing' }
+      { label: 'Pricing', to: '/pricing' },
+      { label: 'State fees and access', to: '/#state-reference' }
     ]
   },
   {
@@ -45,6 +44,11 @@ export const footerNav = [
     links: [
       { label: 'About', to: '/about' },
       { label: 'Contact', to: '/contact' },
+      { label: 'Blog', to: '/blog' },
+      {
+        label: 'Pennsylvania guide',
+        to: '/blog/pennsylvania-medical-cannabis-card-caregiver-rules'
+      },
       { label: 'FAQ', to: '/faq' }
     ]
   },
@@ -74,13 +78,11 @@ export const footerNav = [
 
 export const hero = {
   pill: 'Accepting new patients in 14 states',
-  titleLines: ['Care that meets you', 'where you are.'],
-  titleAccent: 'where you are.',
   lede:
     'A short online intake, a real clinician, and a clear path to your medical card. No waiting rooms, no guesswork — just the next step, made obvious.',
   primaryCta: { label: 'Start your intake', to: '/patient' },
   secondaryCta: { label: 'See how it works', to: '/how-it-works' },
-  notes: ['No account needed', 'Licensed clinicians', 'Same-week appointments']
+  notes: ['2 minute questionnaire', 'Licensed clinicians', '10–15 minute evaluation process']
 }
 
 /* ---------- Journey ----------------------------------------- */
@@ -88,43 +90,44 @@ export const hero = {
 export const journey = [
   {
     step: '01',
-    icon: 'clipboard',
-    title: 'Tell us what brings you in',
+    icon: 'map',
+    title: 'Sign up and choose your state',
     body:
-      'A short, private questionnaire about your goals, history, medications and allergies. No account, no password, about six minutes.',
-    detail: 'Average completion: 6 minutes'
+      'Enter your contact details and choose your state. We check service availability and send you a secure patient link, so there is no password to remember.',
+    detail: 'A secure link keeps your care in one place'
   },
   {
     step: '02',
-    icon: 'map',
-    title: 'We check your state rules',
+    icon: 'clipboard',
+    title: 'Complete a short questionnaire',
     body:
-      'Medical card law differs in every state. MmjGreen checks your jurisdiction automatically and shows you only options that are actually available to you.',
-    detail: 'Rules verified against live jurisdiction data'
+      'Tell us about your medical history, current medications, allergies, and what brings you in. The questionnaire takes about 2 minutes.',
+    detail: 'About 2 minutes'
   },
   {
     step: '03',
-    icon: 'calendar',
-    title: 'Pick a time that works',
+    icon: 'video',
+    title: 'Talk with a doctor',
     body:
-      'Choose a live video or phone consultation from real clinician availability. You get a confirmation with everything you need to join.',
-    detail: 'Same-week slots, evenings included'
+      'A licensed clinician reviews your answers and calls you for the evaluation. Signup, questionnaire, and the doctor conversation typically take 10–15 minutes in total, or up to 30 minutes if you want an in-depth discussion. Where your state requires an in-person visit or other steps, those requirements still apply. State registration and card issuance are separate.',
+    detail: '10–15 minutes total; up to 30 minutes for an in-depth conversation'
   },
   {
     step: '04',
-    icon: 'video',
-    title: 'Meet your clinician',
+    icon: 'card',
+    title: 'Apply for a plastic card or use a digital version',
     body:
-      'A licensed clinician reviews your intake, asks follow-up questions, and completes your evaluation. Bring your photo ID and any records you have.',
-    detail: 'Video or phone — your choice'
+      'If certified, follow your state’s registration requirements. Apply for a physical (plastic) card where available, or use a state-approved digital card or certification where accepted. State fees, processing times, and available formats vary.',
+    detail: 'Card formats and state requirements vary by location'
   },
   {
     step: '05',
-    icon: 'card',
-    title: 'Your card, tracked to the finish',
+    icon: 'map',
+    title: 'Know your state’s next step',
     body:
-      'If approved, we submit to your state registry and keep you updated at every stage until your card is issued.',
-    detail: 'We track your application to issuance'
+      'Before your first purchase, check accepted documents and state fees. California allows adult medicinal purchases with a valid physician recommendation, subject to verification. Pennsylvania requires an active state card and a $50 annual state payment unless waived. Compare all states below.',
+    detail: 'Evaluation fees and state program fees are separate',
+    reference: { to: '/#state-reference', label: 'All-state fees and access guide' }
   }
 ]
 
@@ -135,13 +138,13 @@ export const storySteps = [
     num: '01',
     title: 'Built around your state, not a generic template',
     body:
-      'Most online card services hand you the same questionnaire everywhere. MmjGreen reads your jurisdiction first, so the questions you answer and the options you are offered actually apply where you live.'
+      'Most online card services hand you the same questionnaire everywhere. MyFloraMD reads your jurisdiction first, so the questions you answer and the options you are offered actually apply where you live.'
   },
   {
     num: '02',
     title: 'A real clinician, on a real schedule',
     body:
-      'Every evaluation is performed by a licensed practitioner with an active credential in your state. You see who you are booking with, their background, and the times they are genuinely available.'
+      'Every evaluation is performed by a licensed practitioner in your state. Your treating clinician introduces themselves during your private care interaction; public doctor profiles are not displayed.'
   },
   {
     num: '03',
@@ -162,7 +165,7 @@ export const storySteps = [
 export const trustMarks = [
   { icon: 'shield', label: 'HIPAA-aligned handling' },
   { icon: 'badge', label: 'State-licensed clinicians' },
-  { icon: 'clock', label: 'Same-week appointments' },
+  { icon: 'clock', label: '10–15 minute evaluation process' },
   { icon: 'lock', label: '256-bit encrypted records' },
   { icon: 'chat', label: 'No patient data sold' }
 ]
@@ -173,7 +176,7 @@ export const stats = [
   { value: 12400, suffix: '+', label: 'Evaluations completed' },
   { value: 14, suffix: '', label: 'States served' },
   { value: 4.9, suffix: '/5', label: 'Average patient rating', decimals: 1 },
-  { value: 2.4, suffix: ' days', label: 'Median time to decision', decimals: 1 }
+  { value: 15, suffix: ' min', label: 'Typical evaluation process: 10–15 minutes' }
 ]
 
 /* ---------- Conditions -------------------------------------- */
@@ -221,48 +224,32 @@ export const conditions = [
   }
 ]
 
-/* ---------- Clinicians -------------------------------------- */
+/* ---------- Clinical standards ------------------------------- */
 
-export const clinicians = [
+/**
+ * What a patient can expect from the evaluation.
+ *
+ * Replaces the former clinician directory. The production build stopped
+ * publishing clinician names, portraits, biographies and licences, and says so
+ * on this page and on the home page — so there is deliberately no roster here
+ * to drift out of step with that claim.
+ */
+export const evaluationStandards = [
   {
-    slug: 'dr-amara-osei',
-    name: 'Dr. Amara Osei, MD',
-    role: 'Lead evaluating physician',
-    states: 'CO · CA · WA',
-    years: 14,
-    photo: '/assets/clinician-amara.webp',
-    bio: 'Board-certified in family medicine. Led clinical operations for two multi-state cannabis programs before joining MmjGreen.',
-    languages: ['English', 'Twi']
+    title: 'Licensed for your state',
+    body: 'Your evaluation is handled by a clinician licensed where you receive care. State requirements determine the permitted evaluation format.'
   },
   {
-    slug: 'dr-rafael-duran',
-    name: 'Dr. Rafael Durán, DO',
-    role: 'Evaluating physician',
-    states: 'CO · NM · AZ',
-    years: 11,
-    photo: '/assets/clinician-rafael.webp',
-    bio: 'Osteopathic physician focused on pain medicine and post-surgical recovery. Runs MmjGreen’s chronic pain pathway.',
-    languages: ['English', 'Spanish']
+    title: 'An independent decision',
+    body: 'A clinician reviews your questionnaire and speaks with you before making a decision. Neither MyFloraMD nor the care chatbot can promise approval.'
   },
   {
-    slug: 'dr-priya-raghavan',
-    name: 'Dr. Priya Raghavan, MD',
-    role: 'Evaluating physician',
-    states: 'WA · OR · NV',
-    years: 9,
-    photo: '/assets/clinician-priya.webp',
-    bio: 'Psychiatry background with a focus on anxiety and trauma-related conditions. Publishes on harm reduction and access.',
-    languages: ['English', 'Tamil', 'Hindi']
+    title: 'A private clinical conversation',
+    body: 'Discuss your history and questions in your secure care interaction. We do not publish clinician names, portraits, biographies, or personal profiles on this website.'
   },
   {
-    slug: 'dr-marcus-whitfield',
-    name: 'Dr. Marcus Whitfield, NP',
-    role: 'Nurse practitioner',
-    states: 'CO · IL · MI',
-    years: 12,
-    photo: '/assets/clinician-marcus.webp',
-    bio: 'Family nurse practitioner specialising in chronic illness management and patient education across the full intake pathway.',
-    languages: ['English']
+    title: 'Time for your questions',
+    body: 'The signup, 2 minute questionnaire, and doctor conversation typically take 10–15 minutes in total. Allow up to 30 minutes for an in-depth conversation. State registry processing is separate.'
   }
 ]
 
@@ -299,7 +286,7 @@ export const plans = [
       'Dose and product guidance discussion',
       'Renewal paperwork prepared and submitted',
       'Secure messaging between visits',
-      'Same-week availability'
+      'Time to discuss your questions'
     ]
   },
   {
@@ -345,14 +332,7 @@ export const testimonials = [
   },
   {
     quote:
-      'Dr. Osei was genuinely thorough. She asked about my history in a way no other provider had. I never felt rushed into an answer.',
-    name: 'Alicia N.',
-    location: 'Phoenix, AZ',
-    rating: 5
-  },
-  {
-    quote:
-      'I was nervous about the video call and the tech just worked. Booking, reminders, joining — all of it. I have recommended MmjGreen to two friends since.',
+      'I was nervous about the video call and the tech just worked. Booking, reminders, joining — all of it. I have recommended MyFloraMD to two friends since.',
     name: 'Jordan K.',
     location: 'Reno, NV',
     rating: 5
@@ -368,15 +348,15 @@ export const faqs = [
   },
   {
     q: 'Do I need to create an account?',
-    a: 'No. Your intake is tied to a secure link, not a password. You will receive a confirmation by email or text with your secure patient link — keep it, it is how you return to your record, reschedule, and message your care team.'
+    a: 'Sign up with your contact details and state, then complete the questionnaire. You do not need to create a password. Your secure patient link lets you return to your care record.'
   },
   {
     q: 'How long does the whole process take?',
-    a: 'The questionnaire takes about six minutes. Most evaluations are booked within a week, and our median time from consultation to decision is around 2.4 days. State registry processing varies — we track your application and tell you where it is.'
+    a: 'Sign up, complete the questionnaire in about 2 minutes, then speak with a doctor. The evaluation process typically takes 10–15 minutes in total, or up to 30 minutes if you want an in-depth conversation. Any required in-person assessment, state registration, and card issuance are separate and follow your state’s rules.'
   },
   {
     q: 'What if I live somewhere you do not serve?',
-    a: 'MmjGreen currently operates in 14 states. Enter your state during intake and we will tell you honestly whether we can help. If we cannot, we will say so plainly and point you to the state’s own physician registry rather than sending you through a process that will not work.'
+    a: 'MyFloraMD currently operates in 14 states. Enter your state during intake and we will tell you honestly whether we can help. If we cannot, we will say so plainly and point you to the state’s own physician registry rather than sending you through a process that will not work.'
   },
   {
     q: 'Is my information sold or shared?',
@@ -396,7 +376,7 @@ export const faqs = [
   }
 ]
 
-/* ---------- Why MmjGreen ----------------------------------- */
+/* ---------- Why MyFloraMD ----------------------------------- */
 
 export const pillars = [
   {
@@ -409,7 +389,7 @@ export const pillars = [
     icon: 'badge',
     title: 'Credentialed where you live',
     body:
-      'Each clinician is licensed in the states they evaluate in. We publish who they are and what they treat.'
+      'Each clinician is licensed in the states they evaluate in. We explain our clinical standards without displaying individual doctor profiles.'
   },
   {
     icon: 'clock',
@@ -429,15 +409,11 @@ export const pillars = [
 
 export const careAreas = [
   {
-    path: '/patient',
-    role: 'PATIENT',
     key: 'patient',
     label: 'Patient',
-    kicker: 'Your next step, made clear',
     title: 'Your care.\nOne calm place.',
     body:
       'Complete your intake, follow your appointment and prepare for your conversation with a clinician — without creating a password.',
-    action: 'Open your intake',
     points: [
       ['No account needed', 'Finish your form and questionnaire in one secure session.'],
       ['Always know the next step', 'See review status, appointment details and application progress in one view.'],
@@ -445,15 +421,11 @@ export const careAreas = [
     ]
   },
   {
-    path: '/portal',
-    role: 'DOCTOR',
     key: 'portal',
     label: 'Clinician',
-    kicker: 'More focus for the person in front of you',
     title: 'Your day.\nRoom for care.',
     body:
       'A focused workspace for your schedule, assigned evaluations, availability, and the consultation controls you need.',
-    action: 'Continue to clinician sign in',
     points: [
       ['A clear view of your day', 'Appointments and assigned patients, ordered by what is next.'],
       ['Time on your terms', 'Publish availability and adjust consultation duration as you go.'],
@@ -461,15 +433,11 @@ export const careAreas = [
     ]
   },
   {
-    path: '/staff',
-    role: 'STAFF',
     key: 'staff',
     label: 'Care operations',
-    kicker: 'Every next step has a home',
     title: 'Less searching.\nMore helping.',
     body:
       'Move from intake review to scheduling with clear queues, contact history, and a record of every action taken.',
-    action: 'Continue to operations sign in',
     points: [
       ['Work from a real queue', 'Find submissions needing review or corrected information.'],
       ['Keep the handoff intact', 'Record contact attempts and administrative review notes.'],
@@ -477,15 +445,11 @@ export const careAreas = [
     ]
   },
   {
-    path: '/admin',
-    role: 'ADMIN',
     key: 'admin',
     label: 'Administration',
-    kicker: 'Clarity behind every action',
     title: 'A considered view.\nAccountable control.',
     body:
       'Review access, operational activity and delivery readiness from a dedicated administrative workspace.',
-    action: 'Continue to administrator sign in',
     points: [
       ['Purposeful access', 'Review accounts and revoke access when responsibilities change.'],
       ['Traceable activity', 'Inspect record access and operational changes.'],
@@ -501,7 +465,7 @@ export const legalDocs = {
     title: 'Privacy policy',
     updated: 'September 2026',
     intro:
-      'This policy explains what personal information MmjGreen collects, why we collect it, and the choices you have. It is written to be read, not to be skipped.',
+      'This policy explains what personal information MyFloraMD collects, why we collect it, and the choices you have. It is written to be read, not to be skipped.',
     sections: [
       {
         h: 'Information we collect',
@@ -532,6 +496,13 @@ export const legalDocs = {
         ]
       },
       {
+        h: 'Cookies and browser preferences',
+        p: [
+          'Essential cookies support secure sessions and core features. We store your cookie preference locally on your device for 180 days, without putting medical answers or identification documents in that preference. You can change your choice using Cookie settings in the website footer.',
+          'No optional analytics or advertising plugin is currently installed. Choosing to allow optional cookies records your preference; it does not give permission to use health information for advertising. Cookie permission is separate from medical consent and notification preferences. If your browser blocks preference storage, your choice applies to the current visit and you may be asked again after reloading.'
+        ]
+      },
+      {
         h: 'How long we keep it',
         p: [
           'We keep clinical records for the period required by the laws of the state where you were evaluated, which is commonly seven years. Marketing preferences are kept until you withdraw them. Technical security logs are kept for up to 24 months.'
@@ -550,19 +521,19 @@ export const legalDocs = {
     title: 'Terms of service',
     updated: 'September 2026',
     intro:
-      'These terms describe the agreement between you and MmjGreen when you use our site, complete an intake, or receive care through our clinicians.',
+      'These terms describe the agreement between you and MyFloraMD when you use our site, complete an intake, or receive care through our clinicians.',
     sections: [
       {
         h: 'Using this service',
         p: [
-          'You must be at least 21 years old to open an account or hold a medical card in the states we serve, and at least 18 years old to use this site. You agree to provide accurate information and to keep your secure link confidential.',
-          'You may not use MmjGreen to obtain a card through misrepresentation, to impersonate another person, or in a way that interferes with another person’s care or with the operation of the service.'
+          'Medical patient and caregiver age requirements vary by state. Minors require the applicable parent, guardian, or caregiver pathway. You agree to provide accurate information and keep your secure link confidential.',
+          'You may not use MyFloraMD to obtain a card through misrepresentation, to impersonate another person, or in a way that interferes with another person’s care or with the operation of the service.'
         ]
       },
       {
         h: 'Clinical services',
         p: [
-          'Evaluations are performed by independently licensed clinicians, not by MmjGreen. MmjGreen provides the technology, coordination and administrative support around that clinical relationship.',
+          'Evaluations are performed by independently licensed clinicians, not by MyFloraMD. MyFloraMD provides the technology, coordination and administrative support around that clinical relationship.',
           'Your clinician may decline to complete an evaluation, and we may decline to continue service, where they believe an evaluation is not appropriate or where the law of your state does not permit it. Where we decline before a consultation, we refund the evaluation fee.'
         ]
       },
@@ -577,13 +548,13 @@ export const legalDocs = {
         h: 'Your responsibilities',
         p: [
           'Answer the intake honestly and completely, attend your scheduled consultation, and tell your clinician about anything that could affect your safety or treatment. Tell us promptly if your contact details change so we can reach you.',
-          'Do not use MmjGreen for emergencies. If you are in crisis, call 911 or 988.'
+          'Do not use MyFloraMD for emergencies. If you are in crisis, call 911 or 988.'
         ]
       },
       {
         h: 'Liability',
         p: [
-          'MmjGreen provides clinical evaluations and administrative services but does not provide emergency care and cannot guarantee that a state registry will approve an application. Decisions about whether to issue a card are made by your state, not by us.',
+          'MyFloraMD provides clinical evaluations and administrative services but does not provide emergency care and cannot guarantee that a state registry will approve an application. Decisions about whether to issue a card are made by your state, not by us.',
           'To the extent permitted by law, our aggregate liability for claims arising from use of the service is limited to the amount you paid us in the twelve months before the claim arose. Nothing in these terms limits liability that cannot lawfully be limited.'
         ]
       },
@@ -622,7 +593,7 @@ export const legalDocs = {
       {
         h: 'State application fees',
         p: [
-          'Fees charged by your state registry are outside our control and are non-refundable through MmjGreen. We will always show you what a state charges before you submit.'
+          'Fees charged by your state registry are outside our control and are non-refundable through MyFloraMD. We will always show you what a state charges before you submit.'
         ]
       },
       {
@@ -637,7 +608,7 @@ export const legalDocs = {
     title: 'Telehealth consent',
     updated: 'September 2026',
     intro:
-      'Before your MmjGreen consultation begins, we need your informed consent to being evaluated remotely. Please read this fully — you will be asked to confirm it.',
+      'Before your MyFloraMD consultation begins, we need your informed consent to being evaluated remotely. Please read this fully — you will be asked to confirm it.',
     sections: [
       {
         h: 'What telehealth means here',
@@ -681,7 +652,7 @@ export const legalDocs = {
     title: 'Medical disclaimer',
     updated: 'September 2026',
     intro:
-      'Please read this carefully. It describes what MmjGreen is and is not, and the limits of the information you will find here.',
+      'Please read this carefully. It describes what MyFloraMD is and is not, and the limits of the information you will find here.',
     sections: [
       {
         h: 'Not medical advice',
@@ -692,7 +663,7 @@ export const legalDocs = {
       {
         h: 'No guarantee of approval',
         p: [
-          'A card is issued by your state, not by MmjGreen. Your clinician evaluates whether you meet the medical criteria in your state; the state registry then makes its own decision. We cannot and do not guarantee that any application will be approved.'
+          'A card is issued by your state, not by MyFloraMD. Your clinician evaluates whether you meet the medical criteria in your state; the state registry then makes its own decision. We cannot and do not guarantee that any application will be approved.'
         ]
       },
       {
@@ -704,7 +675,7 @@ export const legalDocs = {
       {
         h: 'Not for emergencies or crisis',
         p: [
-          'MmjGreen is not an emergency service and does not provide crisis care. If you are in danger, thinking about harming yourself, or need immediate help, call or text 988, or dial 911.'
+          'MyFloraMD is not an emergency service and does not provide crisis care. If you are in danger, thinking about harming yourself, or need immediate help, call or text 988, or dial 911.'
         ]
       },
       {
@@ -721,7 +692,7 @@ export const accessibility = {
   title: 'Accessibility statement',
   updated: 'September 2026',
   intro:
-    'MmjGreen wants everyone to be able to use this site and reach our care team, regardless of technology or ability.',
+    'MyFloraMD wants everyone to be able to use this site and reach our care team, regardless of technology or ability.',
   sections: [
     {
       h: 'Our commitment',
@@ -738,7 +709,7 @@ export const accessibility = {
     {
       h: 'Need help, or found a barrier?',
       p: [
-        'Email care@mmjgreen.com or call (888) 555-0142. If something on this site is difficult to use, we want to know — tell us what happened and which page you were on, and we will both fix it and get you care in the meantime.'
+        'Email care@myfloramd.com or call 888-809-3204. If something on this site is difficult to use, tell us what happened and which page you were on so we can help.'
       ]
     }
   ]
@@ -784,7 +755,7 @@ export const timeline = [
   { year: '2022', title: 'Founded in Denver', body: 'Two clinicians and an operations lead, building intake software for their own practice after watching patients struggle with paper forms.' },
   { year: '2023', title: 'First state programmes', body: 'Colorado, Washington and Oregon go live. Jurisdiction-aware intake becomes the core of the product rather than an afterthought.' },
   { year: '2024', title: 'Ten states', body: 'Care operations, clinician and admin workspaces ship as one system, with a full audit trail from first contact to card issuance.' },
-  { year: '2025', title: 'Twelve thousand evaluations', body: 'Median time from consultation to decision falls below three days as scheduling and registry automation improve.' },
+  { year: '2025', title: 'Twelve thousand evaluations', body: 'The workflow focuses on a short questionnaire and a direct clinician conversation, with state registration tracked separately.' },
   { year: '2026', title: 'Fourteen states', body: 'Rebuilt around a single care record so a patient never has to repeat their history between steps, clinicians or states.' }
 ]
 
@@ -797,8 +768,8 @@ export const timeline = [
 export const support = {
   phone: '888-809-3204',
   tel: 'tel:+18888093204',
-  email: 'care@mmjgreen.com',
-  mailto: 'mailto:care@mmjgreen.com'
+  email: 'care@myfloramd.com',
+  mailto: 'mailto:care@myfloramd.com'
 }
 
 /** States we have not opened yet. Everything else reads as available. */
@@ -858,9 +829,9 @@ export const patientPaths = [
     key: 'new',
     eyebrow: 'First-time patient',
     title: 'Starting a new application?',
-    body: 'Begin with your state, have your identification and medical history ready, and follow the instructions shown before your evaluation. Most intakes take about six minutes.',
+    body: 'Sign up with your state and contact details, have your identification ready, and complete the questionnaire in about 2 minutes before the doctor call.',
     action: 'Start a new application',
-    to: '/care'
+    to: '/patient'
   },
   {
     key: 'renew',
@@ -868,7 +839,7 @@ export const patientPaths = [
     title: 'Need to renew?',
     body: 'Renewal windows and registration steps change from year to year. Keep your current card nearby and check today’s requirements rather than assuming last year’s process still holds.',
     action: 'Check renewal availability',
-    to: '/care'
+    to: '/patient'
   }
 ]
 
@@ -891,7 +862,7 @@ export const tagline = [
 export const compliance = {
   eyebrow: 'Compliance and security',
   title: 'Your health information deserves serious protection.',
-  body: 'MmjGreen runs a HIPAA-aligned workflow built to protect patient information across the whole evaluation, not just the parts that are convenient to secure.',
+  body: 'MyFloraMD runs a HIPAA-aligned workflow built to protect patient information across the whole evaluation, not just the parts that are convenient to secure.',
   points: [
     { icon: 'lock', title: 'Encrypted in transit', note: 'Patient information is protected as it moves through the online workflow.' },
     { icon: 'shield', title: 'Collected narrowly', note: 'We only gather what the evaluation actually needs, and stop there.' },
@@ -899,79 +870,34 @@ export const compliance = {
   ]
 }
 
-/** Learning centre cards on the home page, and the index of the resource centre. */
-export const learningResources = [
-  {
-    slug: 'preparing-for-your-evaluation',
-    category: 'Preparation',
-    title: 'What to prepare for an online evaluation',
-    note: 'A practical checklist for identification, medical history, technology and renewals.',
-    body: [
-      'The evaluations themselves are short. Most of the work happens before the call, and almost all of it is paperwork you probably already have somewhere.',
-      'Have a current government-issued photo ID ready. That is the single most common reason a visit gets rescheduled, because we cannot verify identity without it.',
-      'If your state programme asks for proof of residency, find that document before you start rather than after. A utility bill or a lease agreement is usually enough.',
-      'Write down your current medications and any conditions a clinician should know about. You do not need a diagnosis letter — a clear list of what you take and why is more useful.',
-      'Check your camera and microphone work before the appointment if you are meeting by video. A five-minute test call removes almost all of the technical risk.'
-    ]
-  },
-  {
-    slug: 'certification-is-not-a-state-card',
-    category: 'Process',
-    title: 'Certification is not the same as a state card',
-    note: 'Understand the roles of the clinician, MmjGreen and your state programme.',
-    body: [
-      'This is the single most common misunderstanding in the whole process, and it catches people out at the worst possible moment — after they have already paid for an evaluation.',
-      'A clinician certifies you. That is a medical judgement about whether an evaluation is appropriate, and it is entirely theirs to make. We do not make it, and no software does.',
-      'Your state programme then issues the card or the registration. That is a separate administrative process, with its own rules, its own forms, its own fee, and often its own waiting period.',
-      'MmjGreen sits between the two. We handle the intake, the scheduling, the consultation and the tracking — and we tell you honestly which state steps remain after a clinician certifies you.',
-      'The practical consequence: treat the clinician decision and the state registration as two separate projects with two separate timelines. Planning for one to finish the other is what causes the frustration.'
-    ]
-  },
-  {
-    slug: 'what-changes-when-you-renew',
-    category: 'Renewals',
-    title: 'What changes when you renew',
-    note: 'The rules move, and last year’s process is not a reliable guide.',
-    body: [
-      'Renewal is usually faster and simpler than a first evaluation, but not identical to it. States change their rules more often than patients expect.',
-      'Check the current window before you assume you are eligible. Some states have tightened the qualifying-condition list since your last visit, and others have shortened the renewal period.',
-      'Bring your existing card or certification number. States that have moved to digital registries can usually renew without a new evaluation at all, which is worth knowing before you book anything.',
-      'A renewal still requires a clinician review where your state demands one. We cannot skip that step, and we will tell you plainly if your state does not require it either.'
-    ]
-  }
-]
+/**
+ * Learning centre cards on the home page.
+ *
+ * These are the same records the resource centre indexes. They used to be a
+ * second copy held here, and the copy quietly fell behind: it was missing the
+ * cover `imageAlt` values, so the home page shipped four cards with empty alt
+ * text while the blog had the right descriptions. Deriving the list from the
+ * resource centre means the two screens cannot drift apart again.
+ */
+export const learningResources = articles
 
-/** Interior page: the process explained in full. */
-export const serviceStages = [
-  {
-    num: '01',
-    title: 'Tell us what brings you in',
-    body: 'A short, private questionnaire about your goals, history, medications and allergies. No account, no password, about six minutes. You can stop and come back without losing your place.'
-  },
-  {
-    num: '02',
-    title: 'We check your state rules',
-    body: 'Medical card law differs in every state. MmjGreen checks your jurisdiction automatically and shows you only the options that are actually available to you, rather than a generic page that does not apply.'
-  },
-  {
-    num: '03',
-    title: 'Pick a time that works',
-    body: 'Choose a live video or phone consultation from real clinician availability. You get a confirmation with everything you need to join, including what to have ready.'
-  },
-  {
-    num: '04',
-    title: 'Meet your clinician',
-    body: 'A licensed clinician reviews your intake, asks follow-up questions, and completes your evaluation. Bring your photo ID and any records you have — the decision is entirely theirs.'
-  },
-  {
-    num: '05',
-    title: 'Your application, tracked to the finish',
-    body: 'If approved, we submit to your state registry and keep you updated at every stage until your card is issued. You always know exactly where things stand.'
-  }
-]
+/**
+ * Interior page: the process explained in full.
+ *
+ * The same five steps as `journey`, minus the timing detail line — this page
+ * sets them out as one readable column for someone who arrived from search and
+ * wants the whole sequence at once, rather than a horizontal gesture. Derived
+ * rather than copied so the two pages cannot drift apart.
+ */
+export const serviceStages = journey.map(({ step, title, body, reference }) => ({
+  num: step,
+  title,
+  body,
+  reference
+}))
 
 export const servicePromises = [
-  { icon: 'clock', title: 'Video or phone, your choice', note: 'You pick the format when you book, and it is not downgraded afterwards.' },
+  { icon: 'clock', title: 'A short questionnaire, then a call', note: 'About 2 minutes for the questionnaire and typically 10–15 minutes for the whole evaluation. Allow up to 30 minutes for an in-depth discussion; state-required in-person visits and registration are separate.' },
   { icon: 'shield', title: 'Independent clinical decision', note: 'No clinician is steered by a quota, a ranking or an upsell.' },
   { icon: 'card', title: 'Fees shown before you pay', note: 'Evaluation and state fees are itemised separately, every time.' },
   { icon: 'map', title: 'Jurisdiction-aware from step one', note: 'Requirements are checked against live data, not a cached page.' }
@@ -999,7 +925,7 @@ export const guideSections = [
     title: 'How the consultation works',
     body: [
       'You choose video or phone when you book. Either way you get a confirmation with everything needed to join, including a reminder of what to have ready.',
-      'A typical consultation runs twenty to thirty minutes. If you need more, that is fine — the booking is yours to lengthen.',
+      'Signup, the 2 minute questionnaire, and the doctor call typically take 10–15 minutes in total. Allow up to 30 minutes if you want an in-depth discussion. State-required in-person assessment and registration are separate.',
       'Everything stays in the same secure record, so you never have to repeat your history between steps, clinicians or states.'
     ]
   },
@@ -1007,7 +933,7 @@ export const guideSections = [
     title: 'After a clinician certifies you',
     body: [
       'Certification is not a state card. Your state programme runs its own registration, with its own forms, its own fee and often its own waiting period.',
-      'MmjGreen submits to your state registry and tracks the application from there. You will see every stage, and you always know whether something is waiting on you or on us.',
+      'MyFloraMD submits to your state registry and tracks the application from there. You will see every stage, and you always know whether something is waiting on you or on us.',
       'State fees are separate from ours unless a state-specific offer clearly says otherwise. We itemise them rather than folding them into a single number.'
     ]
   }
@@ -1019,5 +945,5 @@ export const guideChecklist = [
   'A list of your current medications',
   'Any relevant medical records you already have',
   'Your existing card, if you are renewing',
-  'A quiet ten minutes and a working camera or phone'
+  'A quiet 10–15 minutes, or up to 30 minutes for an in-depth conversation, and a working camera or phone'
 ]

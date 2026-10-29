@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom'
 
 import { comingSoon } from '../lib/content.js'
 
-const STORAGE_KEY = 'mmjgreen-launch-notice'
+const STORAGE_KEY = 'myfloramd-launch-notice'
 
 export function LaunchNotice() {
   const [visible, setVisible] = useState(false)

@@ -1,8 +1,38 @@
+import { randomBytes } from 'node:crypto'
 import { PGlite } from '@electric-sql/pglite'
 import { btree_gist } from '@electric-sql/pglite/contrib/btree_gist'
 import type { Database, DatabaseConnection, Sql } from '../src/db.ts'
 import { connectDatabase } from '../src/db.ts'
+import type { Config } from '../src/config.ts'
 import { loadConfig } from '../src/config.ts'
+
+/**
+ * A production-shaped Config for tests.
+ *
+ * Every suite needs the same three overrides on top of `loadConfig({})`:
+ * an https origin (mutating requests are origin-checked), a real 32-byte
+ * encryption key (sessions are sealed), and intake turned on. Keeping that in
+ * one place stops the per-suite copies from drifting apart.
+ *
+ * The return type is narrowed over `Config` so those three stay non-optional:
+ * a suite that seals a document or posts to /intake should not have to narrow
+ * `encryptionKey` by hand.
+ *
+ * Pass `overrides` to vary a single field, e.g. `testConfig({ intakeEnabled: false })`.
+ */
+export type TestConfig = Config & {
+  origin: string
+  encryptionKey: string
+  intakeEnabled: boolean
+}
+
+export const testConfig = (overrides: Partial<Config> = {}): TestConfig => ({
+  ...loadConfig({}),
+  origin: 'https://care.example.test',
+  encryptionKey: randomBytes(32).toString('base64'),
+  intakeEnabled: true,
+  ...overrides
+})
 
 export async function testDatabase(): Promise<Database> {
   if (process.env.TEST_DATABASE_URL) {

@@ -69,7 +69,7 @@ export function StateSelector({ compact = false }) {
         {outcome?.kind === 'available' && (
           <>
             {' '}
-            <Link className="text-link" to="/care">
+            <Link className="text-link" to={`/patient?state=${encodeURIComponent(selected)}`}>
               Continue to the intake
             </Link>
             . No account needed.
@@ -84,6 +84,10 @@ export function StateSelector({ compact = false }) {
             .
           </>
         )}
+      </p>
+
+      <p className="state-picker__note">
+        Eligibility is decided by a clinician, not this website.
       </p>
     </form>
   )

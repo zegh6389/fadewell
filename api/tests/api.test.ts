@@ -5,7 +5,7 @@ import test from "node:test";
 import { buildApp } from "../src/app.ts";
 import { loadConfig } from "../src/config.ts";
 import { migrate, migrationNames } from "../src/migrate.ts";
-import { testDatabase } from "./database.ts";
+import { testDatabase, testConfig } from "./database.ts";
 import { hash, randomToken, seal } from "../src/security.ts";
 import type { Role } from "../src/domain.ts";
 
@@ -37,12 +37,7 @@ test("service fails closed without backend configuration", async (t) => {
 });
 
 test("healthcare API authorization, persistence and transactions", async (t) => {
-  const config = {
-    ...loadConfig({}),
-    origin: 'https://care.example.test',
-    encryptionKey: randomBytes(32).toString("base64"),
-    intakeEnabled: true,
-  };
+  const config = testConfig();
   const db = await testDatabase();
   t.after(() => db.close());
   await migrate(db);

@@ -60,7 +60,7 @@ test.describe('Care workspaces', () => {
     // Signed out: the guest entry is offered, not a blank screen.
     await expect(page.locator('.care__bar')).toBeVisible()
     await expect(page.getByRole('button', { name: /Start without an account/i })).toBeVisible()
-    await expect(page.locator('body')).toContainText('MmjGreen')
+    await expect(page.locator('body')).toContainText('MyFloraMD')
 
     await page.getByRole('button', { name: /Start without an account/i }).click()
 

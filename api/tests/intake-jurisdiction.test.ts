@@ -2,9 +2,8 @@ import assert from 'node:assert/strict'
 import { randomBytes, randomUUID } from 'node:crypto'
 import test from 'node:test'
 import { buildApp } from '../src/app.ts'
-import { loadConfig } from '../src/config.ts'
 import { migrate } from '../src/migrate.ts'
-import { testDatabase } from './database.ts'
+import { testDatabase, testConfig } from './database.ts'
 import { hash, randomToken } from '../src/security.ts'
 import type { Role } from '../src/domain.ts'
 
@@ -34,12 +33,7 @@ const JURISDICTIONS = {
 }
 
 async function setupApp(t: test.TestContext) {
-  const config = {
-    ...loadConfig({}),
-    origin: 'https://care.example.test',
-    encryptionKey: randomBytes(32).toString('base64'),
-    intakeEnabled: true
-  }
+  const config = testConfig()
   const db = await testDatabase()
   t.after(() => db.close())
   await migrate(db)
@@ -117,6 +111,9 @@ test('PUT /api/v1/intake rejects a state marked NOT_SUPPORTED with 422 JURISDICT
   })
   assert.equal(response.statusCode, 422, response.body)
   assert.equal(response.json().error?.code, 'JURISDICTION_NOT_SUPPORTED')
+  // The brand in the user-facing message must not drift back to the old name.
+  assert.match(response.json().error?.message ?? '', /MyFloraMD/)
+  assert.doesNotMatch(response.json().error?.message ?? '', /MmjGreen/i)
 })
 
 test('PUT /api/v1/intake rejects a state marked COMING_SOON with 422 JURISDICTION_COMING_SOON', async (t) => {

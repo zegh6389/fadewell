@@ -10,7 +10,7 @@ import {
   mintVideoToken,
 } from "../src/providers.ts";
 import { hash as hashToken, seal } from "../src/security.ts";
-import { testDatabase } from "./database.ts";
+import { testDatabase, testConfig } from "./database.ts";
 
 test("Telnyx requires explicit complete configuration and preserves ambiguous send failures", async (t) => {
   const env = {
@@ -108,12 +108,7 @@ test("booking attaches a Telnyx room and scoped participants mint join tokens", 
     if (previousKey === undefined) delete process.env.TELNYX_API_KEY;
     else process.env.TELNYX_API_KEY = previousKey;
   });
-  const config = {
-    ...loadConfig({}),
-    origin: "https://care.example.test",
-    encryptionKey: randomBytes(32).toString("base64"),
-    intakeEnabled: true,
-  };
+  const config = testConfig();
   const app = await buildApp(config, db, () => {});
   t.after(() => app.close());
   const now = new Date();

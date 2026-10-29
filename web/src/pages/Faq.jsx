@@ -62,7 +62,7 @@ export default function Faq() {
       <CtaBand
         title="Ready to stop reading?"
         accent="Probably."
-        body="The questionnaire takes about six minutes, and you can stop at any point without giving us anything."
+        body="The questionnaire takes about 2 minutes. Signup, questionnaire, and the doctor call typically take 10–15 minutes, or up to 30 minutes for an in-depth conversation."
         secondary={{ label: 'Ask a question', to: '/contact' }}
       />
     </>

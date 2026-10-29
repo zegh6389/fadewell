@@ -2,9 +2,8 @@ import assert from 'node:assert/strict'
 import { randomBytes, randomUUID } from 'node:crypto'
 import test from 'node:test'
 import { buildApp } from '../src/app.ts'
-import { loadConfig } from '../src/config.ts'
 import { migrate } from '../src/migrate.ts'
-import { testDatabase } from './database.ts'
+import { testDatabase, testConfig } from './database.ts'
 import { hash, randomToken, seal } from '../src/security.ts'
 import type { Role } from '../src/domain.ts'
 
@@ -18,12 +17,7 @@ import type { Role } from '../src/domain.ts'
  */
 
 async function setupApp(t: test.TestContext) {
-  const config = {
-    ...loadConfig({}),
-    origin: 'https://care.example.test',
-    encryptionKey: randomBytes(32).toString('base64'),
-    intakeEnabled: true
-  }
+  const config = testConfig()
   const db = await testDatabase()
   t.after(() => db.close())
   await migrate(db)
